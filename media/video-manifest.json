@@ -1,0 +1,30 @@
+{
+  "duration_seconds": 68,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "language": "ru",
+  "capture_footage": "Real offscreen Zipshot editor renders; scripted actions; synthetic input only",
+  "benchmark_source": "docs/benchmark/capture-results.json",
+  "median_speedup": 2.922331186921515,
+  "chapters_seconds": {
+    "intro": 0,
+    "method": 8,
+    "benchmark": 16,
+    "editor": 29,
+    "audit": 48,
+    "github": 58
+  },
+  "narration_clips": [
+    "intro",
+    "method",
+    "speed",
+    "workflow0",
+    "workflow1",
+    "workflow2",
+    "workflow3",
+    "workflow4",
+    "audit",
+    "end"
+  ]
+}

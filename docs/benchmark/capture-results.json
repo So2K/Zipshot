@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-17T14:06:27.4205780Z",
+  "scope": "Warm full-virtual-desktop capture API only. Cursor off. No encoding, disk, clipboard, hotkey dispatch or UI. All screen pixels stay in memory and are discarded.",
+  "privacy": "No screenshots, window titles, desktop pixels or clipboard contents are persisted by these harnesses.",
+  "machine": {
+    "cpu": "AMD Ryzen 9 7950X 16-Core Processor            ",
+    "gpu": [
+      "NVIDIA GeForce RTX 4070 Ti",
+      "AMD Radeon(TM) Graphics"
+    ],
+    "os": "Microsoft Windows 11 IoT Enterprise LTSC",
+    "build": "26100"
+  },
+  "protocol": {
+    "blocks": 3,
+    "warmups_per_process": 3,
+    "samples_per_block": 20,
+    "order": "Alternating by block, Zipshot first in block 0",
+    "native_build": "/O2 /GL /MT",
+    "sharex_runtime": "Original self-contained apphost/runtime from installed ShareX, task-local staging",
+    "background_load": "Normal user desktop and background applications remain running; no exclusive performance environment"
+  },
+  "provenance": {
+    "zipshot_base": "a68c7662098d411d8b2426e98dd1bf78900df3d4",
+    "zipshot_capture_sha256": "0E0ED8BEAB85CCF01295DD9095AB79A5CEF0CA414F7858FC86EC8C380D45F419",
+    "zipshot_capture_normalized_sha256": "432747BBE5FC1DF3C0DF05D1B07496869B99550B090CD7CC043CE5DDE5ACB5A6",
+    "native_harness_sha256": "0E74DE436A51ADB00D682737DF47691570C58986715466811DB314DD598E4A85",
+    "sharex_version": "18.0.1",
+    "sharex_capture_sha256": "9A91869332C488F56AAA5A0A50DE021F7E9FE4C0770A93E6C9D59F025774BE97"
+  },
+  "summary": {
+    "zipshot": {
+      "n": 60,
+      "median_ms": 19.5986,
+      "p95_ms": 20.1553,
+      "min_ms": 16.0671,
+      "max_ms": 24.1271,
+      "mean_ms": 19.217065
+    },
+    "sharex": {
+      "n": 60,
+      "median_ms": 57.2736,
+      "p95_ms": 67.8866,
+      "min_ms": 50.3644,
+      "max_ms": 72.1292,
+      "mean_ms": 58.09206666666666
+    },
+    "median_speedup": 2.922331186921515
+  },
+  "runs": [
+    {
+      "block": 0,
+      "engine": "zipshot",
+      "result": {
+        "engine": "Zipshot CaptureRect",
+        "x": -1920,
+        "y": 0,
+        "width": 5760,
+        "height": 2160,
+        "cursor": false,
+        "ms": [
+          19.8993,
+          20.0489,
+          17.5678,
+          21.7927,
+          20.0039,
+          19.7916,
+          19.7197,
+          19.6762,
+          19.8673,
+          19.6153,
+          17.0964,
+          18.5783,
+          19.563,
+          19.7832,
+          20.0375,
+          16.8579,
+          18.49,
+          19.4901,
+          19.8044,
+          22.4418
+        ]
+      }
+    },
+    {
+      "block": 0,
+      "engine": "sharex",
+      "result": {
+        "engine": "ShareX Screenshot.CaptureRectangle",
+        "library_version": "18.0.1.0",
+        "runtime_version": "9.0.8",
+        "x": -1920,
+        "y": 0,
+        "width": 5760,
+        "height": 2160,
+        "cursor": false,
+        "ms": [
+          57.0608,
+          56.876,
+          57.777,
+          56.343,
+          61.3124,
+          59.8143,
+          59.7573,
+          56.7782,
+          57.8193,
+          58.8792,
+          54.9463,
+          57.6183,
+          54.8451,
+          53.736,
+          52.8568,
+          58.9505,
+          54.7801,
+          50.3644,
+          51.9007,
+          56.7135
+        ]
+      }
+    },
+    {
+      "block": 1,
+      "engine": "sharex",
+      "result": {
+        "engine": "ShareX Screenshot.CaptureRectangle",
+        "library_version": "18.0.1.0",
+        "runtime_version": "9.0.8",
+        "x": -1920,
+        "y": 0,
+        "width": 5760,
+        "height": 2160,
+        "cursor": false,
+        "ms": [
+          54.2138,
+          56.9069,
+          57.3368,
+          59.0083,
+          59.305,
+          59.0021,
+          59.2982,
+          60.4336,
+          67.8866,
+          72.1292,
+          68.0582,
+          68.1919,
+          62.9474,
+          59.3965,
+          57.5577,
+          62.2247,
+          59.0277,
+          57.0577,
+          57.0504,
+          56.4255
+        ]
+      }
+    },
+    {
+      "block": 1,
+      "engine": "zipshot",
+      "result": {
+        "engine": "Zipshot CaptureRect",
+        "x": -1920,
+        "y": 0,
+        "width": 5760,
+        "height": 2160,
+        "cursor": false,
+        "ms": [
+          19.7462,
+          24.1271,
+          19.7692,
+          20.1157,
+          19.323,
+          16.6662,
+          19.1798,
+          19.6172,
+          20.1553,
+          19.8992,
+          19.5655,
+          20.0463,
+          20.0739,
+          19.5691,
+          19.538,
+          19.7649,
+          19.5667,
+          19.8854,
+          16.4701,
+          19.9806
+        ]
+      }
+    },
+    {
+      "block": 2,
+      "engine": "zipshot",
+      "result": {
+        "engine": "Zipshot CaptureRect",
+        "x": -1920,
+        "y": 0,
+        "width": 5760,
+        "height": 2160,
+        "cursor": false,
+        "ms": [
+          19.5819,
+          16.6399,
+          16.5125,
+          19.0597,
+          19.022,
+          19.2671,
+          19.944,
+          19.7304,
+          19.8166,
+          19.9144,
+          16.1318,
+          19.41,
+          16.0671,
+          19.0981,
+          16.2898,
+          19.2806,
+          16.3969,
+          19.3493,
+          19.6987,
+          18.6284
+        ]
+      }
+    },
+    {
+      "block": 2,
+      "engine": "sharex",
+      "result": {
+        "engine": "ShareX Screenshot.CaptureRectangle",
+        "library_version": "18.0.1.0",
+        "runtime_version": "9.0.8",
+        "x": -1920,
+        "y": 0,
+        "width": 5760,
+        "height": 2160,
+        "cursor": false,
+        "ms": [
+          57.167,
+          54.6751,
+          61.2572,
+          59.6536,
+          55.6677,
+          56.4378,
+          56.7024,
+          58.2741,
+          57.039,
+          57.0312,
+          57.1924,
+          56.737,
+          57.3917,
+          57.2104,
+          58.5414,
+          59.4607,
+          54.3972,
+          54.9003,
+          57.5811,
+          55.6193
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Installed ShareX 18.0.1 is compared, not the latest ShareX release.",
+    "API latency is not user-perceived hotkey-to-overlay or capture-to-save latency.",
+    "Results are machine and workload dependent; not a universal product speed claim.",
+    "Capture output dimensions and non-null return are checked; no screen-content validation or published image comparison is performed.",
+    "No evidence supports a 1000x speed claim."
+  ]
+}

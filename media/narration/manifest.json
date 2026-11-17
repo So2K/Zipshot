@@ -1,0 +1,97 @@
+{
+  "voice": "Google Translate Russian TTS",
+  "engine": "gTTS 2.5.4",
+  "subtitles": "estimated sentence timing",
+  "clips": [
+    {
+      "name": "intro",
+      "start_seconds": 0.7,
+      "duration_seconds": 6.551667,
+      "budget_seconds": 7.3,
+      "original_seconds": 7.392,
+      "effective_tempo": 1.128262471215341,
+      "text": "Это Zipshot. Скриншоты, аннотации и запись экрана. Сравним его с ShareX."
+    },
+    {
+      "name": "method",
+      "start_seconds": 8.4,
+      "duration_seconds": 7.153958,
+      "budget_seconds": 7.6,
+      "original_seconds": 8.592,
+      "effective_tempo": 1.2010134809290187,
+      "text": "Один компьютер. Одинаковая область. Без курсора. Только захват, без интерфейса и сохранения."
+    },
+    {
+      "name": "speed",
+      "start_seconds": 16.5,
+      "duration_seconds": 9.932333,
+      "budget_seconds": 12.5,
+      "original_seconds": 9.936,
+      "effective_tempo": 1.000369198253824,
+      "text": "Результат замера виден на экране. Это ускорение захвата на данном компьютере, а не обещание для каждой операции."
+    },
+    {
+      "name": "workflow0",
+      "start_seconds": 29.4,
+      "duration_seconds": 2.655167,
+      "budget_seconds": 3.1,
+      "original_seconds": 3.288,
+      "effective_tempo": 1.238340187265057,
+      "text": "Дальше — реальный редактор Zipshot."
+    },
+    {
+      "name": "workflow1",
+      "start_seconds": 33,
+      "duration_seconds": 2.230167,
+      "budget_seconds": 3.1,
+      "original_seconds": 2.232,
+      "effective_tempo": 1.0008219115429475,
+      "text": "Выделяем главное рамкой."
+    },
+    {
+      "name": "workflow2",
+      "start_seconds": 36.8,
+      "duration_seconds": 1.820458,
+      "budget_seconds": 3.1,
+      "original_seconds": 1.824,
+      "effective_tempo": 1.0019456642229594,
+      "text": "Добавляем стрелку."
+    },
+    {
+      "name": "workflow3",
+      "start_seconds": 40.6,
+      "duration_seconds": 1.82075,
+      "budget_seconds": 3.1,
+      "original_seconds": 1.824,
+      "effective_tempo": 1.0017849787175614,
+      "text": "Размываем фрагмент."
+    },
+    {
+      "name": "workflow4",
+      "start_seconds": 44.4,
+      "duration_seconds": 2.651708,
+      "budget_seconds": 3.1,
+      "original_seconds": 2.928,
+      "effective_tempo": 1.1041939761089832,
+      "text": "Подписываем. Готово к отправке."
+    },
+    {
+      "name": "audit",
+      "start_seconds": 48.4,
+      "duration_seconds": 9.152,
+      "budget_seconds": 9.6,
+      "original_seconds": 10.944,
+      "effective_tempo": 1.195804195804196,
+      "text": "Код проверен. Исправлены прозрачность, перезапись файлов и чтение повреждённых данных. Все тридцать пять проверок пройдены."
+    },
+    {
+      "name": "end",
+      "start_seconds": 58.4,
+      "duration_seconds": 8.552167,
+      "budget_seconds": 9.6,
+      "original_seconds": 10.008,
+      "effective_tempo": 1.1702297207245833,
+      "text": "Код, методика и результаты открыты на GitHub. Zipshot: меньше лишних действий, больше внимания к результату."
+    }
+  ]
+}

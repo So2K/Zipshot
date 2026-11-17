@@ -1,0 +1,126 @@
+#include <winver.h>
+
+// Exe icon (Explorer, Startup apps, Task Manager) and the name Windows shows in those lists.
+1 ICON "zipshot.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,1,0
+ PRODUCTVERSION 1,0,1,0
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName", "Zipshot"
+      VALUE "FileDescription", "Zipshot"
+      VALUE "FileVersion", "1.0.1.0"
+      VALUE "InternalName", "zipshot"
+      VALUE "OriginalFilename", "zipshot.exe"
+      VALUE "ProductName", "Zipshot"
+      VALUE "ProductVersion", "1.0.1.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1200
+  END
+END
+
+// Sounds and Fugue icons taken from ShareX v18.0.1 (GPLv3; icons by Yusuke Kamiyamane, CC BY 3.0).
+
+CAPTURE    WAVE "CaptureSound.wav"
+TASKDONE   WAVE "TaskCompletedSound.wav"
+ERRORSND   WAVE "ErrorSound.wav"
+ACTIONDONE WAVE "ActionCompletedSound.wav"
+CROSSHAIR  CURSOR "Crosshair.cur"
+
+100 RCDATA "tick.png"
+101 RCDATA "disk-black.png"
+102 RCDATA "disks-black.png"
+103 RCDATA "clipboard.png"
+104 RCDATA "cross.png"
+105 RCDATA "cursor.png"
+106 RCDATA "layer-shape.png"
+107 RCDATA "layer-shape-ellipse.png"
+108 RCDATA "pencil.png"
+109 RCDATA "pencil--arrow.png"
+110 RCDATA "layer-shape-line-white.png"
+111 RCDATA "layer-shape-arrow-white.png"
+112 RCDATA "edit-outline-white.png"
+113 RCDATA "edit-shade-white.png"
+114 RCDATA "counter-reset.png"
+115 RCDATA "magnifier-zoom.png"
+116 RCDATA "eraser.png"
+117 RCDATA "layer-shade-white.png"
+118 RCDATA "grid-white.png"
+119 RCDATA "highlighter-text.png"
+120 RCDATA "image-crop.png"
+121 RCDATA "layer--pencil.png"
+122 RCDATA "wrench-screwdriver.png"
+123 RCDATA "arrow-circle-225-left.png"
+124 RCDATA "arrow-circle-315.png"
+125 RCDATA "layer--minus.png"
+126 RCDATA "layer-shape-region.png"
+127 RCDATA "layer-shape-ellipse-region.png"
+128 RCDATA "layer-shape-polygon.png"
+129 RCDATA "camera.png"
+130 RCDATA "gear.png"
+131 RCDATA "layer_fullscreen.png"
+132 RCDATA "monitor.png"
+133 RCDATA "app.png"
+
+// Annotation tools and Edit menu items added for ShareX parity (shapes_ext).
+140 RCDATA "balloon-box-left.png"
+141 RCDATA "folder-open-image.png"
+142 RCDATA "monitor-image.png"
+143 RCDATA "smiley-cool.png"
+144 RCDATA "stamp-cursor.png"
+145 RCDATA "table-delete-column.png"
+146 RCDATA "document-copy.png"
+147 RCDATA "layers-stack-arrange.png"
+148 RCDATA "layers-arrange.png"
+149 RCDATA "layers-arrange-back.png"
+150 RCDATA "layers-stack-arrange-back.png"
+
+// Editor "Image" menu (ShareX tsddbImage), ids 170-189.
+170 RCDATA "image--pencil.png"
+171 RCDATA "image-empty.png"
+172 RCDATA "folder-open-image.png"
+173 RCDATA "image-select.png"
+174 RCDATA "image-resize.png"
+175 RCDATA "image-resize-actual.png"
+176 RCDATA "arrow-circle.png"
+177 RCDATA "arrow-circle-135-left.png"
+178 RCDATA "arrow-circle-double.png"
+179 RCDATA "layer-flip.png"
+180 RCDATA "layer-flip-vertical.png"
+181 RCDATA "image-saturation.png"
+
+// Main window menu icons: ShareX 18 Legacy (Fugue-style) SVGs rendered to 32px PNG.
+200 RCDATA "mw-camera.png"
+201 RCDATA "mw-upload.png"
+202 RCDATA "mw-workflows.png"
+203 RCDATA "mw-wrench.png"
+204 RCDATA "mw-after-capture-tasks.png"
+205 RCDATA "mw-after-upload-tasks.png"
+206 RCDATA "mw-destinations.png"
+207 RCDATA "mw-settings.png"
+208 RCDATA "mw-sliders.png"
+209 RCDATA "mw-keyboard.png"
+210 RCDATA "mw-destination-settings.png"
+211 RCDATA "mw-custom-uploader-settings.png"
+212 RCDATA "mw-screenshots-folder.png"
+213 RCDATA "mw-history.png"
+214 RCDATA "mw-image-history.png"
+215 RCDATA "mw-bug.png"
+216 RCDATA "mw-heart.png"
+217 RCDATA "mw-follow.png"
+218 RCDATA "mw-discord.png"
+219 RCDATA "mw-info.png"
+220 RCDATA "mw-region.png"
+221 RCDATA "mw-fullscreen.png"
+222 RCDATA "mw-window.png"
+223 RCDATA "mw-screen-recording.png"
+224 RCDATA "mw-film.png"

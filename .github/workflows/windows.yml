@@ -1,0 +1,25 @@
+name: Windows build and regression checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build x64 release
+        shell: cmd
+        run: build.bat
+      - name: Capture and output regressions (synthetic pixels only)
+        shell: cmd
+        run: tests\run_capture_output_tests.bat
+      - name: Image core regressions
+        shell: cmd
+        run: tools\test_image_core.bat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zipshot-windows-x64
+          path: |
+            build/zipshot.exe
+            LICENSE
+            THIRD_PARTY_NOTICES.md

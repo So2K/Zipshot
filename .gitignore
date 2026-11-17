@@ -1,0 +1,8 @@
+build/
+icons/preview*.png
+icons/app_preview.png
+.claude/
+__pycache__/
+*.pyc
+zipshot.ini*
+media/frames/

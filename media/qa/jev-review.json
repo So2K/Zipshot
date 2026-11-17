@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-17T14:09:54.8394466Z",
+  "status": "unavailable",
+  "http_status": 402,
+  "request_id": "req_01a1e9d79af970a388ecd31e58d3a3b5",
+  "model_requested": "jev-1.14.0",
+  "attempts": 1,
+  "model_resolved": null,
+  "usage": null,
+  "duration_ms": null,
+  "estimated_cost_usd": null,
+  "tool_wall_seconds": 1.3503977,
+  "scope": "Two explicitly selected synthetic video JPGs only. No desktop screenshots or clipboard data.",
+  "note": "Provider returned HTTP 402; no visual answers or usage metadata were returned. No retry attempted.",
+  "frames": [
+    {
+      "file": "scene-02.jpg",
+      "sha256": "FC7A8E3B7E6EC4A8C9D19D8ED88586C9003ECF8FAEAB72A678E4FBE434AC8FF8"
+    },
+    {
+      "file": "scene-03.jpg",
+      "sha256": "CE8129F90A7865AEC45C00EBE20B326909B0ABA6F322301B1E1EA76B3AAFD393"
+    }
+  ],
+  "source_docs": [
+    "https://docs.typesafe.ai/introduction",
+    "https://docs.typesafe.ai/images",
+    "https://docs.typesafe.ai/api",
+    "https://docs.typesafe.ai/models"
+  ]
+}
