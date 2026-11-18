@@ -1,0 +1,25 @@
+{
+  "source": "Generated review document containing the actual public Zipshot crop implementation. No user files, desktop pixels or clipboard data.",
+  "source_file": "src/capture.cpp",
+  "source_excerpt_lines": [
+    10,
+    21
+  ],
+  "source_sha256": "0e0ed8beab85ccf01295dd9095ab79a5cef0ca414f7858fc86ec8c380d45f419",
+  "fixture": "capture-review.png",
+  "native_ui": "Production Direct2D editor drawing/layout/toolbar methods on an offscreen WIC surface, with a captured real Win32 non-client frame. Documentation helper only; no focus or input automation.",
+  "native_font": "Segoe UI / production app fonts; external figure labels use Ubuntu.",
+  "animation": "Four scripted actual editor states, explanatory timing; not a speed measurement.",
+  "frame_durations_ms": [
+    1600,
+    1400,
+    1400,
+    3000
+  ],
+  "images": {
+    "capture-review.png": "3e90ed4476c73ac47f3e0cf47efd3b8ad4d2ee3e2ec443362da79a7fc4016154",
+    "editor-overview.png": "65a295a6d203a26fa082b5f98a3ded097540d57d577f9f0e85281aa54d64ea32",
+    "annotation-flow.png": "120f27733d6e1a79e7be134f8ff024fd0fdeca700c7248e7c9ecba88f3cb1b7f",
+    "annotated-result.png": "d361d12db9fa6ee3326e0a6196acc6f9f5d706f2caa3073b142acd6c05623e8f"
+  }
+}

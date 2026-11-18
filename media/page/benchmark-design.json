@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "figure": "capture-benchmark.png",
+  "dimensions_px": [
+    1400,
+    650
+  ],
+  "design": "Single neutral Fluent-style surface; Ubuntu labels; native Zipshot blue accent; no app UI recreation.",
+  "palette": {
+    "surface": "#27282B",
+    "border": "#3D3E42",
+    "accent": "#3A8DFF"
+  },
+  "fonts": [
+    "Ubuntu-Regular.ttf",
+    "Ubuntu-Medium.ttf",
+    "Ubuntu-Bold.ttf"
+  ],
+  "font_policy": "Use locally installed fonts for rasterization; no font files copied or embedded.",
+  "source_data_sha256": "90d32fa53b07daceeda03bc61d3ae3455fdb564dcdc37c2266c6e8ea0492efac",
+  "figure_sha256": "9c8f01f2815243606db7eeb48a7bbd5599a205ffa2f85280dceb7fad23201a06",
+  "benchmark_utc": "2026-11-17T14:06:27.4205780Z",
+  "summary": {
+    "zipshot": {
+      "n": 60,
+      "median_ms": 19.5986,
+      "p95_ms": 20.1553,
+      "min_ms": 16.0671,
+      "max_ms": 24.1271,
+      "mean_ms": 19.217065
+    },
+    "sharex": {
+      "n": 60,
+      "median_ms": 57.2736,
+      "p95_ms": 67.8866,
+      "min_ms": 50.3644,
+      "max_ms": 72.1292,
+      "mean_ms": 58.09206666666666
+    },
+    "median_speedup": 2.922331186921515
+  },
+  "bar_geometry": [
+    {
+      "application": "Zipshot",
+      "median_ms": 19.5986,
+      "bar_width_px": 186.18670000000003,
+      "scale_ceiling_ms": 60
+    },
+    {
+      "application": "ShareX 18.0.1",
+      "median_ms": 57.2736,
+      "bar_width_px": 544.0992,
+      "scale_ceiling_ms": 60
+    }
+  ],
+  "validation": {
+    "all_text_in_safe_area": true,
+    "no_text_box_overlap": true,
+    "shared_linear_bar_scale": true,
+    "source_medians_and_sample_counts_used": true
+  },
+  "text_boxes": [
+    {
+      "text": "Capture API latency",
+      "font": "Ubuntu Medium",
+      "size_px": 42,
+      "bounds_px": [
+        76.0,
+        43.0,
+        463.5,
+        83.0
+      ]
+    },
+    {
+      "text": "Same 5760 × 2160 desktop · 60 measured captures per app · Lower is faster",
+      "font": "Ubuntu Regular",
+      "size_px": 24,
+      "bounds_px": [
+        52.0,
+        108.0,
+        866.5,
+        131.0
+      ]
+    },
+    {
+      "text": "APPLICATION",
+      "font": "Ubuntu Medium",
+      "size_px": 20,
+      "bounds_px": [
+        52.0,
+        185.0,
+        181.5,
+        199.0
+      ]
+    },
+    {
+      "text": "MEDIAN CAPTURE TIME",
+      "font": "Ubuntu Medium",
+      "size_px": 20,
+      "bounds_px": [
+        440.0,
+        185.0,
+        662.5,
+        199.0
+      ]
+    },
+    {
+      "text": "95TH PERCENTILE",
+      "font": "Ubuntu Medium",
+      "size_px": 20,
+      "bounds_px": [
+        1178.5,
+        185.0,
+        1348.0,
+        199.0
+      ]
+    },
+    {
+      "text": "Zipshot",
+      "font": "Ubuntu Medium",
+      "size_px": 32,
+      "bounds_px": [
+        52.0,
+        247.0,
+        164.5,
+        277.0
+      ]
+    },
+    {
+      "text": "Warm capture API",
+      "font": "Ubuntu Regular",
+      "size_px": 21,
+      "bounds_px": [
+        52.0,
+        291.0,
+        224.5,
+        309.5
+      ]
+    },
+    {
+      "text": "19.6 ms",
+      "font": "Ubuntu Medium",
+      "size_px": 30,
+      "bounds_px": [
+        1026.5,
+        249.0,
+        1132.0,
+        271.0
+      ]
+    },
+    {
+      "text": "20.2 ms",
+      "font": "Ubuntu Regular",
+      "size_px": 30,
+      "bounds_px": [
+        1243.0,
+        249.0,
+        1348.0,
+        270.0
+      ]
+    },
+    {
+      "text": "ShareX 18.0.1",
+      "font": "Ubuntu Medium",
+      "size_px": 32,
+      "bounds_px": [
+        52.0,
+        365.0,
+        254.0,
+        389.5
+      ]
+    },
+    {
+      "text": "Installed version",
+      "font": "Ubuntu Regular",
+      "size_px": 21,
+      "bounds_px": [
+        52.0,
+        409.0,
+        208.0,
+        425.0
+      ]
+    },
+    {
+      "text": "57.3 ms",
+      "font": "Ubuntu Medium",
+      "size_px": 30,
+      "bounds_px": [
+        1026.5,
+        367.0,
+        1132.0,
+        389.0
+      ]
+    },
+    {
+      "text": "67.9 ms",
+      "font": "Ubuntu Regular",
+      "size_px": 30,
+      "bounds_px": [
+        1243.0,
+        367.0,
+        1348.0,
+        388.0
+      ]
+    },
+    {
+      "text": "Measured median ratio: 2.9× in this test",
+      "font": "Ubuntu Medium",
+      "size_px": 27,
+      "bounds_px": [
+        52.0,
+        478.0,
+        551.0,
+        499.0
+      ]
+    },
+    {
+      "text": "Installed ShareX 18.0.1 · Warm API only; excludes hotkeys, UI, encoding and saving.",
+      "font": "Ubuntu Regular",
+      "size_px": 22,
+      "bounds_px": [
+        52.0,
+        532.0,
+        873.0,
+        553.0
+      ]
+    },
+    {
+      "text": "Ryzen 9 7950X · RTX 4070 Ti · Windows 11, build 26100 · Cursor capture off",
+      "font": "Ubuntu Regular",
+      "size_px": 21,
+      "bounds_px": [
+        52.0,
+        570.0,
+        767.0,
+        590.0
+      ]
+    },
+    {
+      "text": "Source: docs/benchmark/capture-results.json",
+      "font": "Ubuntu Regular",
+      "size_px": 20,
+      "bounds_px": [
+        52.0,
+        608.0,
+        462.0,
+        627.0
+      ]
+    }
+  ]
+}
