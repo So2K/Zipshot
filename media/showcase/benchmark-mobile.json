@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "figure": "benchmark-mobile.png",
+  "dimensions_px": [
+    840,
+    1000
+  ],
+  "target_display_width_css_px": 320,
+  "design": "Vertical neutral Fluent-style data figure; Ubuntu typography; native Zipshot blue; no recreated app UI.",
+  "palette": {
+    "background": "#181A1E",
+    "border": "#3D3E42",
+    "accent": "#3A8DFF"
+  },
+  "fonts": [
+    "Ubuntu-Regular.ttf",
+    "Ubuntu-Medium.ttf"
+  ],
+  "font_policy": "Locally installed fonts used only for rasterization; no font binaries copied or embedded.",
+  "source": "docs/benchmark/capture-results.json",
+  "source_sha256": "90d32fa53b07daceeda03bc61d3ae3455fdb564dcdc37c2266c6e8ea0492efac",
+  "figure_sha256": "e6977b6836931e9f8ebb907ed13f21b0b176fe6a784de0247cbe082362f5c2db",
+  "benchmark_utc": "2026-11-17T14:06:27.4205780Z",
+  "sharex_version": "18.0.1",
+  "summary": {
+    "zipshot": {
+      "n": 60,
+      "median_ms": 19.5986,
+      "p95_ms": 20.1553,
+      "min_ms": 16.0671,
+      "max_ms": 24.1271,
+      "mean_ms": 19.217065
+    },
+    "sharex": {
+      "n": 60,
+      "median_ms": 57.2736,
+      "p95_ms": 67.8866,
+      "min_ms": 50.3644,
+      "max_ms": 72.1292,
+      "mean_ms": 58.09206666666666
+    },
+    "median_speedup": 2.922331186921515
+  },
+  "machine": {
+    "cpu": "AMD Ryzen 9 7950X 16-Core Processor            ",
+    "gpu": [
+      "NVIDIA GeForce RTX 4070 Ti",
+      "AMD Radeon(TM) Graphics"
+    ],
+    "os": "Microsoft Windows 11 IoT Enterprise LTSC",
+    "build": "26100"
+  },
+  "bar_geometry": [
+    {
+      "application": "Zipshot",
+      "median_ms": 19.5986,
+      "bar_width_px": 236.48977333333335,
+      "scale_ceiling_ms": 60
+    },
+    {
+      "application": "ShareX 18.0.1",
+      "median_ms": 57.2736,
+      "bar_width_px": 691.10144,
+      "scale_ceiling_ms": 60
+    }
+  ],
+  "validation": {
+    "all_text_in_safe_area": true,
+    "no_text_box_overlap": true,
+    "shared_linear_bar_scale": true,
+    "minimum_text_at_320_css_px": 13.714285714285714
+  },
+  "text_boxes": [
+    {
+      "text": "Capture API latency",
+      "font": "Ubuntu Medium",
+      "size_px": 46,
+      "size_at_320_css_px": 17.523809523809526,
+      "bounds_px": [
+        82.0,
+        54.0,
+        505.0,
+        97.5
+      ]
+    },
+    {
+      "text": "2.9×",
+      "font": "Ubuntu Medium",
+      "size_px": 136,
+      "size_at_320_css_px": 51.80952380952381,
+      "bounds_px": [
+        58.0,
+        126.0,
+        326.5,
+        224.5
+      ]
+    },
+    {
+      "text": "faster in this test",
+      "font": "Ubuntu Regular",
+      "size_px": 40,
+      "size_at_320_css_px": 15.238095238095237,
+      "bounds_px": [
+        58.0,
+        281.0,
+        366.0,
+        312.0
+      ]
+    },
+    {
+      "text": "Zipshot",
+      "font": "Ubuntu Medium",
+      "size_px": 40,
+      "size_at_320_css_px": 15.238095238095237,
+      "bounds_px": [
+        58.0,
+        394.0,
+        199.0,
+        431.5
+      ]
+    },
+    {
+      "text": "19.6 ms",
+      "font": "Ubuntu Medium",
+      "size_px": 70,
+      "size_at_320_css_px": 26.666666666666668,
+      "bounds_px": [
+        534.5,
+        378.0,
+        782.0,
+        428.5
+      ]
+    },
+    {
+      "text": "ShareX 18.0.1",
+      "font": "Ubuntu Medium",
+      "size_px": 40,
+      "size_at_320_css_px": 15.238095238095237,
+      "bounds_px": [
+        58.0,
+        566.0,
+        310.5,
+        596.5
+      ]
+    },
+    {
+      "text": "57.3 ms",
+      "font": "Ubuntu Medium",
+      "size_px": 70,
+      "size_at_320_css_px": 26.666666666666668,
+      "bounds_px": [
+        534.5,
+        550.0,
+        782.0,
+        600.5
+      ]
+    },
+    {
+      "text": "Medians · 60 captures per app",
+      "font": "Ubuntu Regular",
+      "size_px": 36,
+      "size_at_320_css_px": 13.714285714285714,
+      "bounds_px": [
+        58.0,
+        752.0,
+        545.0,
+        786.0
+      ]
+    },
+    {
+      "text": "5760 × 2160 · Cursor off",
+      "font": "Ubuntu Regular",
+      "size_px": 36,
+      "size_at_320_css_px": 13.714285714285714,
+      "bounds_px": [
+        58.0,
+        806.0,
+        451.5,
+        834.0
+      ]
+    },
+    {
+      "text": "Warm API only; excludes hotkeys,",
+      "font": "Ubuntu Regular",
+      "size_px": 36,
+      "size_at_320_css_px": 13.714285714285714,
+      "bounds_px": [
+        58.0,
+        860.0,
+        604.0,
+        894.0
+      ]
+    },
+    {
+      "text": "UI, editing, encoding and saving.",
+      "font": "Ubuntu Regular",
+      "size_px": 36,
+      "size_at_320_css_px": 13.714285714285714,
+      "bounds_px": [
+        58.0,
+        910.0,
+        582.0,
+        944.0
+      ]
+    }
+  ]
+}

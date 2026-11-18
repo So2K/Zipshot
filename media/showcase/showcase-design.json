@@ -1,0 +1,1050 @@
+{
+  "design": "Ubuntu typography, native Zipshot blue, flat capture geometry and genuine editor crops. No generated/fabricated UI.",
+  "source_editor": "media/page/editor-overview.png",
+  "source_workflow": "media/page/annotation-flow.png",
+  "source_result": "media/page/annotated-result.png",
+  "source_icon": "res/app.png",
+  "claims": {
+    "warm_capture_median_ms": 19.5986,
+    "exe_bytes": 1912320,
+    "exe_decimal_mb": 1.9,
+    "license": "GPLv3+"
+  },
+  "font_policy": "Installed Ubuntu font files used for rasterization only. No font binaries distributed.",
+  "workflow_timing_ms": [
+    1600,
+    1400,
+    1400,
+    3000
+  ],
+  "images": {
+    "hero-desktop.png": {
+      "sha256": "44433eef20be9fb319845ff2197f77082da6e0b040a1b70ffc9cec44fcc27935",
+      "dimensions": [
+        1600,
+        1010
+      ]
+    },
+    "hero-mobile.png": {
+      "sha256": "11ec20da68c4848ebaa336ea9293dc900aaea196345d5a849b19949c467e0f25",
+      "dimensions": [
+        840,
+        1240
+      ]
+    },
+    "feature-desktop.png": {
+      "sha256": "c915191ed9bc1632a02c27a9c95e4487a411ce7f81ec2338081f8a5fa93dae06",
+      "dimensions": [
+        1600,
+        620
+      ]
+    },
+    "feature-mobile.png": {
+      "sha256": "aaaa32f5782cd8f3b6e4bfaf91c6019a9e3259b66d5e551528a7da87a99d47e4",
+      "dimensions": [
+        840,
+        1770
+      ]
+    },
+    "workflow.png": {
+      "sha256": "629c98c14a30b5f4a5cc2e69a83b075fe25c595db5f4e6813269d661aa078065",
+      "dimensions": [
+        1600,
+        1100
+      ]
+    },
+    "download-button.png": {
+      "sha256": "f990f41b30f10860e6b57206e989a7b2db2c9b0b962e6e442a18bf5c38019c0f",
+      "dimensions": [
+        540,
+        116
+      ]
+    },
+    "social-card.png": {
+      "sha256": "df93908797db8eb1f3329b2a95f49e57f4b101251b663054588ecf3343bf7725",
+      "dimensions": [
+        1280,
+        640
+      ]
+    }
+  },
+  "text_bounds": {
+    "hero-desktop.png": [
+      {
+        "text": "Zipshot",
+        "bounds": [
+          154,
+          49,
+          353,
+          102
+        ],
+        "font": "Ubuntu Bold",
+        "size": 55
+      },
+      {
+        "text": "WINDOWS x64  /  FREE & OPEN SOURCE",
+        "bounds": [
+          1120,
+          69,
+          1466.0,
+          86
+        ],
+        "font": "Ubuntu Regular",
+        "size": 17
+      },
+      {
+        "text": "Capture.",
+        "bounds": [
+          64,
+          214,
+          481,
+          306
+        ],
+        "font": "Ubuntu Bold",
+        "size": 102
+      },
+      {
+        "text": "Annotate.",
+        "bounds": [
+          64,
+          326,
+          551,
+          398
+        ],
+        "font": "Ubuntu Bold",
+        "size": 102
+      },
+      {
+        "text": "Done.",
+        "bounds": [
+          64,
+          438,
+          346,
+          511
+        ],
+        "font": "Ubuntu Bold",
+        "size": 102
+      },
+      {
+        "text": "Screenshots and annotations.",
+        "bounds": [
+          68,
+          582,
+          457,
+          604
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "One native Windows app.",
+        "bounds": [
+          68,
+          627,
+          404,
+          654
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "THE EDITOR",
+        "bounds": [
+          614,
+          155,
+          735.0,
+          173
+        ],
+        "font": "Ubuntu Medium",
+        "size": 18
+      },
+      {
+        "text": "19.6 ms",
+        "bounds": [
+          68,
+          871,
+          240,
+          907
+        ],
+        "font": "Ubuntu Medium",
+        "size": 49
+      },
+      {
+        "text": "warm capture API",
+        "bounds": [
+          68,
+          939,
+          253,
+          959
+        ],
+        "font": "Ubuntu Regular",
+        "size": 23
+      },
+      {
+        "text": "1.9 MB",
+        "bounds": [
+          588,
+          871,
+          743,
+          907
+        ],
+        "font": "Ubuntu Medium",
+        "size": 49
+      },
+      {
+        "text": "Windows executable",
+        "bounds": [
+          588,
+          939,
+          805,
+          957
+        ],
+        "font": "Ubuntu Regular",
+        "size": 23
+      },
+      {
+        "text": "GPLv3+",
+        "bounds": [
+          1108,
+          871,
+          1280,
+          907
+        ],
+        "font": "Ubuntu Medium",
+        "size": 49
+      },
+      {
+        "text": "free and open source",
+        "bounds": [
+          1108,
+          939,
+          1330,
+          961
+        ],
+        "font": "Ubuntu Regular",
+        "size": 23
+      },
+      {
+        "text": "Capture timing is from one machine. Optional FFmpeg is separate. Details below.",
+        "bounds": [
+          68,
+          982,
+          701,
+          998
+        ],
+        "font": "Ubuntu Regular",
+        "size": 17
+      }
+    ],
+    "hero-mobile.png": [
+      {
+        "text": "Zipshot",
+        "bounds": [
+          126,
+          45,
+          312,
+          95
+        ],
+        "font": "Ubuntu Bold",
+        "size": 51
+      },
+      {
+        "text": "Windows x64",
+        "bounds": [
+          598,
+          61,
+          724,
+          77
+        ],
+        "font": "Ubuntu Regular",
+        "size": 21
+      },
+      {
+        "text": "Capture.",
+        "bounds": [
+          42,
+          156,
+          398,
+          233
+        ],
+        "font": "Ubuntu Bold",
+        "size": 87
+      },
+      {
+        "text": "Annotate.",
+        "bounds": [
+          42,
+          248,
+          458,
+          309
+        ],
+        "font": "Ubuntu Bold",
+        "size": 87
+      },
+      {
+        "text": "Done.",
+        "bounds": [
+          42,
+          340,
+          282,
+          401
+        ],
+        "font": "Ubuntu Bold",
+        "size": 87
+      },
+      {
+        "text": "Native screenshots and annotations.",
+        "bounds": [
+          46,
+          458,
+          526,
+          480
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "19.6 ms",
+        "bounds": [
+          44,
+          1111,
+          181,
+          1138
+        ],
+        "font": "Ubuntu Medium",
+        "size": 39
+      },
+      {
+        "text": "warm API test",
+        "bounds": [
+          44,
+          1170,
+          247,
+          1192
+        ],
+        "font": "Ubuntu Regular",
+        "size": 32
+      },
+      {
+        "text": "1.9 MB",
+        "bounds": [
+          309,
+          1111,
+          432,
+          1138
+        ],
+        "font": "Ubuntu Medium",
+        "size": 39
+      },
+      {
+        "text": "Windows EXE",
+        "bounds": [
+          309,
+          1170,
+          505,
+          1195
+        ],
+        "font": "Ubuntu Regular",
+        "size": 32
+      },
+      {
+        "text": "GPLv3+",
+        "bounds": [
+          574,
+          1111,
+          711,
+          1138
+        ],
+        "font": "Ubuntu Medium",
+        "size": 39
+      },
+      {
+        "text": "open source",
+        "bounds": [
+          574,
+          1170,
+          751,
+          1193
+        ],
+        "font": "Ubuntu Regular",
+        "size": 32
+      }
+    ],
+    "feature-desktop.png": [
+      {
+        "text": "01",
+        "bounds": [
+          50,
+          52,
+          76,
+          67
+        ],
+        "font": "Ubuntu Medium",
+        "size": 22
+      },
+      {
+        "text": "Pick a region.",
+        "bounds": [
+          50,
+          107,
+          307,
+          145
+        ],
+        "font": "Ubuntu Bold",
+        "size": 40
+      },
+      {
+        "text": "A window, one monitor",
+        "bounds": [
+          50,
+          177,
+          306,
+          199
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      },
+      {
+        "text": "or exactly the area you need.",
+        "bounds": [
+          50,
+          210,
+          366,
+          232
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      },
+      {
+        "text": "Ctrl + PrtScn",
+        "bounds": [
+          90,
+          494,
+          247,
+          514
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "02",
+        "bounds": [
+          580,
+          52,
+          606,
+          67
+        ],
+        "font": "Ubuntu Medium",
+        "size": 22
+      },
+      {
+        "text": "Make the point.",
+        "bounds": [
+          580,
+          107,
+          881,
+          145
+        ],
+        "font": "Ubuntu Bold",
+        "size": 40
+      },
+      {
+        "text": "Arrows, text and highlights.",
+        "bounds": [
+          580,
+          177,
+          884,
+          199
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      },
+      {
+        "text": "Keep the explanation in the image.",
+        "bounds": [
+          580,
+          210,
+          962,
+          232
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      },
+      {
+        "text": "R",
+        "bounds": [
+          626,
+          489,
+          643,
+          508
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "A",
+        "bounds": [
+          723,
+          489,
+          742,
+          508
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "T",
+        "bounds": [
+          820,
+          489,
+          836,
+          508
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "03",
+        "bounds": [
+          1110,
+          52,
+          1136,
+          67
+        ],
+        "font": "Ubuntu Medium",
+        "size": 22
+      },
+      {
+        "text": "Copy or save.",
+        "bounds": [
+          1110,
+          107,
+          1363,
+          142
+        ],
+        "font": "Ubuntu Bold",
+        "size": 40
+      },
+      {
+        "text": "Use the shortcuts you know.",
+        "bounds": [
+          1110,
+          177,
+          1422,
+          199
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      },
+      {
+        "text": "Take the result to your next task.",
+        "bounds": [
+          1110,
+          210,
+          1475,
+          232
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      },
+      {
+        "text": "Ctrl + C",
+        "bounds": [
+          1152,
+          321,
+          1259,
+          344
+        ],
+        "font": "Ubuntu Medium",
+        "size": 31
+      },
+      {
+        "text": "Ctrl + S",
+        "bounds": [
+          1365,
+          321,
+          1469,
+          344
+        ],
+        "font": "Ubuntu Medium",
+        "size": 31
+      },
+      {
+        "text": "clipboard",
+        "bounds": [
+          1136,
+          427,
+          1236,
+          449
+        ],
+        "font": "Ubuntu Regular",
+        "size": 23
+      },
+      {
+        "text": "local file",
+        "bounds": [
+          1349,
+          427,
+          1437,
+          445
+        ],
+        "font": "Ubuntu Regular",
+        "size": 23
+      }
+    ],
+    "feature-mobile.png": [
+      {
+        "text": "01",
+        "bounds": [
+          42,
+          35,
+          70,
+          52
+        ],
+        "font": "Ubuntu Medium",
+        "size": 25
+      },
+      {
+        "text": "Pick a region.",
+        "bounds": [
+          42,
+          84,
+          356,
+          131
+        ],
+        "font": "Ubuntu Bold",
+        "size": 49
+      },
+      {
+        "text": "A window, one monitor",
+        "bounds": [
+          42,
+          156,
+          349,
+          183
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "or exactly the area you need.",
+        "bounds": [
+          42,
+          194,
+          421,
+          221
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "Ctrl + PrtScn",
+        "bounds": [
+          82,
+          535,
+          253,
+          557
+        ],
+        "font": "Ubuntu Medium",
+        "size": 29
+      },
+      {
+        "text": "02",
+        "bounds": [
+          42,
+          605,
+          70,
+          622
+        ],
+        "font": "Ubuntu Medium",
+        "size": 25
+      },
+      {
+        "text": "Make the point.",
+        "bounds": [
+          42,
+          654,
+          411,
+          701
+        ],
+        "font": "Ubuntu Bold",
+        "size": 49
+      },
+      {
+        "text": "Arrows, text and highlights.",
+        "bounds": [
+          42,
+          726,
+          407,
+          753
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "Keep the explanation in the image.",
+        "bounds": [
+          42,
+          764,
+          501,
+          791
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "R",
+        "bounds": [
+          88,
+          1100,
+          105,
+          1119
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "A",
+        "bounds": [
+          185,
+          1100,
+          204,
+          1119
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "T",
+        "bounds": [
+          282,
+          1100,
+          298,
+          1119
+        ],
+        "font": "Ubuntu Medium",
+        "size": 27
+      },
+      {
+        "text": "03",
+        "bounds": [
+          42,
+          1175,
+          70,
+          1192
+        ],
+        "font": "Ubuntu Medium",
+        "size": 25
+      },
+      {
+        "text": "Copy or save.",
+        "bounds": [
+          42,
+          1224,
+          355,
+          1268
+        ],
+        "font": "Ubuntu Bold",
+        "size": 49
+      },
+      {
+        "text": "Use the shortcuts you know.",
+        "bounds": [
+          42,
+          1296,
+          416,
+          1323
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "Take the result to your next task.",
+        "bounds": [
+          42,
+          1334,
+          478,
+          1361
+        ],
+        "font": "Ubuntu Regular",
+        "size": 29
+      },
+      {
+        "text": "Ctrl + C",
+        "bounds": [
+          84,
+          1430,
+          207,
+          1457
+        ],
+        "font": "Ubuntu Medium",
+        "size": 36
+      },
+      {
+        "text": "Ctrl + S",
+        "bounds": [
+          454,
+          1430,
+          573,
+          1457
+        ],
+        "font": "Ubuntu Medium",
+        "size": 36
+      },
+      {
+        "text": "clipboard",
+        "bounds": [
+          68,
+          1536,
+          178,
+          1561
+        ],
+        "font": "Ubuntu Regular",
+        "size": 26
+      },
+      {
+        "text": "local file",
+        "bounds": [
+          438,
+          1536,
+          538,
+          1556
+        ],
+        "font": "Ubuntu Regular",
+        "size": 26
+      }
+    ],
+    "workflow-0": [
+      {
+        "text": "IN THE EDITOR",
+        "bounds": [
+          54,
+          39,
+          211.0,
+          58
+        ],
+        "font": "Ubuntu Medium",
+        "size": 19
+      },
+      {
+        "text": "Open the capture.",
+        "bounds": [
+          51,
+          79,
+          455,
+          124
+        ],
+        "font": "Ubuntu Bold",
+        "size": 47
+      },
+      {
+        "text": "01 / 04",
+        "bounds": [
+          1458,
+          62,
+          1530,
+          84
+        ],
+        "font": "Ubuntu Medium",
+        "size": 23
+      }
+    ],
+    "workflow-1": [
+      {
+        "text": "IN THE EDITOR",
+        "bounds": [
+          54,
+          39,
+          211.0,
+          58
+        ],
+        "font": "Ubuntu Medium",
+        "size": 19
+      },
+      {
+        "text": "Frame the detail.",
+        "bounds": [
+          51,
+          79,
+          433,
+          116
+        ],
+        "font": "Ubuntu Bold",
+        "size": 47
+      },
+      {
+        "text": "02 / 04",
+        "bounds": [
+          1458,
+          62,
+          1530,
+          84
+        ],
+        "font": "Ubuntu Medium",
+        "size": 23
+      }
+    ],
+    "workflow-2": [
+      {
+        "text": "IN THE EDITOR",
+        "bounds": [
+          54,
+          39,
+          211.0,
+          58
+        ],
+        "font": "Ubuntu Medium",
+        "size": 19
+      },
+      {
+        "text": "Add direction.",
+        "bounds": [
+          51,
+          79,
+          369,
+          116
+        ],
+        "font": "Ubuntu Bold",
+        "size": 47
+      },
+      {
+        "text": "03 / 04",
+        "bounds": [
+          1458,
+          62,
+          1530,
+          84
+        ],
+        "font": "Ubuntu Medium",
+        "size": 23
+      }
+    ],
+    "workflow-3": [
+      {
+        "text": "IN THE EDITOR",
+        "bounds": [
+          54,
+          39,
+          211.0,
+          58
+        ],
+        "font": "Ubuntu Medium",
+        "size": 19
+      },
+      {
+        "text": "Leave a short note.",
+        "bounds": [
+          51,
+          79,
+          480,
+          116
+        ],
+        "font": "Ubuntu Bold",
+        "size": 47
+      },
+      {
+        "text": "04 / 04",
+        "bounds": [
+          1458,
+          62,
+          1530,
+          84
+        ],
+        "font": "Ubuntu Medium",
+        "size": 23
+      }
+    ],
+    "download-button.png": [
+      {
+        "text": "Download for Windows",
+        "bounds": [
+          103,
+          24,
+          462,
+          49
+        ],
+        "font": "Ubuntu Medium",
+        "size": 33
+      },
+      {
+        "text": "x64  \u00b7  v1.0.1  \u00b7  free",
+        "bounds": [
+          104,
+          74,
+          286,
+          90
+        ],
+        "font": "Ubuntu Regular",
+        "size": 21
+      }
+    ],
+    "social-card.png": [
+      {
+        "text": "Zipshot",
+        "bounds": [
+          133,
+          48,
+          306,
+          94
+        ],
+        "font": "Ubuntu Bold",
+        "size": 48
+      },
+      {
+        "text": "Capture.",
+        "bounds": [
+          49,
+          175,
+          365,
+          243
+        ],
+        "font": "Ubuntu Bold",
+        "size": 77
+      },
+      {
+        "text": "Annotate.",
+        "bounds": [
+          49,
+          264,
+          417,
+          318
+        ],
+        "font": "Ubuntu Bold",
+        "size": 77
+      },
+      {
+        "text": "Done.",
+        "bounds": [
+          49,
+          353,
+          262,
+          407
+        ],
+        "font": "Ubuntu Bold",
+        "size": 77
+      },
+      {
+        "text": "Native Windows screenshots.",
+        "bounds": [
+          52,
+          527,
+          383,
+          546
+        ],
+        "font": "Ubuntu Regular",
+        "size": 25
+      },
+      {
+        "text": "Free. Open source. GPLv3+.",
+        "bounds": [
+          52,
+          580,
+          351,
+          601
+        ],
+        "font": "Ubuntu Regular",
+        "size": 24
+      }
+    ]
+  }
+}

@@ -1,51 +1,65 @@
 <p align="center">
-  <img src="res/app.png" width="72" height="72" alt="Zipshot icon">
+  <picture>
+    <source media="(max-width: 640px)" srcset="media/showcase/hero-mobile.png">
+    <img src="media/showcase/hero-desktop.png" alt="Zipshot. Native screenshots and annotations for Windows." width="1600">
+  </picture>
 </p>
-<h1 align="center">Zipshot</h1>
-<p align="center">Screenshots and quick annotations for Windows.</p>
 <p align="center">
-  <a href="https://github.com/So2K/Zipshot/releases/latest"><strong>Download for Windows x64</strong></a>
-  &nbsp;·&nbsp; <a href="#get-started">Get started</a>
-  &nbsp;·&nbsp; <a href="docs/benchmark/README.md">Benchmarks</a>
+  <a href="https://github.com/So2K/Zipshot/releases/latest"><img src="media/showcase/download-button.png" alt="Download Zipshot for Windows x64" width="240"></a>
+</p>
+<p align="center">
+  <a href="https://github.com/So2K/Zipshot/releases/download/v1.0.1/zipshot-vs-sharex.mp4">Watch&nbsp;the&nbsp;demo</a>
+  &nbsp;·&nbsp; <a href="docs/benchmark/README.md">Read&nbsp;the&nbsp;benchmark</a>
+  &nbsp;·&nbsp; <a href="#get-started">Get&nbsp;started</a>
 </p>
 
-Capture a window or region, point out what matters, and copy or save the result. Zipshot brings familiar ShareX-style tools into a native Windows editor.
+Capture what you need, add context, and copy or save the result. Zipshot brings familiar ShareX-style tools into a native Windows editor.
 
-![Zipshot's Windows editor showing an annotated capture](media/page/editor-overview.png)
+The 19.6 ms figure is the median from [our warm capture API test](docs/benchmark/README.md). It excludes the interface, editing and saving. The 1.9 MB executable does not include optional FFmpeg or sticker packs.
 
-## Capture, mark up, send it along
+## Make the point
 
-Add an arrow, highlight a detail, blur a fragment, or leave a short note. Undo and adjust until the image says what you need.
+<picture>
+  <source media="(max-width: 640px)" srcset="media/showcase/feature-mobile.png">
+  <img src="media/showcase/feature-desktop.png" alt="Capture a detail, annotate it, and save the result with Zipshot's native tools." width="1600">
+</picture>
 
-![A sequence of annotations made in the real Zipshot editor](media/page/annotation-flow.png)
+Capture a window, one monitor, the desktop, or a region. Return to the previous selection when you need another shot.
 
-*Scripted renders using Zipshot's editor. Playback illustrates the workflow; it is not a speed measurement. [Image notes](media/page/README.md).*
+Annotate with arrows, shapes, text, step labels and highlights. Blur or pixelate a fragment, add an image, and undo or adjust your edits.
 
-- **Capture what you need:** the desktop, an active window, one monitor, a region, or the previous selection.
-- **Make the point:** arrows, rectangles, text, step labels, freehand strokes, highlights, blur and pixelation. Add images or optional stickers.
-- **Finish the image:** crop, resize, rotate, adjust the canvas, apply effects, or combine captures. Save locally, copy to the clipboard, or return to the editor from a notification.
-- **Record a region:** MP4 or GIF with an optional FFmpeg installation, with pause/resume controls and configurable audio input.
-- **Keep familiar settings:** Russian and English UI, configurable hotkeys, and import of supported ShareX settings.
+Save locally or copy to the clipboard. Crop, resize, rotate, apply effects, or combine captures before sending them along.
 
-## Capture performance
+## A few edits, one clear image
 
-![Measured warm capture API latency: Zipshot 19.6 ms, ShareX 18.0.1 57.3 ms](media/page/capture-benchmark.png)
+![Four steps in Zipshot's editor, adding a rectangle, arrow and note to a capture](media/showcase/workflow.png)
 
-On the test machine, Zipshot's warm full-desktop capture API took **19.6 ms median**, compared with **57.3 ms** for the installed **ShareX 18.0.1**: about **2.9× faster**, with 60 measured calls per application. These timings exclude hotkey dispatch, editing, encoding and saving. See the [methodology and limitations](docs/benchmark/README.md) and [raw measurements](docs/benchmark/capture-results.json).
+Scripted renders using Zipshot's editor show the steps. Playback illustrates the workflow and is not a speed measurement. [Image notes](media/showcase/README.md).
+
+## 2.9× faster capture in this test
+
+<picture>
+  <source media="(max-width: 640px)" srcset="media/showcase/benchmark-mobile.png">
+  <img src="media/page/capture-benchmark.png" alt="Warm capture API benchmark, Zipshot 19.6 ms median and ShareX 18.0.1 57.3 ms median, with 60 captures per app." width="1400">
+</picture>
+
+On the test machine, Zipshot's warm full-desktop capture API took 19.6 ms median, compared with 57.3 ms for the installed ShareX 18.0.1. That is about 2.9× faster across 60 measured calls per application. These timings exclude hotkey dispatch, editing, encoding and saving. See the [methodology and limits](docs/benchmark/README.md) and [raw measurements](docs/benchmark/capture-results.json).
 
 [Watch the 68-second Russian walkthrough and comparison](https://github.com/So2K/Zipshot/releases/download/v1.0.1/zipshot-vs-sharex.mp4) · [Russian subtitles](media/narration.srt)
 
-The video includes narration, an original soundtrack and the editor working on synthetic demo data. Its scripted editing sequence is illustrative; only the separately described API measurements are timed results.
+The video includes narration, an original soundtrack and the editor working on synthetic demo data. Its editing sequence is scripted. Only the separately described API measurements are timed results.
 
 ## Get started
 
 1. [Download Zipshot 1.0.1](https://github.com/So2K/Zipshot/releases/latest), extract the archive to a writable folder, and run `zipshot.exe`.
-2. Press **Ctrl+PrtScn**, drag a region or click a window, and capture. **Esc** cancels the selection.
-3. Click the capture notification to open the editor. Add your annotations, then press **Enter** to save, copy and close.
+2. Press Ctrl+PrtScn, drag a region or click a window, and capture. Esc cancels the selection.
+3. Click the capture notification to open the editor. Add your annotations, then press Enter to save, copy and close.
 
-Zipshot stays in the system tray; its menu provides capture commands, settings and Exit. If another capture tool already owns a hotkey, change or disable the conflicting binding in that tool or in Zipshot. The release executable is unsigned; SHA-256 checksums are published with the release.
+Zipshot stays in the system tray. Its menu provides capture commands, settings and Exit. If another capture tool already owns a hotkey, change or disable the conflicting binding in that tool or in Zipshot. The Windows x64 executable is 1.9 MB, or 1,912,320 bytes. It is unsigned, with SHA-256 checksums published in the release.
 
-On first launch, Zipshot attempts to import supported ShareX settings into `zipshot.ini` beside the executable. Otherwise captures go to **Pictures\Zipshot**, organized by month. By default, images are copied and saved; opaque PNGs over 2 MB are saved as JPEG. These after-capture tasks and the size threshold are configurable.
+On first launch, Zipshot attempts to import supported ShareX settings into `zipshot.ini` beside the executable. Otherwise captures go to Pictures\Zipshot, organized by month. By default, images are copied and saved. Opaque PNGs over 2 MB are saved as JPEG. These after-capture tasks and the size threshold are configurable.
+
+Russian and English UI are included, along with custom hotkeys and optional sticker packs. Region recording to MP4 or GIF uses a separate FFmpeg installation.
 
 ### Default hotkeys
 
@@ -57,21 +71,21 @@ On first launch, Zipshot attempts to import supported ShareX settings into `zips
 | Shift+PrtScn | Start/stop MP4 recording |
 | Ctrl+Shift+PrtScn | Start/stop GIF recording |
 
-Imported or configured bindings override these defaults. In the editor, **Ctrl+S** saves, **Ctrl+Shift+S** saves as, **Ctrl+C** copies, and **Ctrl+Z / Ctrl+Y** undo/redo. Use the mouse wheel to zoom, middle-drag to pan, and **Ctrl+0** to fit the image. Text entry and unfinished selections have their own Enter/Esc behavior.
+Imported or configured bindings override these defaults. In the editor, Ctrl+S saves, Ctrl+Shift+S saves as, Ctrl+C copies, and Ctrl+Z / Ctrl+Y undo/redo. Use the mouse wheel to zoom, middle-drag to pan, and Ctrl+0 to fit the image. Text entry and unfinished selections have their own Enter/Esc behavior.
 
 <details>
-<summary><strong>Recording and FFmpeg</strong></summary>
+<summary>Recording and FFmpeg</summary>
 
-Install FFmpeg separately and place `ffmpeg.exe` beside Zipshot, add it to `PATH`, or set `[main] FFmpeg` in `zipshot.ini` to its full path. Encoder and capture-filter availability depend on that FFmpeg build and the machine; NVENC is optional and alternative recording paths are attempted. See [dependency notices](THIRD_PARTY_NOTICES.md).
+Install FFmpeg separately and place `ffmpeg.exe` beside Zipshot, add it to `PATH`, or set `[main] FFmpeg` in `zipshot.ini` to its full path. Recording supports pause/resume controls and a configurable audio input. Encoder and capture-filter availability depend on that FFmpeg build and the machine. NVENC is optional and alternative recording paths are attempted. See [dependency notices](THIRD_PARTY_NOTICES.md).
 
 </details>
 
 <details>
-<summary><strong>Settings, custom hotkeys and logs</strong></summary>
+<summary>Settings, custom hotkeys and logs</summary>
 
 `zipshot.ini` stores the save directory, naming patterns, language, after-capture tasks, annotation options and recording settings. Common `[main]` keys are `SaveDir`, `JpegOverKB`, `JpegQuality`, `Sound`, `Language`, `AfterCopy`, `AfterSave`, `AfterToast`, `AfterEditor` and `FFmpeg`.
 
-A `[hotkeys]` section defines the complete binding set: omitted or empty entries are disabled. Separate alternatives with `;`. For example:
+A `[hotkeys]` section defines the complete binding set. Omitted or empty entries are disabled. Separate alternatives with `;`.
 
 ```ini
 [hotkeys]
@@ -89,9 +103,9 @@ Restart Zipshot or use its hotkey re-registration command after editing bindings
 </details>
 
 <details>
-<summary><strong>Build from source and run the checks</strong></summary>
+<summary>Build from source and run the checks</summary>
 
-Zipshot is written in C++ with Win32, Direct2D and Windows Imaging Component, using the static C++ runtime. Install Visual Studio 2022 or Build Tools with **Desktop development with C++** and a Windows SDK, then run from the repository root:
+Zipshot is written in C++ with Win32, Direct2D and Windows Imaging Component, using the static C++ runtime. Install Visual Studio 2022 or Build Tools with Desktop development with C++ and a Windows SDK, then run from the repository root.
 
 ```bat
 build.bat
@@ -107,6 +121,10 @@ The regression runners use synthetic images and isolated outputs; they do not ca
 
 ## Scope and license
 
-Zipshot focuses on local capture and editing. Upload, destination and workflow entries are unavailable placeholders; it does not implement every ShareX feature. Recording/audio devices, every editor tool and the full range of GPU/display configurations have not been exhaustively tested; see the [audit](docs/AUDIT.md).
+Zipshot focuses on local capture and editing. Upload, destination and workflow entries are unavailable placeholders. It does not implement every ShareX feature. Recording/audio devices, every editor tool and the full range of GPU/display configurations have not been exhaustively tested. See the [audit](docs/AUDIT.md).
 
 GNU GPL version 3 or later. See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md) for ShareX resources, Fugue Icons, optional sticker packs and FFmpeg. Zipshot is an independent project and is not endorsed by the ShareX team.
+
+## Help improve Zipshot
+
+Found a problem or have an idea? [Open an issue](https://github.com/So2K/Zipshot/issues/new) with the steps and expected result. Code improvements are welcome through [pull requests](https://github.com/So2K/Zipshot/pulls).
