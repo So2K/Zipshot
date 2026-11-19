@@ -4,6 +4,7 @@
 #include "../src/combine.h"
 #include "../src/clipboard_shelf.h"
 #include "../src/sharex_import.h"
+#include "../src/cursor_video.h"
 #include <commctrl.h>
 #include <dwmapi.h>
 #include <shlobj.h>
@@ -31,6 +32,11 @@ std::mutex queueMutex;
 std::deque<std::function<void()>> callbacks;
 std::map<std::wstring, bool> settings;
 std::atomic<int> readCalls{0}, storeCalls{0}, forbiddenCalls{0};
+std::atomic<int> trackLoads{0}, videoRenders{0};
+std::atomic_bool holdRender{false}, holdStore{false}, trackValid{true}, renderSucceeds{true};
+std::mutex videoMutex;
+std::wstring renderedOriginal, renderedOutput;
+bool renderedForceAll = false, recorderBusy = false, recorderActive = false, ffmpegAvailable = true;
 bool mediaAvailable = true, controlDown = false, english = false;
 HWND virtualFocus = nullptr;
 HDC renderDC = nullptr;
@@ -149,6 +155,26 @@ void TouchAt(const std::wstring& path, uint64_t ordinal) {
     if (file == INVALID_HANDLE_VALUE || !SetFileTime(file, &ft, &ft, &ft)) ++forbiddenCalls;
     if (file != INVALID_HANDLE_VALUE) CloseHandle(file);
 }
+
+std::string ReadBytes(const std::wstring& path) {
+    std::ifstream file(std::filesystem::path(path), std::ios::binary);
+    return {std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
+}
+
+bool WriteNew(const std::wstring& path, const std::string& bytes) {
+    HANDLE file = CreateFileW(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file == INVALID_HANDLE_VALUE) return false;
+    DWORD written = 0;
+    const bool ok = WriteFile(file, bytes.data(), static_cast<DWORD>(bytes.size()), &written, nullptr) && written == bytes.size();
+    CloseHandle(file);
+    return ok;
+}
+
+void Hold(std::atomic_bool& flag) {
+    const auto end = std::chrono::steady_clock::now() + std::chrono::seconds(10);
+    while (flag.load() && std::chrono::steady_clock::now() < end)
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+}
 }  // namespace test
 
 HINSTANCE g_inst = nullptr;
@@ -182,6 +208,9 @@ void OpenEditor(ImagePtr, const std::wstring&) { ++test::forbiddenCalls; }
 void CopyImageToClipboard(const Image&) { ++test::forbiddenCalls; }
 void CopyFileToClipboard(const std::wstring&) { ++test::forbiddenCalls; }
 void PlayUiSound(Sound) {}
+bool RecorderBusy() { return test::recorderBusy; }
+bool RecorderActive() { return test::recorderActive; }
+std::wstring FindFFmpeg() { return test::ffmpegAvailable ? L"synthetic-ffmpeg-not-executed.exe" : L""; }
 CombineOptions LoadCombineOptions() { return {}; }
 bool ShowCombineDialog(HWND, std::vector<std::wstring>&, CombineOptions&) { ++test::forbiddenCalls; return false; }
 void CombineFilesAsync(std::vector<std::wstring>, CombineOptions,
@@ -212,6 +241,7 @@ bool ReadClipboard(HWND, Payload& out, std::wstring& error) {
 }
 SaveResult Store(Payload data) {
     const int number = ++test::storeCalls;
+    test::Hold(test::holdStore);
     const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
     const std::wstring path = Directory() + L"\\Вставка_" + std::to_wstring(number) + L".png";
     const bool ok = test::WritePng(data.image, path);
@@ -220,6 +250,34 @@ SaveResult Store(Payload data) {
     return ok ? SaveResult{{path}, L""} : SaveResult{{}, L"Synthetic PNG could not be written"};
 }
 }  // namespace shelf
+
+namespace cursor_video {
+std::wstring TrackPath(const std::wstring& original) { return original + L".cursor.json"; }
+bool LoadTrack(const std::wstring&, Track& track, std::wstring* error) {
+    ++test::trackLoads;
+    if (!test::trackValid.load()) {
+        if (error) *error = L"Synthetic cursor track is invalid";
+        return false;
+    }
+    track.width = 640; track.height = 480; track.fps = 30; track.duration = 1;
+    track.samples = {{0, .5, .5, true}};
+    return true;
+}
+Result Render(const std::wstring&, const std::wstring& original, const Track&,
+              const std::wstring& output, bool forceAllFollow) {
+    {
+        std::lock_guard lock(test::videoMutex);
+        test::renderedOriginal = original;
+        test::renderedOutput = output;
+        test::renderedForceAll = forceAllFollow;
+    }
+    ++test::videoRenders;
+    test::Hold(test::holdRender);
+    if (!test::renderSucceeds.load()) return {false, L"Synthetic encoder failure. Original unchanged"};
+    return test::WriteNew(output, "synthetic-focus-output") ? Result{true, {}}
+         : Result{false, L"Synthetic output already exists or cannot be written"};
+}
+}  // namespace cursor_video
 
 #define ShowWindow test::HiddenShowWindow
 #define SetForegroundWindow test::BlockForeground
@@ -338,6 +396,138 @@ bool Preview(const std::wstring& path) {
     DeleteDC(dc);
     std::set<uint32_t> colors(image.px.begin(), image.px.end());
     return colors.size() > 32 && WritePng(image, path);
+}
+
+void CursorFollowCases(const std::wstring& video, const std::wstring& image) {
+    Entry entry;
+    entry.path = video; entry.name = L"Ролик.MP4"; entry.kind = K_Mp4;
+    HMENU menu = BuildTileMenu(entry, false);
+    const UINT unsupported = GetMenuState(menu, M_CursorFollow, MF_BYCOMMAND);
+    wchar_t hint[256]{};
+    GetMenuStringW(menu, 2, hint, std::size(hint), MF_BYPOSITION);
+    Check(unsupported != static_cast<UINT>(-1) && (unsupported & MF_GRAYED) &&
+          std::wstring(hint).find(L"Zipshot") != std::wstring::npos,
+          "legacy video has a disabled follow action with a new-Zipshot-recording explanation");
+    DestroyMenu(menu);
+    const int beforeLoads = trackLoads, beforeRenders = videoRenders;
+    StartCursorFollow(video);
+    Check(!MainWindowMediaBusy() && trackLoads == beforeLoads && videoRenders == beforeRenders && !g_mw->notice.empty(),
+          "video without sidecar never starts cursor processing or infers a cursor");
+    Entry photo;
+    photo.path = image; photo.kind = K_Image;
+    menu = BuildTileMenu(photo, false);
+    Check(GetMenuState(menu, M_CursorFollow, MF_BYCOMMAND) == static_cast<UINT>(-1),
+          "photo context menu does not offer video cursor processing");
+    DestroyMenu(menu);
+
+    { std::ofstream file(std::filesystem::path(video), std::ios::binary | std::ios::trunc); file << "synthetic-original-video"; }
+    const std::string sourceBytes = ReadBytes(video);
+    Check(WriteNew(cursor_video::TrackPath(video), "synthetic-sidecar"), "cursor sidecar fixture is created only in owned test catalog");
+    menu = BuildTileMenu(entry, false);
+    const UINT enabled = GetMenuState(menu, M_CursorFollow, MF_BYCOMMAND);
+    Check(enabled != static_cast<UINT>(-1) && !(enabled & (MF_GRAYED | MF_DISABLED)),
+          "new Zipshot video with a sidecar enables follow action");
+    Check(GetMenuDefaultItem(menu, FALSE, 0) == M_Open, "video double-click default remains Open");
+    DestroyMenu(menu);
+
+    recorderActive = true;
+    StartCursorFollow(video);
+    menu = BuildTileMenu(entry, false);
+    Check(!MainWindowMediaBusy() && trackLoads == beforeLoads &&
+          (GetMenuState(menu, M_CursorFollow, MF_BYCOMMAND) & MF_GRAYED),
+          "live screen recording disables follow export and never starts the backend");
+    DestroyMenu(menu);
+    recorderActive = false;
+    recorderBusy = true;
+    StartCursorFollow(video);
+    Check(!MainWindowMediaBusy() && trackLoads == beforeLoads, "screen-recording busy guard blocks post-processing before backend load");
+    recorderBusy = false;
+    ffmpegAvailable = false;
+    StartCursorFollow(video);
+    Check(!MainWindowMediaBusy() && trackLoads == beforeLoads && !g_mw->notice.empty(),
+          "missing FFmpeg gives inline feedback without a worker");
+    ffmpegAvailable = true;
+
+    Query(L"Ролик.MP4");
+    SelectPath(video);
+    holdRender = true;
+    StartCursorFollow(video);
+    StartCursorFollow(video);
+    Check(MainWindowMediaBusy(), "cursor video export marks process-wide media work busy");
+    Check(Wait([&] { return videoRenders == beforeRenders + 1; }), "duplicate export requests start exactly one background renderer");
+    menu = BuildTileMenu(entry, false);
+    Check(GetMenuState(menu, M_CursorFollow, MF_BYCOMMAND) & MF_GRAYED, "follow menu action is disabled while an export is running");
+    DestroyMenu(menu);
+    holdRender = false;
+    Check(Wait([] { return !MainWindowMediaBusy(); }), "successful cursor export completes through main-thread callback");
+    const std::wstring focused = video.substr(0, video.find_last_of(L'.')) + L"_focus.mp4";
+    Check(SelectedPath() == focused && g_mw->filter == gallery::Filter::Videos && g_mw->query.empty(),
+          "successful follow output is rescanned and selected in Videos with cleared search");
+    {
+        std::lock_guard lock(videoMutex);
+        Check(renderedOriginal == video && renderedOutput == focused && renderedForceAll,
+              "renderer receives original path, a separate focus output and force-all-follow mode");
+    }
+    const std::string focusedBytes = ReadBytes(focused);
+    Check(ReadBytes(video) == sourceBytes && !focusedBytes.empty(), "successful focus export retains all original source bytes");
+
+    const int beforeCollision = videoRenders;
+    StartCursorFollow(video);
+    Check(Wait([&] { return !MainWindowMediaBusy() && videoRenders == beforeCollision + 1; }), "repeated export with an existing focus file completes");
+    const std::wstring secondFocus = SelectedPath();
+    Check(secondFocus != video && secondFocus != focused && secondFocus.find(L"_focus") != std::wstring::npos &&
+          ReadBytes(focused) == focusedBytes && ReadBytes(video) == sourceBytes,
+          "existing focus file and original are never overwritten when a second copy is created");
+
+    Query(L"Ролик.MP4");
+    SelectPath(video);
+    trackValid = false;
+    const int rendersBeforeBadTrack = videoRenders;
+    StartCursorFollow(video);
+    Check(Wait([] { return !MainWindowMediaBusy(); }) && videoRenders == rendersBeforeBadTrack &&
+          SelectedPath() == video && g_mw->query == L"Ролик.MP4" && !g_mw->notice.empty() && ReadBytes(video) == sourceBytes,
+          "bad sidecar reports inline failure, never calls renderer and preserves original selection and bytes");
+    trackValid = true;
+    renderSucceeds = false;
+    StartCursorFollow(video);
+    Check(Wait([] { return !MainWindowMediaBusy(); }) && SelectedPath() == video &&
+          g_mw->query == L"Ролик.MP4" && !g_mw->notice.empty() && ReadBytes(video) == sourceBytes,
+          "encoder failure leaves original file and current view unchanged");
+    renderSucceeds = true;
+
+    holdRender = true;
+    const int beforeReopen = videoRenders;
+    const unsigned originalSession = g_mw->session;
+    StartCursorFollow(video);
+    Check(Wait([&] { return videoRenders == beforeReopen + 1; }), "held export entered the synthetic renderer");
+    DestroyWindow(g_mw->hwnd);
+    Check(!g_mw && MainWindowMediaBusy(), "export busy state survives destruction of the gallery window");
+    ShowMainWindow();
+    Check(g_mw && g_mw->session != originalSession && MainWindowMediaBusy(), "reopened gallery retains process-wide export busy guard");
+    if (!g_mw) { holdRender = false; return; }
+    StartCursorFollow(video);
+    Check(videoRenders == beforeReopen + 1, "reopening the window cannot start a duplicate export");
+    holdRender = false;
+    Check(Wait([] { return !MainWindowMediaBusy(); }) && SelectedPath() != video &&
+          SelectedPath().find(L"_focus") != std::wstring::npos && ReadBytes(video) == sourceBytes,
+          "finished export refreshes and selects its new copy in the reopened gallery");
+
+    mediaAvailable = true;
+    holdStore = true;
+    const int beforeStore = storeCalls;
+    PasteToShelf();
+    Check(Wait([&] { return storeCalls == beforeStore + 1; }) && MainWindowMediaBusy(), "held paste is counted as process-wide media work");
+    DestroyWindow(g_mw->hwnd);
+    Check(!g_mw && MainWindowMediaBusy(), "paste worker remains busy after its gallery window closes");
+    ShowMainWindow();
+    if (!g_mw) { holdStore = false; Check(false, "gallery reopens during held paste"); return; }
+    const int readsDuringStore = readCalls;
+    PasteToShelf();
+    Check(readCalls == readsDuringStore && MainWindowMediaBusy(), "reopened window does not duplicate an unfinished clipboard copy");
+    holdStore = false;
+    Check(Wait([] { return !MainWindowMediaBusy(); }) &&
+          GetFileAttributesW((shelf::Directory() + L"\\Вставка_" + std::to_wstring(beforeStore + 1) + L".png").c_str()) != INVALID_FILE_ATTRIBUTES,
+          "paste completes safely after window replacement and releases global busy state");
 }
 }  // namespace test
 
@@ -500,6 +690,7 @@ int wmain(int argc, wchar_t** argv) {
     test::Check(!IsWindowVisible(g_mw->hwnd) && GetForegroundWindow() != g_mw->hwnd &&
                 test::foregroundBlocked > 0 && test::topLevelShowBlocked > 0,
                 "test window never activates and all top-level show requests are blocked");
+    test::CursorFollowCases(video, archive);
     std::weak_ptr<Worker> stopping = g_worker;
     DestroyWindow(g_mw->hwnd);
     test::Check(test::Wait([&] { return stopping.expired(); }), "owned thumbnail worker exits after window teardown");

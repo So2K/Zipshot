@@ -49,6 +49,7 @@ void ShowMainWindow();
 void MainWindowNotifyCapture(const std::wstring& path);  // a file was just saved (still, GIF or video)
 void MainWindowRefresh();                                 // language/settings changed: relayout + repaint if open
 bool MainWindowWriteReady(const std::wstring& path);       // optional CLI readiness report, no image/file names
+bool MainWindowMediaBusy();                               // explicit paste or cursor-focus export in progress
 
 // sharex_import.cpp
 bool ImportShareXSettings(std::wstring& report);         // ShareX configs -> zipshot.ini; false if none found

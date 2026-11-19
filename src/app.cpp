@@ -41,6 +41,8 @@ std::vector<Bound> g_bound;  // RegisterHotKey id = index + 1
 
 UINT g_taskbarCreated;
 constexpr UINT_PTR kTrayClickTimer = 7;
+constexpr UINT_PTR kQuitAfterSaveTimer = 8;
+bool g_quitAfterSave = false;
 bool g_trayDouble = false;
 NOTIFYICONDATAW g_nid{};
 std::wstring g_failedHotkeys;
@@ -273,6 +275,7 @@ void ImportShareXNow() {
 }
 
 void Run(int cmd) {
+    if (g_quitAfterSave && cmd != C_Quit) return;
     switch (cmd) {
     case C_Full: CaptureFull(); break;
     case C_Region: CaptureRegion(false, false); break;
@@ -301,7 +304,14 @@ void Run(int cmd) {
             if (LoadImageFile(g_lastPath, *img)) OpenEditor(img, g_lastPath);
         }
         break;
-    case C_Quit: DestroyWindow(g_main); break;
+    case C_Quit:
+        // Finish owned encoding/copy work before exiting instead of orphaning an encoder.
+        g_quitAfterSave = true;
+        KillTimer(g_main, kTrayClickTimer);
+        if (RecorderActive()) RecorderStop();
+        if (RecorderBusy() || MainWindowMediaBusy()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
+        else DestroyWindow(g_main);
+        break;
     case C_ShowMain: ShowMainWindow(); break;
     case C_ToggleAutostart: SetAutostart(!AutostartEnabled()); break;
     case C_ImportShareX: ImportShareXNow(); break;
@@ -405,9 +415,11 @@ int ParseCmd(const std::wstring& s) {
 LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
     switch (m) {
     case WM_HOTKEY:
+        if (g_quitAfterSave) return 0;
         if (w >= 1 && w <= g_bound.size()) Run(g_bound[w - 1].cmd);
         return 0;
     case WM_TRAY:
+        if (g_quitAfterSave) return 0;
         // Single click = region capture, but only once the double-click time has passed without a second
         // click; a double click opens the main window and takes no screenshot.
         if (LOWORD(l) == WM_LBUTTONUP) {
@@ -422,6 +434,13 @@ LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         }
         return 0;
     case WM_TIMER:
+        if (w == kQuitAfterSaveTimer) {
+            if (!RecorderBusy() && !MainWindowMediaBusy()) {
+                KillTimer(h, kQuitAfterSaveTimer);
+                DestroyWindow(h);
+            }
+            return 0;
+        }
         if (w == kTrayClickTimer) {
             KillTimer(h, kTrayClickTimer);
             Run(C_Region);
@@ -441,6 +460,7 @@ LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         return 0;
     }
     case WM_COPYDATA: {
+        if (g_quitAfterSave) return FALSE;
         auto* cd = (COPYDATASTRUCT*)l;
         // WM_COPYDATA is public IPC: reject malformed/non-wide payloads before reading them.
         if (!cd || !cd->lpData || !cd->cbData || cd->cbData > 128 * 1024 || cd->cbData % sizeof(wchar_t)) return FALSE;

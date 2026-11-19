@@ -1,6 +1,7 @@
 #include "common.h"
 #include "capture_ext.h"
 #include "sharex_import.h"
+#include "cursor_video.h"
 #include <dxgi.h>
 #include <wrl/client.h>
 #include <algorithm>
@@ -26,6 +27,7 @@ namespace {
 struct RecCfg {
     int videoFps = 30, gifFps = 15, crf = 23, nvencCq = 23, bayerScale = 2;
     bool cursor = true;
+    bool followCursor = false;
     std::wstring preset = L"ultrafast", dither = L"sierra2_4a", stats = L"full";
     std::wstring audio;               // dshow device name, empty = no audio (ShareX AudioSource)
     std::wstring audioCodec = L"aac"; // aac | opus | mp3
@@ -48,6 +50,7 @@ RecCfg LoadRecCfg() {
     c.nvencCq = std::clamp(IniInt(L"record", L"NvencCq", c.nvencCq), 0, 51);
     c.bayerScale = std::clamp(IniInt(L"record", L"GifBayerScale", c.bayerScale), 0, 5);
     c.cursor = IniInt(L"record", L"ShowCursor", 1) != 0;
+    c.followCursor = IniInt(L"record", L"FollowCursor", 0) != 0;
     c.preset = Pick(IniString(L"record", L"X264Preset", L""),
                     {L"ultrafast", L"superfast", L"veryfast", L"faster", L"fast", L"medium", L"slow", L"slower", L"veryslow", L"placebo"},
                     L"ultrafast");
@@ -87,6 +90,10 @@ struct Rec {
     DWORD segStart = 0, recordedMs = 0, countdownEnd = 0;
     int shownCount = -1;
     HWND frame = nullptr, panel = nullptr;
+    bool followEnabled = false, followHotkey = false, cursorLimitReached = false;
+    std::vector<cursor_follow::Sample> cursorSamples;
+    size_t segmentSampleStart = 0;
+    DWORD lastCursorTick = 0;
     RecCfg cfg;
 } g;
 
@@ -220,9 +227,64 @@ void BuildVariants(RECT mon, int outIdx) {
 
 // ---------- on-screen frame + control panel (excluded from capture) ----------
 
-constexpr UINT_PTR kTimerTick = 1, kTimerCheck = 2;
+constexpr UINT_PTR kTimerTick = 1, kTimerCheck = 2, kTimerCursor = 3;
+constexpr int kFollowHotkey = 0x5A46;
+constexpr size_t kMaxCursorSamples = 2000000;
 
-DWORD Elapsed() { return g.recordedMs + (g.state == RS_Recording ? GetTickCount() - g.segStart : 0); }
+DWORD ElapsedAt(DWORD now) { return g.recordedMs + (g.state == RS_Recording ? now - g.segStart : 0); }
+DWORD Elapsed() { return ElapsedAt(GetTickCount()); }
+
+void RecordCursorSample(bool force = false) {
+    // No background monitoring: waiting/countdown/paused/GIF never read cursor.
+    if (!g.active || g.gif || g.state != RS_Recording) return;
+    if (g.cursorLimitReached) return;
+    const DWORD now = GetTickCount();
+    if (!force && now - g.lastCursorTick < 15) return;
+    g.lastCursorTick = now;
+    cursor_follow::Sample sample;
+    sample.t = ElapsedAt(now) / 1000.0;
+    sample.enabled = g.followEnabled;
+    if (g.cursorSamples.size() >= kMaxCursorSamples) {
+        sample.enabled = sample.visible = false;
+        g.cursorSamples.back() = sample;
+        g.cursorLimitReached = true;
+        g.followEnabled = false;
+        return;
+    }
+    CURSORINFO cursor{sizeof(cursor)};
+    const bool available = GetCursorInfo(&cursor) != FALSE;
+    const int width = g.r.right - g.r.left, height = g.r.bottom - g.r.top;
+    sample.visible = available && (cursor.flags & CURSOR_SHOWING) && width > 0 && height > 0 &&
+                     cursor.ptScreenPos.x >= g.r.left && cursor.ptScreenPos.x < g.r.right &&
+                     cursor.ptScreenPos.y >= g.r.top && cursor.ptScreenPos.y < g.r.bottom;
+    if (sample.visible) {
+        sample.x = double(cursor.ptScreenPos.x - g.r.left) / width;
+        sample.y = double(cursor.ptScreenPos.y - g.r.top) / height;
+    }
+    // Keep segment boundaries separate so failed-start rollback cannot modify
+    // a sample belonging to the previous successfully completed segment.
+    if (g.cursorSamples.size() > g.segmentSampleStart && g.cursorSamples.back().t == sample.t)
+        g.cursorSamples.back() = sample;
+    else {
+        try { g.cursorSamples.push_back(sample); }
+        catch (const std::bad_alloc&) {
+            sample.enabled = sample.visible = false;
+            if (!g.cursorSamples.empty()) g.cursorSamples.back() = sample;
+            g.cursorLimitReached = true;
+            g.followEnabled = false;
+        }
+    }
+}
+
+void Redraw();
+void ToggleFollow() {
+    if (!g.active || g.gif || g.cursorLimitReached) return;
+    g.followEnabled = !g.followEnabled;
+    EnsureUnicodeIni();
+    WritePrivateProfileStringW(L"record", L"FollowCursor", g.followEnabled ? L"1" : L"0", ZipshotIni().c_str());
+    RecordCursorSample(true);
+    Redraw();
+}
 
 // Border like ShareX's ScreenRecordForm: yellow while waiting/counting down/paused, red (GIF: orange) while recording.
 // During the start delay the remaining seconds are shown big in the middle.
@@ -275,7 +337,7 @@ void DrawFrame() {
     DeleteObject(bmp);
 }
 
-enum PanelBtn { PB_Start, PB_Pause, PB_Stop, PB_Abort };
+enum PanelBtn { PB_Start, PB_Pause, PB_Stop, PB_Abort, PB_Follow };
 
 std::vector<std::pair<PanelBtn, RECT>> PanelButtons() {
     std::vector<PanelBtn> kinds;
@@ -284,11 +346,16 @@ std::vector<std::pair<PanelBtn, RECT>> PanelButtons() {
     case RS_Countdown: kinds = {PB_Abort}; break;
     default: kinds = {PB_Pause, PB_Stop, PB_Abort}; break;
     }
+    if (!g.gif) kinds.insert(kinds.begin(), PB_Follow);
     RECT c;
     GetClientRect(g.panel, &c);
-    int bw = (c.bottom - c.top) * 3, x = c.right;
+    const int weight = (int)kinds.size() * 3 + (g.gif ? 0 : 2);
+    const int status = std::min(c.right / 3, c.bottom * 5);
+    const int unit = std::max(1, std::min((int)c.bottom, ((int)c.right - status) / weight));
+    int x = c.right;
     std::vector<std::pair<PanelBtn, RECT>> v(kinds.size());
     for (int i = (int)kinds.size() - 1; i >= 0; --i) {
+        const int bw = unit * (kinds[i] == PB_Follow ? 5 : 3);
         v[i] = {kinds[i], {x - bw, 0, x, c.bottom}};
         x -= bw;
     }
@@ -300,6 +367,8 @@ const wchar_t* PanelLabel(PanelBtn b) {
     case PB_Start: return Tr(L"Старт", L"Start");
     case PB_Pause: return g.state == RS_Paused ? Tr(L"Продолжить", L"Resume") : Tr(L"Пауза", L"Pause");
     case PB_Stop: return Tr(L"Стоп", L"Stop");
+    case PB_Follow: return g.cursorLimitReached ? Tr(L"Слежение: лимит", L"Follow: limit") :
+                          g.followEnabled ? Tr(L"Слежение ВКЛ", L"Follow ON") : Tr(L"Слежение ВЫКЛ", L"Follow OFF");
     default: return Tr(L"Прервать", L"Abort");
     }
 }
@@ -340,12 +409,25 @@ LRESULT CALLBACK PanelProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         for (auto& b : buttons) {
             RECT r = b.second;
             InflateRect(&r, -2, -3);
-            COLORREF fill = b.first == PB_Stop ? RGB(200, 45, 45) : b.first == PB_Start ? RGB(46, 140, 70) : RGB(58, 58, 64);
+            COLORREF fill = b.first == PB_Follow && g.followEnabled ? RGB(34, 103, 190) :
+                            b.first == PB_Stop ? RGB(200, 45, 45) : b.first == PB_Start ? RGB(46, 140, 70) : RGB(58, 58, 64);
             HBRUSH br = CreateSolidBrush(fill);
             FillRect(mdc, &r, br);
             DeleteObject(br);
             SetTextColor(mdc, RGB(240, 240, 240));
-            DrawTextW(mdc, PanelLabel(b.first), -1, &b.second, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+            if (b.first == PB_Follow) {
+                RECT label = b.second, hint = b.second;
+                label.bottom = c.bottom * 62 / 100;
+                hint.top = label.bottom - 1;
+                DrawTextW(mdc, PanelLabel(b.first), -1, &label, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+                HFONT hintFont = CreateFontW(-std::max(9L, c.bottom * 28 / 100), 0, 0, 0, FW_NORMAL, 0, 0, 0,
+                                          DEFAULT_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, L"Segoe UI");
+                HGDIOBJ oldSmall = SelectObject(mdc, hintFont);
+                const wchar_t* help = g.followHotkey ? L"Ctrl+Alt+F8" : Tr(L"Нажмите для переключения", L"Click to toggle");
+                DrawTextW(mdc, help, -1, &hint, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+                SelectObject(mdc, oldSmall);
+                DeleteObject(hintFont);
+            } else DrawTextW(mdc, PanelLabel(b.first), -1, &b.second, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
         }
         const wchar_t* status = g.state == RS_Waiting ? Tr(L"Ожидание", L"Waiting")
                               : g.state == RS_Countdown ? Tr(L"Старт через", L"Starting in")
@@ -374,6 +456,10 @@ LRESULT CALLBACK PanelProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         return 0;
     }
     case WM_TIMER:
+        if (w == kTimerCursor) {
+            RecordCursorSample();
+            return 0;
+        }
         if (w == kTimerTick) {
             if (g.state == RS_Countdown) {
                 long left = (long)(g.countdownEnd - GetTickCount());
@@ -410,8 +496,20 @@ LRESULT CALLBACK PanelProc(HWND h, UINT m, WPARAM w, LPARAM l) {
                     return 0;
                 }
                 g.segStart = GetTickCount();
+                g.cursorSamples.resize(g.segmentSampleStart);
+                g.cursorLimitReached = g.cursorSamples.size() >= kMaxCursorSamples;
+                RecordCursorSample(true);
                 SetTimer(h, kTimerCheck, 1500, nullptr);
             }
+        }
+        return 0;
+    case WM_HOTKEY:
+        if (w == kFollowHotkey) ToggleFollow();
+        return 0;
+    case WM_DESTROY:
+        if (g.followHotkey) {
+            UnregisterHotKey(h, kFollowHotkey);
+            g.followHotkey = false;
         }
         return 0;
     }
@@ -447,19 +545,32 @@ void CreateUi() {
         UINT dx, dy;
         if (SUCCEEDED(fn(mon, 0, &dx, &dy))) dpi = dx;
     }
-    int pw = MulDiv(450, dpi, 96), ph = MulDiv(30, dpi, 96);
-    int x = std::clamp<int>(g.r.right - pw, mi.rcMonitor.left, mi.rcMonitor.right - pw);
+    RECT work = mi.rcWork;
+    if (work.right <= work.left || work.bottom <= work.top) work = mi.rcMonitor;
+    const int pw = std::min<int>(MulDiv(g.gif ? 450 : 720, dpi, 96), std::max(1L, work.right - work.left));
+    const int ph = std::min<int>(MulDiv(g.gif ? 30 : 36, dpi, 96), std::max(1L, work.bottom - work.top));
+    int x = std::clamp<int>(g.r.right - pw, work.left, work.right - pw);
     int y = g.r.bottom + 6;
-    if (y + ph > mi.rcMonitor.bottom) y = g.r.top - 6 - ph;
-    if (y < mi.rcMonitor.top) y = g.r.bottom - ph - 6;  // no room outside: inside, excluded from capture anyway
+    if (y + ph > work.bottom) y = g.r.top - 6 - ph;
+    y = std::clamp<int>(y, work.top, work.bottom - ph);
     g.panel = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE, L"ZipshotRecPanel", L"", WS_POPUP, x, y, pw,
                               ph, nullptr, nullptr, g_inst, nullptr);
     SetWindowDisplayAffinity(g.panel, WDA_EXCLUDEFROMCAPTURE);
     ShowWindow(g.panel, SW_SHOWNOACTIVATE);
-    SetTimer(g.panel, kTimerTick, 50, nullptr);
+    if (g.panel) {
+        SetTimer(g.panel, kTimerTick, 50, nullptr);
+        if (!g.gif) {
+            SetTimer(g.panel, kTimerCursor, 16, nullptr);
+            g.followHotkey = RegisterHotKey(g.panel, kFollowHotkey, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, VK_F8) != FALSE;
+        }
+    }
 }
 
 void DestroyUi() {
+    if (g.panel && g.followHotkey) {
+        UnregisterHotKey(g.panel, kFollowHotkey);
+        g.followHotkey = false;
+    }
     if (g.frame) DestroyWindow(g.frame);
     if (g.panel) DestroyWindow(g.panel);
     g.frame = g.panel = nullptr;
@@ -480,6 +591,8 @@ bool StartSegment() {
     g.segs.push_back(seg);
     g.state = RS_Recording;
     g.segStart = GetTickCount();
+    g.segmentSampleStart = g.cursorSamples.size();
+    RecordCursorSample(true);
     if (g.panel) SetTimer(g.panel, kTimerCheck, 1500, nullptr);
     Redraw();
     return true;
@@ -488,6 +601,7 @@ bool StartSegment() {
 // Asks the current ffmpeg to finish its segment ('q' on stdin); it is waited for on stop.
 void EndSegment() {
     if (!g.cur.pi.hProcess) return;
+    RecordCursorSample(true);
     if (g.cur.in) {
         DWORD wr;
         WriteFile(g.cur.in, "q", 1, &wr, nullptr);
@@ -523,6 +637,7 @@ void PanelClick(PanelBtn b) {
     case PB_Pause: RecorderPauseResume(); break;
     case PB_Stop: RecorderStop(); break;
     case PB_Abort: RecorderAbort(); break;
+    case PB_Follow: ToggleFollow(); break;
     }
 }
 
@@ -575,6 +690,53 @@ bool Finalize(const std::wstring& ffmpeg, const std::vector<std::wstring>& segs,
     return ok && GetFileAttributesW(out.c_str()) != INVALID_FILE_ATTRIBUTES;
 }
 
+std::wstring FocusedOutputPath(const std::wstring& original) {
+    size_t dot = original.find_last_of(L'.'), slash = original.find_last_of(L"\\/");
+    if (dot == std::wstring::npos || (slash != std::wstring::npos && dot < slash)) dot = original.size();
+    const std::wstring stem = original.substr(0, dot);
+    for (unsigned n = 0; n < 10000; ++n) {
+        const std::wstring suffix = n ? L"_" + std::to_wstring(n + 1) : L"";
+        std::wstring candidate = stem + L"_focus" + suffix + L".mp4";
+        if (GetFileAttributesW(candidate.c_str()) == INVALID_FILE_ATTRIBUTES) return candidate;
+    }
+    return {};
+}
+
+struct CursorCompletion { std::wstring focused, warning; };
+
+CursorCompletion CompleteCursorVideo(const std::wstring& ffmpeg, const std::wstring& original,
+                                     int width, int height, double fps, double duration,
+                                     const std::vector<cursor_follow::Sample>& samples) {
+    CursorCompletion completion;
+    const cursor_video::Result saved = cursor_video::SaveTrack(original, width, height, fps, duration, samples);
+    if (!saved.ok) {
+        Log(L"recorder: cursor sidecar failed: %s", saved.error.c_str());
+        completion.warning = Tr(L"Видео сохранено; данные курсора недоступны", L"Video saved; cursor data unavailable");
+        return completion;
+    }
+    bool anyEnabled = false;
+    for (size_t i = 0; i < samples.size(); ++i) {
+        const double end = i + 1 < samples.size() ? samples[i + 1].t : duration;
+        anyEnabled |= samples[i].enabled && !samples[i].paused && end > samples[i].t;
+    }
+    if (!anyEnabled) return completion;  // Sidecar still supports later manual application.
+    cursor_video::Track track;
+    std::wstring error;
+    std::wstring focused = FocusedOutputPath(original);
+    bool ok = !focused.empty() && cursor_video::LoadTrack(original, track, &error);
+    if (ok) {
+        const auto rendered = cursor_video::Render(ffmpeg, original, track, focused);
+        ok = rendered.ok;
+        error = rendered.error;
+    }
+    if (ok) completion.focused = std::move(focused);
+    else {
+        Log(L"recorder: cursor render failed: %s", error.c_str());
+        completion.warning = Tr(L"Исходник сохранён; приближение не применено", L"Original saved; cursor zoom could not be applied");
+    }
+    return completion;
+}
+
 void StartRecordingNow() {
     if (!g.active || g.state != RS_Countdown) return;
     g.shownCount = -1;
@@ -586,6 +748,8 @@ void StartRecordingNow() {
 bool RecorderActive() { return g.active; }
 bool RecorderBusy() { return g.busy; }
 bool RecorderPaused() { return g.active && g.state == RS_Paused; }
+bool RecorderFollowEnabled() { return g.active && !g.gif && g.followEnabled; }
+void RecorderToggleFollow() { ToggleFollow(); }
 
 void RecorderStart(RECT r, bool gif) {
     if (g.active || g.busy) return;
@@ -607,6 +771,7 @@ void RecorderStart(RECT r, bool gif) {
     }
     g.r = r;
     g.gif = gif;
+    g.followEnabled = !gif && g.cfg.followCursor;
     g.out = NewOutputPath(gif ? L"gif" : L"mp4");
     g.base = TempDir() + L"zipshot_rec_" + std::to_wstring(GetCurrentProcessId()) + L"_";
     DeleteFileW(LogPath().c_str());
@@ -657,21 +822,41 @@ void RecorderStop() {
     RecCfg cfg = g.cfg;
     std::vector<std::wstring> segs = g.segs;
     std::wstring out = g.out, ffmpeg = g.ffmpeg, base = g.base;
-    std::thread([=] {
+    auto cursorSamples = std::move(g.cursorSamples);
+    const bool cursorLimitReached = g.cursorLimitReached;
+    const int sourceWidth = g.r.right - g.r.left, sourceHeight = g.r.bottom - g.r.top;
+    const double duration = g.recordedMs / 1000.0;
+    std::thread([=, cursorSamples = std::move(cursorSamples)] {
         for (const Proc& p : procs) {
             if (WaitForSingleObject(p.pi.hProcess, 15000) == WAIT_TIMEOUT) TerminateProcess(p.pi.hProcess, 1);
             CloseHandle(p.pi.hProcess);
             CloseHandle(p.pi.hThread);
         }
         bool ok = !aborted && Finalize(ffmpeg, segs, out, gif, cfg, base);
+        CursorCompletion cursor;
+        if (ok && !gif) {
+            try {
+                cursor = CompleteCursorVideo(ffmpeg, out, sourceWidth, sourceHeight, cfg.videoFps, duration, cursorSamples);
+                if (cursorLimitReached && cursor.warning.empty())
+                    cursor.warning = Tr(L"Видео сохранено; достигнут лимит слежения", L"Video saved; cursor tracking limit reached");
+            } catch (...) {
+                Log(L"recorder: unexpected cursor processing failure; original retained");
+                cursor.warning = Tr(L"Исходник сохранён; приближение не применено", L"Original saved; cursor zoom could not be applied");
+            }
+        }
         for (auto& s : segs) DeleteFileW(s.c_str());
         RunOnMain([=] {
             g.busy = false;
             if (ok) {
-                CopyFileToClipboard(out);
+                const std::wstring delivered = cursor.focused.empty() ? out : cursor.focused;
+                CopyFileToClipboard(delivered);
                 PlayUiSound(S_TaskDone);
-                ShowToast(nullptr, out, gif ? Tr(L"GIF сохранён", L"GIF saved") : Tr(L"Видео сохранено", L"Video saved"));
+                const std::wstring title = !cursor.warning.empty() ? cursor.warning :
+                    !cursor.focused.empty() ? Tr(L"Видео с приближением сохранено", L"Focused video saved") :
+                    gif ? Tr(L"GIF сохранён", L"GIF saved") : Tr(L"Видео сохранено", L"Video saved");
+                ShowToast(nullptr, delivered, title);
                 MainWindowNotifyCapture(out);
+                if (!cursor.focused.empty()) MainWindowNotifyCapture(cursor.focused);
             } else if (!aborted) {
                 PlayUiSound(S_Error);
                 MessageBoxW(nullptr, (Tr(L"Запись не удалась. Лог: ", L"Recording failed. Log: ") + LogPath()).c_str(), L"Zipshot",

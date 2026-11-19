@@ -2,6 +2,7 @@
 #include "combine.h"
 #include "gallery_model.h"
 #include "clipboard_shelf.h"
+#include "cursor_video.h"
 #include "sharex_import.h"
 #include <commctrl.h>
 #include <dwmapi.h>
@@ -11,6 +12,7 @@
 #include <wincodec.h>
 #include <wrl/client.h>
 #include <algorithm>
+#include <atomic>
 #include <cmath>
 #include <condition_variable>
 #include <cstdio>
@@ -82,7 +84,7 @@ const ToggleEntry kAfter[] = {
     {L"Открыть в редакторе", L"Open in image editor", L"AfterEditor", false},
 };
 constexpr UINT kCapBase = 1, kAfterBase = 20, kLangRu = 40, kLangEn = 41, kImport = 42, kOpenIni = 43, kAutostart = 44;
-enum : UINT { M_Open = 100, M_Editor, M_CopyImage, M_CopyFile, M_CopyPath, M_ShowFolder, M_Delete, M_Combine };
+enum : UINT { M_Open = 100, M_Editor, M_CopyImage, M_CopyFile, M_CopyPath, M_ShowFolder, M_Delete, M_Combine, M_CursorFollow };
 constexpr UINT_PTR kTimerRun = 1, kTimerFlash = 2;
 constexpr size_t kMaxThumbs = 240;
 constexpr UINT kSearch = 400, kPaste = 401, kNewest = 402, kOldest = 403, kFilterBase = 410;
@@ -137,6 +139,8 @@ struct State {
 };
 State* g_mw = nullptr;
 unsigned g_sessionCounter = 0;
+std::atomic_bool g_cursorRenderBusy{false};
+std::atomic_uint g_pasteJobs{0};
 
 int S(int v) { return MulDiv(v, (int)g_mw->dpi, 96); }
 bool Enabled(const Item& it) { return it.act != A_None; }
@@ -734,7 +738,7 @@ void CreateToolbar() {
 }
 
 void PasteToShelf() {
-    if (!g_mw || g_mw->pasting) return;
+    if (!g_mw || g_mw->pasting || g_pasteJobs.load()) return;
     shelf::Payload data;
     std::wstring error;
     if (!shelf::ReadClipboard(g_mw->hwnd, data, error)) {
@@ -748,8 +752,13 @@ void PasteToShelf() {
     LayoutToolbar();
     InvalidateRect(g_mw->hwnd, nullptr, FALSE);
     const unsigned session = g_mw->session;
-    std::thread([session, data = std::move(data), readError = std::move(error)]() mutable {
-        shelf::SaveResult result = shelf::Store(std::move(data));
+    ++g_pasteJobs;
+    try {
+      std::thread([session, data = std::move(data), readError = std::move(error)]() mutable {
+        shelf::SaveResult result;
+        try { result = shelf::Store(std::move(data)); }
+        catch (...) { result.error = Tr(L"Не удалось добавить файлы на полку", L"Could not add files to the shelf"); }
+        --g_pasteJobs;
         if (!readError.empty()) {
             if (!result.error.empty()) readError += L"\n" + result.error;
             result.error = std::move(readError);
@@ -770,7 +779,13 @@ void PasteToShelf() {
             } else g_mw->notice = result.error.empty() ? Tr(L"Не удалось вставить изображение", L"Could not paste image") : result.error;
             InvalidateRect(g_mw->hwnd, nullptr, FALSE);
         });
-    }).detach();
+      }).detach();
+    } catch (...) {
+        --g_pasteJobs;
+        g_mw->pasting = false;
+        g_mw->notice = Tr(L"Не удалось начать вставку", L"Could not start the paste operation");
+        InvalidateRect(g_mw->hwnd, nullptr, FALSE);
+    }
 }
 
 int HitToolbar(POINT p) {
@@ -832,12 +847,14 @@ void PaintToolbar(HDC dc) {
     int x = t.search.left + S(10), y = t.search.top + S(9);
     Ellipse(dc, x, y, x+S(10), y+S(10)); MoveToEx(dc, x+S(8), y+S(8), nullptr); LineTo(dc, x+S(14), y+S(14));
     SelectObject(dc, oldPen); SelectObject(dc, oldBrush); DeleteObject(pen);
-    button(t.paste, g_mw->pasting ? Tr(L"Добавляем...", L"Adding...") : Tr(L"+ Вставить  Ctrl+V", L"+ Paste  Ctrl+V"), false, g_mw->toolbarHover == kPaste, true);
+    button(t.paste, (g_mw->pasting || g_pasteJobs.load()) ? Tr(L"Добавляем...", L"Adding...") : Tr(L"+ Вставить  Ctrl+V", L"+ Paste  Ctrl+V"), false, g_mw->toolbarHover == kPaste, true);
     button(t.sort, g_mw->oldestFirst ? Tr(L"↑ Сначала старые", L"↑ Oldest first") : Tr(L"↓ Сначала новые", L"↓ Newest first"), false, g_mw->toolbarHover == kNewest);
     const wchar_t* names[] = {Tr(L"Все",L"All"),Tr(L"Фото",L"Photos"),L"GIF",Tr(L"Видео",L"Video"),Tr(L"Полка",L"Shelf")};
     for (int i=0;i<5;++i) button(t.filters[i], names[i], (int)g_mw->filter == i, g_mw->toolbarHover == (int)kFilterBase+i);
     if (t.status.right > t.status.left) {
-        std::wstring status = g_mw->notice.empty() ? std::to_wstring(g_mw->files.size()) + L" / " + std::to_wstring(g_mw->catalog.size()) : g_mw->notice;
+        std::wstring status = g_mw->notice;
+        if (status.empty() && g_cursorRenderBusy.load()) status = Tr(L"Создаём видео со слежением...", L"Creating cursor-follow video...");
+        if (status.empty()) status = std::to_wstring(g_mw->files.size()) + L" / " + std::to_wstring(g_mw->catalog.size());
         SetTextColor(dc, kTextOff);
         RECT r = t.status;
         DrawTextW(dc, status.c_str(), -1, &r, DT_SINGLELINE | DT_VCENTER | DT_RIGHT | DT_NOPREFIX | DT_END_ELLIPSIS);
@@ -1317,10 +1334,98 @@ void CombineDialog() {
     if (ShowCombineDialog(g_mw->hwnd, paths, o)) CombineFilesAsync(std::move(paths), o, SelectPath);
 }
 
-void TileMenu(int i, POINT screen) {
-    if (i < 0 || i >= (int)g_mw->files.size()) return;
-    const Entry e = g_mw->files[i];
-    bool multi = g_mw->picked.size() > 1 && IsPicked(e.path);
+bool HasCursorTrack(const Entry& entry) {
+    if (entry.kind != K_Mp4) return false;
+    const DWORD attributes = GetFileAttributesW(cursor_video::TrackPath(entry.path).c_str());
+    return attributes != INVALID_FILE_ATTRIBUTES && !(attributes & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+std::wstring NewFocusVideoPath(const std::wstring& original) {
+    const size_t slash = original.find_last_of(L"\\/"), dot = original.find_last_of(L'.');
+    const size_t end = dot != std::wstring::npos && (slash == std::wstring::npos || dot > slash) ? dot : original.size();
+    const std::wstring stem = original.substr(0, end) + L"_focus";
+    for (unsigned index = 0; index < 10000; ++index) {
+        const std::wstring candidate = stem + (index ? L" (" + std::to_wstring(index) + L")" : L"") + L".mp4";
+        if (GetFileAttributesW(candidate.c_str()) != INVALID_FILE_ATTRIBUTES) continue;
+        const DWORD error = GetLastError();
+        if (error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND) return candidate;
+        return {};
+    }
+    return {};
+}
+
+void StartCursorFollow(const std::wstring& original) {
+    if (!g_mw) return;
+    Kind kind;
+    if (!IsCaptureExt(original, kind) || kind != K_Mp4) {
+        g_mw->notice = Tr(L"Выберите видео, записанное Zipshot", L"Choose a video recorded by Zipshot");
+        Redraw();
+        return;
+    }
+    Entry entry;
+    entry.kind = kind;
+    entry.path = original;
+    if (!HasCursorTrack(entry)) {
+        g_mw->notice = Tr(L"Нужна новая запись Zipshot с треком курсора", L"A new Zipshot recording with a cursor track is required");
+        Redraw();
+        return;
+    }
+    if (RecorderActive() || RecorderBusy()) {
+        g_mw->notice = Tr(L"Сначала завершите запись экрана", L"Finish the screen recording first");
+        Redraw();
+        return;
+    }
+    const std::wstring ffmpeg = FindFFmpeg();
+    if (ffmpeg.empty()) {
+        g_mw->notice = Tr(L"Для обработки видео нужен FFmpeg", L"FFmpeg is required to process this video");
+        Redraw();
+        return;
+    }
+    if (g_cursorRenderBusy.exchange(true)) {
+        g_mw->notice = Tr(L"Видео со слежением уже создаётся", L"A cursor-follow video is already being created");
+        Redraw();
+        return;
+    }
+    g_mw->notice = Tr(L"Создаём видео со слежением...", L"Creating cursor-follow video...");
+    Redraw();
+    try {
+        std::thread([original, ffmpeg] {
+            cursor_video::Result result;
+            std::wstring output;
+            try {
+                cursor_video::Track track;
+                if (!cursor_video::LoadTrack(original, track, &result.error)) {
+                    if (result.error.empty()) result.error = Tr(L"Не удалось прочитать трек курсора", L"Could not read the cursor track");
+                } else if ((output = NewFocusVideoPath(original)).empty()) {
+                    result.error = Tr(L"Не удалось выбрать новое имя видео", L"Could not choose a new video filename");
+                } else result = cursor_video::Render(ffmpeg, original, track, output, true);
+            } catch (...) {
+                result.error = Tr(L"Не удалось создать видео со слежением", L"Could not create the cursor-follow video");
+            }
+            RunOnMain([result = std::move(result), output = std::move(output)] {
+                g_cursorRenderBusy.store(false);
+                if (!g_mw) return;
+                if (result.ok) {
+                    g_mw->showTable = false;
+                    g_mw->filter = gallery::Filter::Videos;
+                    SetWindowTextW(g_mw->search, L"");
+                    g_mw->query.clear();
+                    Rescan();
+                    SelectPath(output);
+                    g_mw->notice = Tr(L"Видео со слежением готово. Исходник сохранён", L"Cursor-follow video is ready. Original retained");
+                } else g_mw->notice = result.error.empty()
+                    ? Tr(L"Не удалось обработать видео. Исходник сохранён", L"Could not process the video. Original retained") : result.error;
+                Redraw();
+            });
+        }).detach();
+    } catch (...) {
+        g_cursorRenderBusy.store(false);
+        g_mw->notice = Tr(L"Не удалось начать обработку видео", L"Could not start video processing");
+        Redraw();
+    }
+}
+
+HMENU BuildTileMenu(const Entry& e, bool multi) {
     HMENU m = CreatePopupMenu();
     if (multi && PickedImages().size() >= 2) {
         AppendMenuW(m, MF_STRING, M_Combine, Tr(L"Объединить изображения...", L"Combine images..."));
@@ -1328,6 +1433,13 @@ void TileMenu(int i, POINT screen) {
     }
     AppendMenuW(m, MF_STRING, M_Open, Tr(L"Открыть", L"Open"));
     if (e.kind == K_Image) AppendMenuW(m, MF_STRING, M_Editor, Tr(L"Открыть в редакторе", L"Open in editor"));
+    if (e.kind == K_Mp4) {
+        const bool track = HasCursorTrack(e);
+        AppendMenuW(m, MF_STRING | (!track || g_cursorRenderBusy.load() || RecorderActive() || RecorderBusy() ? MF_GRAYED : 0), M_CursorFollow,
+                    Tr(L"Сделать видео со слежением за курсором...", L"Create cursor-follow video..."));
+        if (!track) AppendMenuW(m, MF_STRING | MF_GRAYED, 0,
+                               Tr(L"Нужна новая запись Zipshot с треком курсора", L"Requires a new Zipshot recording with a cursor track"));
+    }
     AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
     if (e.kind == K_Image) AppendMenuW(m, MF_STRING, M_CopyImage, Tr(L"Копировать изображение\tCtrl+C", L"Copy image\tCtrl+C"));
     AppendMenuW(m, MF_STRING, M_CopyFile, Tr(L"Копировать файл", L"Copy file"));
@@ -1339,6 +1451,14 @@ void TileMenu(int i, POINT screen) {
                              : Tr(L"Удалить\tDelete", L"Delete\tDelete");
     AppendMenuW(m, MF_STRING, M_Delete, del.c_str());
     SetMenuDefaultItem(m, multi && PickedImages().size() >= 2 ? M_Combine : e.kind == K_Image ? M_Editor : M_Open, FALSE);
+    return m;
+}
+
+void TileMenu(int i, POINT screen) {
+    if (i < 0 || i >= (int)g_mw->files.size()) return;
+    const Entry e = g_mw->files[i];
+    const bool multi = g_mw->picked.size() > 1 && IsPicked(e.path);
+    HMENU m = BuildTileMenu(e, multi);
     HWND h = g_mw->hwnd;
     UINT id = (UINT)TrackPopupMenuEx(m, TPM_RETURNCMD | TPM_RIGHTBUTTON | TPM_LEFTALIGN | TPM_TOPALIGN, screen.x, screen.y, h,
                                      nullptr);
@@ -1351,6 +1471,7 @@ void TileMenu(int i, POINT screen) {
     case M_CopyImage: CopyImage(e.path); break;
     case M_CopyFile: CopyFileToClipboard(e.path); break;
     case M_CopyPath: CopyPathText(e.path); break;
+    case M_CursorFollow: StartCursorFollow(e.path); break;
     case M_ShowFolder: ShowInFolder(e.path); break;
     case M_Delete: {
         for (int k = 0; k < (int)g_mw->files.size(); ++k)
@@ -2043,6 +2164,10 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
 }
 
 }  // namespace
+
+bool MainWindowMediaBusy() {
+    return g_cursorRenderBusy.load() || g_pasteJobs.load() != 0 || (g_mw && g_mw->pasting);
+}
 
 void ShowMainWindow() {
     if (g_mw) {

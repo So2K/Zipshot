@@ -28,6 +28,12 @@ jobs:
       - name: Continuous brush strokes and explicit selection
         shell: cmd
         run: tests\run_editor_brush_tests.bat
+      - name: Cursor camera motion model
+        shell: cmd
+        run: tests\run_cursor_follow_tests.bat
+      - name: Recorder cursor state and output routing
+        shell: cmd
+        run: tests\run_recorder_cursor_tests.bat
       - uses: actions/upload-artifact@v4
         with:
           name: Zipshot-windows-x64

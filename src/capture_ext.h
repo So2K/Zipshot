@@ -14,5 +14,7 @@ void RecorderHotkey();         // hotkey pressed again: start (waiting), abort (
 void RecorderPauseResume();
 void RecorderAbort();
 bool RecorderPaused();
+bool RecorderFollowEnabled();
+void RecorderToggleFollow();
 // dshow audio capture devices as ffmpeg lists them (`ffmpeg -list_devices true -f dshow -i dummy`).
 std::vector<std::wstring> ListAudioDevices();
