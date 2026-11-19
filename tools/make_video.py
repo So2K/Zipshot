@@ -269,24 +269,10 @@ def main():
         if k%(fps*8)==0: print(f'Rendered {t:.0f}s / {LENGTH}s',flush=True)
     proc.stdin.close()
     if proc.wait(): raise SystemExit('FFmpeg rendering failed')
-    music=ROOT/'build/original-music.wav'; soundtrack(music)
-    cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(silent),'-i',str(music)]
-    workflow=[(f'workflow{k}',offset) for k,offset in enumerate([29.4,33,36.8,40.6,44.4])]
-    if not all((MEDIA/f'narration/{name}.mp3').exists() for name,_ in workflow): workflow=[('workflow',29.4)]
-    clips=[('intro',.7),('method',8.4),('speed',16.5)]+workflow+[('audit',48.4),('end',58.4)]
-    found=[]
-    for name,offset in clips:
-        path=MEDIA/f'narration/{name}.mp3'
-        if path.exists(): cmd+=['-i',str(path)]; found.append((name,offset))
-    filters=['[1:a]volume=0.70[bed]']; streams=['[bed]']
-    for j,(name,offset) in enumerate(found,2):
-        filters.append(f'[{j}:a]aresample=48000,volume=1.25,adelay={int(offset*1000)}:all=1[v{j}]'); streams.append(f'[v{j}]')
-    filters.append(''.join(streams)+f'amix=inputs={len(streams)}:duration=longest:normalize=0,alimiter=limit=0.9[a]')
-    cmd+=['-filter_complex',';'.join(filters),'-map','0:v','-map','[a]','-c:v','copy','-c:a','aac','-b:a','192k','-t',str(LENGTH),'-movflags','+faststart',str(MEDIA/'zipshot-vs-sharex.mp4')]
-    subprocess.run(cmd,check=True)
+    subprocess.run(['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(silent),'-map','0:v:0','-c:v','copy','-an','-movflags','+faststart',str(MEDIA/'zipshot-vs-sharex.mp4')],check=True)
     poster=scenes[2].resize((1280,720),Image.Resampling.LANCZOS)
     poster.save(MEDIA/'comparison-poster.jpg',quality=94)
-    (MEDIA/'video-manifest.json').write_text(json.dumps({'duration_seconds':LENGTH,'width':W,'height':H,'fps':fps,'language':'ru','capture_footage':'Real offscreen Zipshot editor renders; scripted actions; synthetic input only','benchmark_source':'docs/benchmark/capture-results.json','median_speedup':data['summary']['median_speedup'],'chapters_seconds':dict(zip(['intro','method','benchmark','editor','audit','github'],starts)),'narration_clips':[x[0] for x in found]},ensure_ascii=False,indent=2),encoding='utf-8')
+    (MEDIA/'video-manifest.json').write_text(json.dumps({'duration_seconds':LENGTH,'width':W,'height':H,'fps':fps,'language':'ru','capture_footage':'Real offscreen Zipshot editor renders; scripted actions; synthetic input only','benchmark_source':'docs/benchmark/capture-results.json','median_speedup':data['summary']['median_speedup'],'chapters_seconds':dict(zip(['intro','method','benchmark','editor','audit','github'],starts)),'audio_streams':0,'audio_policy':'Silent video only. No voice, music or subtitle tracks.'},ensure_ascii=False,indent=2),encoding='utf-8')
     print('Complete:',MEDIA/'zipshot-vs-sharex.mp4',flush=True)
 
 

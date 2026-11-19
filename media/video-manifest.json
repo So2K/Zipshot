@@ -15,16 +15,6 @@
     "audit": 48,
     "github": 58
   },
-  "narration_clips": [
-    "intro",
-    "method",
-    "speed",
-    "workflow0",
-    "workflow1",
-    "workflow2",
-    "workflow3",
-    "workflow4",
-    "audit",
-    "end"
-  ]
+  "audio_streams": 0,
+  "audio_policy": "Silent video only. No voice, music or subtitle tracks."
 }
