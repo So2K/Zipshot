@@ -13,6 +13,21 @@ jobs:
       - name: Capture and output regressions (synthetic pixels only)
         shell: cmd
         run: tests\run_capture_output_tests.bat
+      - name: Capture completion ordering and worker lifetime
+        shell: cmd
+        run: tests\run_capture_pipeline_tests.bat
+      - name: Automatic JPEG threshold and exact output
+        shell: cmd
+        run: tests\run_png_threshold_tests.bat
+      - name: Alpha predicate boundaries and exact results
+        shell: cmd
+        run: tests\run_pixel_alpha_tests.bat
+      - name: Lossless PNG pixels, metadata and runtime dispatch
+        shell: cmd
+        run: tools\perf\image_fpng_quality.bat
+      - name: Lossless PNG scalar fallback
+        shell: cmd
+        run: tools\perf\image_fpng_quality.bat --scalar
       - name: Image core regressions
         shell: cmd
         run: tools\test_image_core.bat
@@ -28,6 +43,9 @@ jobs:
       - name: Continuous brush strokes and explicit selection
         shell: cmd
         run: tests\run_editor_brush_tests.bat
+      - name: Exact blur and editor export
+        shell: cmd
+        run: tests\run_editor_fx_tests.bat
       - name: Cursor camera motion model
         shell: cmd
         run: tests\run_cursor_follow_tests.bat

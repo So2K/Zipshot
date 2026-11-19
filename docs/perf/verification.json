@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "verified_utc": "2026-11-19T10:14:31.7393346Z",
+  "base_commit": "1fdf0a7d9df857168a18b7e11620d6e1686b77a3",
+  "regression_suites": [
+    {
+      "name": "capture_output",
+      "exit_code": 0,
+      "seconds": 4.9643314,
+      "log": "build\\perf\\final-verification\\capture_output.log",
+      "result": "PASS all concurrent PNGs decode with exact original pixels"
+    },
+    {
+      "name": "capture_pipeline",
+      "exit_code": 0,
+      "seconds": 2.7573392,
+      "log": "build\\perf\\final-verification\\capture_pipeline.log",
+      "result": "19 assertions, 0 failures"
+    },
+    {
+      "name": "png_threshold",
+      "exit_code": 0,
+      "seconds": 4.4357473,
+      "log": "build\\perf\\final-verification\\png_threshold.log",
+      "result": "40 assertions, 0 failures"
+    },
+    {
+      "name": "pixel_alpha",
+      "exit_code": 0,
+      "seconds": 1.8875568,
+      "log": "build\\perf\\final-verification\\pixel_alpha.log",
+      "result": "pixel-alpha assertions=295300 failures=0"
+    },
+    {
+      "name": "png_quality_simd",
+      "exit_code": 0,
+      "seconds": 5.2697449,
+      "log": "build\\perf\\final-verification\\png_quality_simd.log",
+      "result": "33 assertions, 0 failures"
+    },
+    {
+      "name": "png_quality_scalar",
+      "exit_code": 0,
+      "seconds": 5.2258718,
+      "log": "build\\perf\\final-verification\\png_quality_scalar.log",
+      "result": "33 assertions, 0 failures"
+    },
+    {
+      "name": "image_core",
+      "exit_code": 0,
+      "seconds": 2.7277763,
+      "log": "build\\perf\\final-verification\\image_core.log",
+      "result": "0 failure(s)"
+    },
+    {
+      "name": "gallery_model",
+      "exit_code": 0,
+      "seconds": 1.7431296,
+      "log": "build\\perf\\final-verification\\gallery_model.log",
+      "result": "29 assertions, 0 failures"
+    },
+    {
+      "name": "clipboard_shelf",
+      "exit_code": 0,
+      "seconds": 4.7952336,
+      "log": "build\\perf\\final-verification\\clipboard_shelf.log",
+      "result": "PASS saved PNG remains readable in a fresh process after restart"
+    },
+    {
+      "name": "mainwindow_gallery",
+      "exit_code": 0,
+      "seconds": 5.5359761,
+      "log": "build\\perf\\final-verification\\mainwindow_gallery.log",
+      "result": "73 assertions, 0 failures"
+    },
+    {
+      "name": "editor_brush",
+      "exit_code": 0,
+      "seconds": 18.5256103,
+      "log": "build\\perf\\final-verification\\editor_brush.log",
+      "result": "86 assertions, 0 failures"
+    },
+    {
+      "name": "editor_effects",
+      "exit_code": 0,
+      "seconds": 18.8185496,
+      "log": "build\\perf\\final-verification\\editor_effects.log",
+      "result": "66 assertions, 0 failures, 164 pixel-equivalence cases"
+    },
+    {
+      "name": "cursor_follow",
+      "exit_code": 0,
+      "seconds": 1.6028943,
+      "log": "build\\perf\\final-verification\\cursor_follow.log",
+      "result": "28 assertions, 0 failures"
+    },
+    {
+      "name": "recorder_cursor",
+      "exit_code": 0,
+      "seconds": 3.7744584,
+      "log": "build\\perf\\final-verification\\recorder_cursor.log",
+      "result": "35 assertions, 0 failures"
+    },
+    {
+      "name": "cursor_video",
+      "exit_code": 0,
+      "seconds": 8.159283,
+      "log": "build\\perf\\final-verification\\cursor_video.log",
+      "result": "PASS all completed/failed exports clean only their owned temporary paths"
+    }
+  ],
+  "all_passed": true,
+  "final_source_sha256": {
+    "src/app.cpp": "f0c98e616d0bd45ba4831639c47a4f31977a8bbeff4907417f54ded379e63059",
+    "src/output.cpp": "3cd52b2141addcc29b7f81709bb37a2a6c807929b630af19395dd8430fe68163",
+    "src/pixel_alpha.h": "2158487d78ba74681b31d460bd7256d5cd43c1088df13aa4b82b0f4134611d51",
+    "src/png_encode_fast.cpp": "b201c637e697816dd48dc47481dcf0553f46c21a21a27655e2b8445b27e4b233",
+    "src/png_limit_stream.h": "947193ec0c3cf63bddadadc0279fac01757888329a408e2c1a758f563bcb41cd",
+    "src/editor.cpp": "2da52908e1ae7155909e249d551a4d13a953f58dcf7152d513ef44a1517d85e3",
+    "src/mainwindow.cpp": "5eab898a524395cdfd7d963ba37b94b1e25dff4c99aa840b94596e0c5dc6a0ec",
+    "src/cursor_video.cpp": "70bb99450e3752ca13a900e0050ddd804ad189284aa7cbb539f53c1600e86d39",
+    "src/cursor_video.h": "57fb9149f00403bb4d16c55c89737804b081721d2352df6270ae6fbe8205e9f6",
+    "src/recorder.cpp": "fa106a81a6ba37f6eb175b8865224fe3bdbb11d6413ce98c41a1a8f3229c56de",
+    "res/zipshot.rc": "ce2324f63d946230a0edc5a4c08a194921225882e1ecfe1120125cb5770dbb4b"
+  },
+  "post_freeze_capture_output_rerun": "16 assertions passed after native opacity predicate integration",
+  "prepared_helper": "15 assertions passed after final LoadImageFile integration",
+  "deployment": {
+    "Applied": true,
+    "Version": "1.3.0.0",
+    "PID": 41956,
+    "Executable": "C:\\Users\\User\\Tools\\Zipshot\\zipshot.exe",
+    "SHA256": "aaac5d6bc0f804037d0abb8210f658c103e824075895e85207d67b898d0a9412",
+    "Backup": "C:\\Users\\User\\Tools\\Zipshot\\backups\\before-gallery-20261119-100825",
+    "ConfigurationUnchanged": true,
+    "ReadyFile": "C:\\Users\\User\\Projects\\Zipshot\\build\\gallery-qa\\installed-ready-20261119-100825.json",
+    "Gallery": {
+      "visible": true,
+      "search_visible": true,
+      "paint_count": 1,
+      "width": 1335,
+      "height": 750,
+      "dpi": 144,
+      "items": 10202,
+      "oldest_first": false
+    }
+  },
+  "scope": "Synthetic unit/native integration and actual application readiness; not a universal latency guarantee",
+  "final_loader_matrix": {
+    "inputs": 49,
+    "warm_per_engine": 20,
+    "rows": 2058,
+    "all_pixels_dimensions_alpha_exact": true,
+    "report": "image_wic_final.json"
+  },
+  "loader_followup": {
+    "inputs": 8,
+    "paths": 3,
+    "warm_per_path": 9,
+    "all_pixels_dimensions_alpha_exact": true,
+    "report": "image_wic_followup.json",
+    "conclusion": "Earlier large 1080p alpha timing regression did not reproduce with builds idle; both measurements retained"
+  }
+}

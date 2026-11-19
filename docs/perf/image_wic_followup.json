@@ -1,0 +1,71 @@
+{
+  "n": 9,
+  "inputs": 8,
+  "exact_all": true,
+  "cases": [
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/1920x1080-alpha/engine0.png",
+      "medians": {
+        "original": 24.3974,
+        "direct-bgra-simd": 24.4348,
+        "original-converter-simd": 24.8596
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/1920x1080-alpha/fast1.png",
+      "medians": {
+        "original": 22.4236,
+        "direct-bgra-simd": 22.3492,
+        "original-converter-simd": 22.5288
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/3840x2160-alpha/engine0.png",
+      "medians": {
+        "original": 97.3711,
+        "direct-bgra-simd": 95.862,
+        "original-converter-simd": 97.2076
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/3840x2160-alpha/fast1.png",
+      "medians": {
+        "original": 94.3846,
+        "direct-bgra-simd": 95.5089,
+        "original-converter-simd": 94.3515
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/1920x1080-ui/sharex.png",
+      "medians": {
+        "original": 6.1847,
+        "direct-bgra-simd": 5.8852,
+        "original-converter-simd": 5.9214
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/3840x2160-ui/sharex.png",
+      "medians": {
+        "original": 29.8726,
+        "direct-bgra-simd": 24.6804,
+        "original-converter-simd": 27.1309
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/1920x1080-alpha-ui/engine0.png",
+      "medians": {
+        "original": 5.0618,
+        "direct-bgra-simd": 5.3027,
+        "original-converter-simd": 4.9172
+      }
+    },
+    {
+      "file": "C:/Users/User/Projects/Zipshot/build/perf/images/corpus-v1/3840x2160-alpha-ui/engine0.png",
+      "medians": {
+        "original": 18.7921,
+        "direct-bgra-simd": 18.848,
+        "original-converter-simd": 19.2021
+      }
+    }
+  ]
+}

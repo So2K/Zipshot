@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework><OutputType>Exe</OutputType><UseAppHost>true</UseAppHost>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems><AssemblyName>image_sharex</AssemblyName>
+    <ShareXDir Condition="'$(ShareXDir)'==''">D:/ZipshotRuntimeCompare-20261118/vendor/ShareX-22.4.0-portable-x64</ShareXDir>
+    <BaseIntermediateOutputPath>../../build/perf/images/sharex-obj/</BaseIntermediateOutputPath>
+    <OutputPath>../../build/perf/images/sharex-build/</OutputPath><AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="image_sharex.cs" /></ItemGroup>
+  <ItemGroup>
+    <Reference Include="ShareX"><HintPath>$(ShareXDir)/ShareX.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="ShareX.HelpersLib"><HintPath>$(ShareXDir)/ShareX.HelpersLib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="SkiaSharp"><HintPath>$(ShareXDir)/SkiaSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Drawing.Common"><HintPath>$(ShareXDir)/System.Drawing.Common.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Avalonia.Base"><HintPath>$(ShareXDir)/Avalonia.Base.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

@@ -20,6 +20,8 @@
 #include <map>
 #include <mutex>
 #include <thread>
+#include <string_view>
+#include <unordered_set>
 
 // Main window laid out like ShareX 18's: the left menu panel with Fugue icons and, on the right, either the
 // "Hotkey | Description" table (no captures yet) or the capture history as ShareX's thumbnail view.
@@ -384,9 +386,14 @@ void RebuildView(bool resetScroll = false) {
         if (g_mw->files[i].path == selected) g_mw->sel = i;
         if (g_mw->files[i].path == anchor) g_mw->anchor = i;
     }
-    std::erase_if(g_mw->picked, [](const std::wstring& p) {
-        return std::none_of(g_mw->files.begin(), g_mw->files.end(), [&](const Entry& e) { return e.path == p; });
-    });
+    if (!g_mw->picked.empty()) {
+        // Paths belong to files, which remain stable while only picked is pruned.
+        // A hash membership check avoids scanning the whole gallery per selection.
+        std::unordered_set<std::wstring_view> visible;
+        visible.reserve(g_mw->files.size());
+        for (const Entry& e : g_mw->files) visible.insert(e.path);
+        std::erase_if(g_mw->picked, [&](const std::wstring& p) { return !visible.contains(p); });
+    }
     g_mw->hoverTile = g_mw->dropTile = g_mw->downTile = -1;
     g_mw->dragArmed = g_mw->collapseOnUp = g_mw->scrollDrag = false;
     if (GetCapture() == g_mw->hwnd) ReleaseCapture();

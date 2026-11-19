@@ -24,6 +24,7 @@ std::wstring root, clipboard, toast, savedSource, renderTarget;
 std::vector<std::wstring> notified;
 std::atomic<DWORD> now{10000};
 std::atomic<int> cursorReads{0}, spawns{0}, saves{0}, renders{0}, forbidden{0};
+std::atomic<int> preparedSaves{0}, preparedRenders{0}, loads{0};
 std::atomic<bool> blockRender{false}, renderEntered{false};
 bool followDefault = false, cursorVisible = true, cursorAvailable = true;
 bool hotkeyAllowed = true, failSave = false, failRender = false;
@@ -181,6 +182,15 @@ HBITMAP CreateDib(int width, int height, void** bits) {
     return CreateDIBSection(nullptr, &info, DIB_RGB_COLORS, bits, nullptr, 0);
 }
 namespace cursor_video {
+struct PreparedSource::State {
+    std::wstring source;
+    Track track;
+};
+PreparedSource::PreparedSource() = default;
+PreparedSource::~PreparedSource() = default;
+PreparedSource::PreparedSource(PreparedSource&&) noexcept = default;
+PreparedSource& PreparedSource::operator=(PreparedSource&&) noexcept = default;
+
 std::wstring TrackPath(const std::wstring& original) { return original + L".cursor.json"; }
 Result SaveTrack(const std::wstring& original, int width, int height, double fps, double duration,
                  const std::vector<cursor_follow::Sample>& samples) {
@@ -190,7 +200,21 @@ Result SaveTrack(const std::wstring& original, int width, int height, double fps
     test::savedTrack = {width, height, fps, duration, samples};
     return {test::WriteOwned(TrackPath(original), "synthetic cursor metadata"), L""};
 }
+Result SaveTrackPrepared(const std::wstring& original, int width, int height, double fps, double duration,
+                         const std::vector<cursor_follow::Sample>& samples, PreparedSource& out) {
+    ++test::preparedSaves;
+    out.state_.reset();
+    Result saved = SaveTrack(original, width, height, fps, duration, samples);
+    if (saved.ok) {
+        auto state = std::make_unique<PreparedSource::State>();
+        state->source = original;
+        state->track = {width, height, fps, duration, samples};
+        out.state_ = std::move(state);
+    }
+    return saved;
+}
 bool LoadTrack(const std::wstring& original, Track& out, std::wstring*) {
+    ++test::loads;
     if (original != test::savedSource) return false;
     out = test::savedTrack;
     return true;
@@ -205,6 +229,12 @@ Result Render(const std::wstring&, const std::wstring&, const Track&, const std:
     if (forceAll) ++test::forbidden;
     if (test::failRender) return {false, L"Synthetic render failure"};
     return {test::WriteOwned(out, "synthetic focused video"), L""};
+}
+Result RenderPrepared(const std::wstring& ffmpeg, const PreparedSource& source,
+                      const std::wstring& out, bool forceAll) {
+    ++test::preparedRenders;
+    if (!source.state_ || source.state_->source.empty()) return {false, L"Synthetic prepared source unavailable"};
+    return Render(ffmpeg, source.state_->source, source.state_->track, out, forceAll);
 }
 }  // namespace cursor_video
 
@@ -370,8 +400,9 @@ int wmain(int argc, wchar_t** argv) {
                 "sidecar binds original dimensions and pause-free active timeline");
     test::Check(std::filesystem::exists(raw) && std::filesystem::exists(cursor_video::TrackPath(raw)) &&
                 test::clipboard == test::renderTarget && test::renderTarget.find(L"_focus_2.mp4") != std::wstring::npos &&
-                test::notified == std::vector<std::wstring>{raw, test::renderTarget},
-                "successful effect keeps raw and sidecar and publishes separate unique focused copy");
+                test::notified == std::vector<std::wstring>{raw, test::renderTarget} &&
+                test::preparedSaves == 1 && test::preparedRenders == 1 && test::loads == 0,
+                "successful prepared effect avoids sidecar reload and publishes separate unique focused copy");
     test::Check(std::filesystem::file_size(collision) == 35 && std::filesystem::file_size(raw) == 4096 &&
                 test::registered == test::unregistered, "existing destination and raw survive; panel shortcut unregisters");
 

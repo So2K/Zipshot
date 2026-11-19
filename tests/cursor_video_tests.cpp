@@ -5,8 +5,14 @@
 #include <cstdio>
 #include <thread>
 #include <limits>
+#include <wincrypt.h>
 bool IsEnglish() { return true; }
 static bool forceNoProbe = false;
+static unsigned identityPasses = 0;
+static BOOL WINAPI TestCryptCreateHash(HCRYPTPROV provider,ALG_ID algorithm,HCRYPTKEY key,DWORD flags,HCRYPTHASH* hash) {
+    if(algorithm==CALG_SHA_256)++identityPasses;
+    return CryptCreateHash(provider,algorithm,key,flags,hash);
+}
 static DWORD WINAPI TestGetFileAttributesW(LPCWSTR path) {
     std::wstring value=path;
     if(forceNoProbe && value.size()>=11 && !_wcsicmp(value.c_str()+value.size()-11,L"ffprobe.exe"))return INVALID_FILE_ATTRIBUTES;
@@ -18,9 +24,11 @@ static DWORD WINAPI TestSearchPathW(LPCWSTR path,LPCWSTR file,LPCWSTR ext,DWORD 
 }
 #define GetFileAttributesW TestGetFileAttributesW
 #define SearchPathW TestSearchPathW
+#define CryptCreateHash TestCryptCreateHash
 #include "../src/cursor_video.cpp"
 #undef GetFileAttributesW
 #undef SearchPathW
+#undef CryptCreateHash
 
 static int failures=0;
 static void Check(bool pass,const char* text){std::printf("%s %s\n",pass?"PASS":"FAIL",text);if(!pass)++failures;}
@@ -73,12 +81,38 @@ int wmain(int argc,wchar_t** argv){
     Check(expectedError<15&&expectedError<fullError*.5,"rendered middle frame follows the supplied camera crop and position");
     Check(Difference(Frame(ffmpeg,output,0),Frame(ffmpeg,original,0))<5,"initial FollowOff frame remains full-frame");
     Check(Bytes(original)==sourceBytes,"original video bytes remain unchanged after rendering");
+
+    auto preparedOriginal=root+L"\\prepared-source.mp4";Write(preparedOriginal,sourceBytes);
+    auto preparedOutput=root+L"\\prepared-focus.mp4";
+    cursor_video::PreparedSource prepared;
+    Check(!cursor_video::RenderPrepared(ffmpeg,prepared,preparedOutput).ok,"empty prepared context cannot skip source verification");
+    const unsigned hashesBefore=identityPasses;
+    Check(cursor_video::SaveTrackPrepared(preparedOriginal,640,360,30,2.5,samples,prepared).ok,"prepared save publishes sidecar and retains verified source");
+    HANDLE writer=CreateFileW(preparedOriginal.c_str(),GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,0,nullptr);
+    const bool deniedWrite=writer==INVALID_HANDLE_VALUE;if(writer!=INVALID_HANDLE_VALUE)CloseHandle(writer);
+    Check(deniedWrite&&!DeleteFileW(preparedOriginal.c_str()),"retained source handle denies writes and deletion throughout automatic processing");
+    cursor_video::PreparedSource moved(std::move(prepared));
+    cursor_video::PreparedSource assigned;assigned=std::move(moved);
+    Check(!cursor_video::RenderPrepared(ffmpeg,prepared,preparedOutput).ok&&!cursor_video::RenderPrepared(ffmpeg,moved,preparedOutput).ok,"moving a prepared context transfers verification without leaving usable aliases");
+    auto preparedRender=cursor_video::RenderPrepared(ffmpeg,assigned,preparedOutput);
+    Check(preparedRender.ok&&identityPasses==hashesBefore+1,"prepared save plus render computes full source identity only once");
+    auto referenceHashes=cursor_video::Run(ffmpeg,{L"-v",L"error",L"-threads",L"4",L"-i",output,L"-map",L"0:v:0",L"-f",L"framemd5",L"-"},{},30000);
+    auto preparedHashes=cursor_video::Run(ffmpeg,{L"-v",L"error",L"-threads",L"4",L"-i",preparedOutput,L"-map",L"0:v:0",L"-f",L"framemd5",L"-"},{},30000);
+    Check(referenceHashes.ok&&preparedHashes.ok&&referenceHashes.text==preparedHashes.text,"prepared and manual paths preserve every decoded frame and timestamp");
+    const auto preparedBytes=Bytes(preparedOutput);
+    Check(!cursor_video::RenderPrepared(ffmpeg,assigned,preparedOutput).ok&&Bytes(preparedOutput)==preparedBytes,"prepared rendering cannot overwrite an existing output");
+    Check(!cursor_video::SaveTrackPrepared(preparedOriginal,640,360,30,2.5,samples,assigned).ok&&!cursor_video::RenderPrepared(ffmpeg,assigned,root+L"\\stale.mp4").ok,"failed prepared save clears its old context instead of reusing stale verification");
+    writer=CreateFileW(preparedOriginal.c_str(),GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,0,nullptr);
+    Check(writer!=INVALID_HANDLE_VALUE,"releasing prepared context restores normal write access to the unchanged source");if(writer!=INVALID_HANDLE_VALUE)CloseHandle(writer);
     auto oldOutput=Bytes(output);
     Check(!cursor_video::Render(ffmpeg,original,track,output).ok&&Bytes(output)==oldOutput,"existing output is not overwritten");
     auto wrong=track;wrong.width=320;
     Check(!cursor_video::Render(ffmpeg,original,wrong,root+L"\\wrong.mp4").ok&&!cursor_video::Exists(root+L"\\wrong.mp4"),"real video dimensions are checked against the track");
     auto changed=root+L"\\changed.mp4";Write(changed,sourceBytes+"changed");
     Check(!cursor_video::Render(ffmpeg,changed,track,root+L"\\bad.mp4").ok,"source identity mismatch is rejected before export");
+    auto changedSameSize=root+L"\\changed-same-size.mp4";auto modified=sourceBytes;modified[modified.size()/2]^=1;Write(changedSameSize,modified);
+    const unsigned beforeManual=identityPasses;
+    Check(!cursor_video::Render(ffmpeg,changedSameSize,track,root+L"\\bad-same-size.mp4").ok&&identityPasses==beforeManual+1,"manual rendering still hashes all bytes and rejects a same-size modified source");
     auto allOff=track;for(auto& sample:allOff.samples)sample.enabled=false;
     auto forced=root+L"\\forced.mp4";
     Check(cursor_video::Render(ffmpeg,original,allOff,forced,true).ok&&Difference(Frame(ffmpeg,forced,36),full)>15,"forceAllFollow enables recorded positions without changing source track flags");
@@ -96,9 +130,9 @@ int wmain(int argc,wchar_t** argv){
     auto audioFixture=cursor_video::Run(ffmpeg,{L"-v",L"error",L"-y",L"-f",L"lavfi",L"-i",L"testsrc2=size=320x180:rate=30:duration=3",L"-f",L"lavfi",L"-i",L"sine=frequency=880:sample_rate=48000:duration=3",L"-map",L"0:v:0",L"-map",L"1:a:0",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-crf",L"0",L"-threads",L"4",L"-c:a",L"aac",L"-b:a",L"96k",audioSource},{},30000);
     Check(audioFixture.ok,"synthetic AAC/sine fixture generated only in ignored test output, without playback");
     auto audioOriginal=Bytes(audioSource);
-    auto audioSaved=cursor_video::SaveTrack(audioSource,320,180,30,3,samples);cursor_video::Track audioTrack;
-    bool audioLoaded=cursor_video::LoadTrack(audioSource,audioTrack);auto audioOut=root+L"\\audio-preserved-private-test.mp4";
-    auto audioRender=audioLoaded?cursor_video::Render(ffmpeg,audioSource,audioTrack,audioOut):cursor_video::Result{};
+    cursor_video::PreparedSource audioPrepared;
+    auto audioSaved=cursor_video::SaveTrackPrepared(audioSource,320,180,30,3,samples,audioPrepared);auto audioOut=root+L"\\audio-preserved-private-test.mp4";
+    auto audioRender=audioSaved.ok?cursor_video::RenderPrepared(ffmpeg,audioPrepared,audioOut):cursor_video::Result{};
     cursor_video::Info audioBefore,audioAfter;
     Check(audioSaved.ok&&audioRender.ok&&cursor_video::Probe(ffmpeg,audioSource,audioBefore)&&cursor_video::Probe(ffmpeg,audioOut,audioAfter)&&audioBefore.audio==1&&audioAfter.audio==1,"audio stream is preserved alongside the processed video");
     auto originalAAC=cursor_video::Run(ffmpeg,{L"-v",L"error",L"-i",audioSource,L"-map",L"0:a:0",L"-c:a",L"copy",L"-f",L"adts",L"-"},{},30000);

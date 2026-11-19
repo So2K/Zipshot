@@ -10,6 +10,11 @@ this is an independent project and is not endorsed by the ShareX team.
 * **Fugue Icons** — copyright Yusuke Kamiyamane, Creative Commons Attribution 3.0.
   Some icons are modified for the dark theme. https://p.yusukekamiyamane.com/
   License: https://creativecommons.org/licenses/by/3.0/
+* **fpng** — Richard Geldreich and contributors, Unlicense. Used for lossless PNG
+  encoding, with runtime CPU dispatch and a scalar fallback. The upstream reader
+  is not used. Pinned source and full license text are retained under
+  `third_party/fpng`, revision `925796543b9d26b8edfcdcecd94c1dac280f29fc`.
+  Source: https://github.com/richgel999/fpng/tree/925796543b9d26b8edfcdcecd94c1dac280f29fc
 
 Optional sticker packs are downloaded separately by `tools/fetch_stickers.py`;
 they are not included in the executable or release archive. Each downloaded pack
@@ -23,6 +28,6 @@ included in this release. See the downloader for upstream URLs and pack handling
 FFmpeg is a separate optional dependency. It is not bundled. Its license depends
 on the selected build: https://ffmpeg.org/legal.html
 
-The comparison video uses original synthetic fixtures, original synthesized
-audio, and captures of Zipshot's real offscreen editor. ShareX is a trademark of
-its respective owner. Benchmark source/provenance accompanies the measurements.
+Current GitHub comparison media is silent and uses original synthetic fixtures
+and captures of Zipshot's real offscreen editor. ShareX is a trademark of its
+respective owner. Benchmark source/provenance accompanies the measurements.

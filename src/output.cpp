@@ -1,5 +1,9 @@
 #include "common.h"
+#include "png_limit_stream.h"
 #include "sharex_import.h"
+#include "encoded_png.h"
+#include "png_encode_fast.h"
+#include "pixel_alpha.h"
 #include <wincodec.h>
 #include <shlwapi.h>
 #include <shlobj.h>
@@ -262,17 +266,34 @@ bool EncodeImage(const Image& img, const std::wstring& path, bool jpeg) {
     ComPtr<IStream> s;
     if (FAILED(SHCreateStreamOnFileEx(path.c_str(), STGM_CREATE | STGM_WRITE, FILE_ATTRIBUTE_NORMAL, TRUE, nullptr, &s)))
         return false;
+    if (!jpeg) {
+        std::vector<uint8_t> png;
+        if (TryEncodePngFast(img, png)) {
+            ULONG written = 0;
+            return SUCCEEDED(s->Write(png.data(), (ULONG)png.size(), &written)) && written == png.size();
+        }
+    }
     return Encode(img, s.Get(), jpeg);
 }
 
 bool SaveImageAuto(const Image& img, std::wstring& path) {
+    if (img.alpha || g_jpegOverKB <= 0) {
+        std::vector<uint8_t> png;
+        if (TryEncodePngFast(img, png)) return WriteFileBytes(path, png.data(), png.size());
+    }
     ComPtr<IStream> mem;
     mem.Attach(SHCreateMemStream(nullptr, 0));
-    if (!mem || !Encode(img, mem.Get(), false)) return false;
+    if (!mem) return false;
+    ComPtr<PngLimitStream> limited;
+    if (!img.alpha && g_jpegOverKB > 0)
+        limited.Attach(new PngLimitStream(mem.Get(), (uint64_t)g_jpegOverKB * 1024));
+    const bool pngOk = Encode(img, limited ? static_cast<IStream*>(limited.Get()) : mem.Get(), false);
+    const bool thresholdExceeded = limited && limited->Exceeded();
+    if (!pngOk && !thresholdExceeded) return false;
     STATSTG st{};
     if (FAILED(mem->Stat(&st, STATFLAG_NONAME))) return false;
     size_t size = (size_t)st.cbSize.QuadPart;
-    if (!img.alpha && g_jpegOverKB > 0 && size > (size_t)g_jpegOverKB * 1024) {
+    if (thresholdExceeded || (!img.alpha && g_jpegOverKB > 0 && size > (size_t)g_jpegOverKB * 1024)) {
         path = path.substr(0, path.find_last_of(L'.')) + L".jpg";
         mem.Attach(SHCreateMemStream(nullptr, 0));
         if (!mem || !Encode(img, mem.Get(), true) || FAILED(mem->Stat(&st, STATFLAG_NONAME))) return false;
@@ -287,6 +308,80 @@ bool SaveImageAuto(const Image& img, std::wstring& path) {
     return WriteFileBytes(path, buf.data(), size);
 }
 
+static bool StreamBytes(IStream* stream, std::vector<BYTE>& bytes) {
+    STATSTG stat{};
+    if (!stream || FAILED(stream->Stat(&stat, STATFLAG_NONAME)) || !stat.cbSize.QuadPart || stat.cbSize.QuadPart > MAXDWORD)
+        return false;
+    bytes.resize((size_t)stat.cbSize.QuadPart);
+    LARGE_INTEGER zero{};
+    ULONG read = 0;
+    return SUCCEEDED(stream->Seek(zero, STREAM_SEEK_SET, nullptr)) &&
+           SUCCEEDED(stream->Read(bytes.data(), (ULONG)bytes.size(), &read)) && read == bytes.size();
+}
+
+static bool PngBytes(const Image& image, std::vector<BYTE>& bytes) {
+    ComPtr<IStream> stream;
+    stream.Attach(SHCreateMemStream(nullptr, 0));
+    return stream && Encode(image, stream.Get(), false) && StreamBytes(stream.Get(), bytes);
+}
+
+static bool SelectedPngBytes(const Image& image, std::vector<BYTE>& bytes) {
+    if (image.alpha && TryEncodePngFast(image, bytes)) return true;
+    return PngBytes(image, bytes);
+}
+
+class PreparedPng {
+    friend PreparedPngPtr PreparePngWic(std::shared_ptr<const Image>);
+    friend PreparedPngPtr PreparePng(std::shared_ptr<const Image>);
+    friend void CopyPreparedImageToClipboard(const PreparedPngPtr&, std::function<bool()>);
+    friend bool SavePreparedImageAuto(const PreparedPngPtr&, std::wstring&);
+    std::shared_ptr<const Image> image;
+    std::vector<BYTE> png;
+    int width = 0, height = 0;
+    bool alpha = false;
+    bool Valid() const {
+        return image && ValidImage(*image) && image->w == width && image->h == height && image->alpha == alpha &&
+               !png.empty() && png.size() <= MAXDWORD;
+    }
+};
+
+PreparedPngPtr PreparePngWic(std::shared_ptr<const Image> image) {
+    if (!image || !ValidImage(*image)) return {};
+    auto prepared = std::shared_ptr<PreparedPng>(new PreparedPng);
+    prepared->image = std::move(image);
+    prepared->width = prepared->image->w;
+    prepared->height = prepared->image->h;
+    prepared->alpha = prepared->image->alpha;
+    if (!PngBytes(*prepared->image, prepared->png)) return {};
+    return prepared;
+}
+
+PreparedPngPtr PreparePng(std::shared_ptr<const Image> image) {
+    if (!image || !ValidImage(*image)) return {};
+    auto prepared = std::shared_ptr<PreparedPng>(new PreparedPng);
+    prepared->image = std::move(image);
+    prepared->width = prepared->image->w;
+    prepared->height = prepared->image->h;
+    prepared->alpha = prepared->image->alpha;
+    if (!SelectedPngBytes(*prepared->image, prepared->png)) return {};
+    return prepared;
+}
+
+bool SavePreparedImageAuto(const PreparedPngPtr& prepared, std::wstring& path) {
+    if (!prepared || !prepared->Valid()) return false;
+    const Image& image = *prepared->image;
+    // WIC PNG size is unchanged, including the automatic-JPEG decision.
+    if (!image.alpha && g_jpegOverKB > 0 && prepared->png.size() > (size_t)g_jpegOverKB * 1024) {
+        path = path.substr(0, path.find_last_of(L'.')) + L".jpg";
+        ComPtr<IStream> stream;
+        stream.Attach(SHCreateMemStream(nullptr, 0));
+        std::vector<BYTE> jpeg;
+        if (!stream || !Encode(image, stream.Get(), true) || !StreamBytes(stream.Get(), jpeg)) return false;
+        return WriteFileBytes(path, jpeg.data(), jpeg.size());
+    }
+    return WriteFileBytes(path, prepared->png.data(), prepared->png.size());
+}
+
 bool LoadImageFile(const std::wstring& path, Image& out) {
     ComPtr<IWICImagingFactory> f;
     if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&f)))) return false;
@@ -295,21 +390,32 @@ bool LoadImageFile(const std::wstring& path, Image& out) {
         return false;
     ComPtr<IWICBitmapFrameDecode> frame;
     if (FAILED(dec->GetFrame(0, &frame))) return false;
-    ComPtr<IWICFormatConverter> conv;
-    if (FAILED(f->CreateFormatConverter(&conv))) return false;
-    if (FAILED(conv->Initialize(frame.Get(), GUID_WICPixelFormat32bppBGRA, WICBitmapDitherTypeNone, nullptr, 0,
-                                WICBitmapPaletteTypeCustom)))
-        return false;
+    WICPixelFormatGUID native{};
+    frame->GetPixelFormat(&native);
+    ComPtr<IWICBitmapSource> source;
+    if (native == GUID_WICPixelFormat32bppBGRA) source = frame;
+    else {
+        ComPtr<IWICFormatConverter> conv;
+        if (FAILED(f->CreateFormatConverter(&conv))) return false;
+        if (FAILED(conv->Initialize(frame.Get(), GUID_WICPixelFormat32bppBGRA, WICBitmapDitherTypeNone, nullptr, 0,
+                                    WICBitmapPaletteTypeCustom)))
+            return false;
+        source = conv;
+    }
     UINT w, h;
-    if (FAILED(conv->GetSize(&w, &h)) || !w || !h || (uint64_t)w * h > UINT_MAX / 4) return false;
+    if (FAILED(source->GetSize(&w, &h)) || !w || !h || (uint64_t)w * h > UINT_MAX / 4) return false;
     Image loaded;
     loaded.w = (int)w;
     loaded.h = (int)h;
     loaded.px.resize((size_t)w * h);
-    if (FAILED(conv->CopyPixels(nullptr, w * 4, (UINT)(loaded.px.size() * 4), (BYTE*)loaded.px.data()))) return false;
+    if (FAILED(source->CopyPixels(nullptr, w * 4, (UINT)(loaded.px.size() * 4), (BYTE*)loaded.px.data()))) return false;
     // Image documents use straight BGRA; the editor premultiplies only when uploading to D2D.
     // Flattening here destroyed transparency when a saved PNG was reopened.
-    loaded.alpha = std::any_of(loaded.px.begin(), loaded.px.end(), [](uint32_t p) { return (p >> 24) != 255; });
+    // These native formats cannot contain alpha. Gray/indexed/other formats
+    // still inspect decoded pixels, including palette and color-key cases.
+    const bool opaque = native == GUID_WICPixelFormat24bppBGR || native == GUID_WICPixelFormat24bppRGB ||
+                        native == GUID_WICPixelFormat32bppBGR;
+    loaded.alpha = !opaque && PixelsHaveTransparency(loaded.px.data(), loaded.px.size());
     out = std::move(loaded);
     return true;
 }
@@ -322,13 +428,21 @@ static bool OpenClipboardRetry() {
     return false;
 }
 
-void CopyImageToClipboard(const Image& img) {
-    if (img.empty() || !OpenClipboardRetry()) return;
+static void CopyImageToClipboardBytes(const Image& img, const std::vector<BYTE>* png,
+                                      const std::function<bool()>& allow = {}) {
+    if (!ValidImage(img) || !OpenClipboardRetry()) return;
+    struct CloseOnExit { ~CloseOnExit() { CloseClipboard(); } } close;
+    if (allow) {
+        try { if (!allow()) return; }
+        catch (...) { return; }
+    }
     EmptyClipboard();
     size_t rowBytes = (size_t)img.w * 4;
     HGLOBAL g = GlobalAlloc(GMEM_MOVEABLE, sizeof(BITMAPINFOHEADER) + rowBytes * img.h);
     if (g) {
         auto* bih = (BITMAPINFOHEADER*)GlobalLock(g);
+        if (!bih) { GlobalFree(g); g = nullptr; }
+        if (bih) {
         *bih = {};
         bih->biSize = sizeof(*bih);
         bih->biWidth = img.w;
@@ -342,26 +456,30 @@ void CopyImageToClipboard(const Image& img) {
             memcpy(dst + rowBytes * (img.h - 1 - y), &img.px[(size_t)y * img.w], rowBytes);
         GlobalUnlock(g);
         if (!SetClipboardData(CF_DIB, g)) GlobalFree(g);
-    }
-    if (img.alpha) {
-        // DIBs lose transparency in most apps; browsers, Telegram and Discord read the "PNG" format.
-        ComPtr<IStream> mem;
-        mem.Attach(SHCreateMemStream(nullptr, 0));
-        if (mem && Encode(img, mem.Get(), false)) {
-            STATSTG st{};
-            mem->Stat(&st, STATFLAG_NONAME);
-            HGLOBAL pg = GlobalAlloc(GMEM_MOVEABLE, (SIZE_T)st.cbSize.QuadPart);
-            if (pg) {
-                LARGE_INTEGER zero{};
-                mem->Seek(zero, STREAM_SEEK_SET, nullptr);
-                ULONG rd = 0;
-                mem->Read(GlobalLock(pg), (ULONG)st.cbSize.QuadPart, &rd);
-                GlobalUnlock(pg);
-                if (!SetClipboardData(RegisterClipboardFormatW(L"PNG"), pg)) GlobalFree(pg);
-            }
         }
     }
-    CloseClipboard();
+    if (img.alpha && png && !png->empty() && png->size() <= MAXDWORD) {
+        // DIBs lose transparency in most apps; browsers, Telegram and Discord read the "PNG" format.
+            HGLOBAL pg = GlobalAlloc(GMEM_MOVEABLE, png->size());
+            if (pg) {
+                void* data = GlobalLock(pg);
+                if (data) memcpy(data, png->data(), png->size());
+                GlobalUnlock(pg);
+                if (!data || !SetClipboardData(RegisterClipboardFormatW(L"PNG"), pg)) GlobalFree(pg);
+            }
+    }
+}
+
+void CopyImageToClipboard(const Image& img) {
+    if (!ValidImage(img)) return;
+    std::vector<BYTE> png;
+    if (img.alpha) SelectedPngBytes(img, png);  // All encoding occurs before opening the clipboard.
+    CopyImageToClipboardBytes(img, png.empty() ? nullptr : &png);
+}
+
+void CopyPreparedImageToClipboard(const PreparedPngPtr& prepared, std::function<bool()> allow) {
+    if (!prepared || !prepared->Valid()) return;
+    CopyImageToClipboardBytes(*prepared->image, &prepared->png, allow);
 }
 
 void CopyFileToClipboard(const std::wstring& path) {

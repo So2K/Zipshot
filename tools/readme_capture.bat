@@ -10,7 +10,7 @@ if not exist build\readme-native mkdir build\readme-native
 python tools\prepare_readme_editor.py || exit /b 1
 rc /nologo /fo build\readme-native\zipshot.res res\zipshot.rc || exit /b 1
 cl /nologo /O2 /GL /GS /guard:cf /Gy /W3 /EHsc /std:c++20 /utf-8 /MT /DUNICODE /D_UNICODE /Isrc ^
-   src\app.cpp src\capture.cpp src\output.cpp src\overlay.cpp tools\readme_capture.cpp src\toast.cpp src\recorder.cpp src\mainwindow.cpp src\i18n.cpp src\sharex_import.cpp src\colorpicker.cpp src\combine.cpp src\imageops.cpp src\imagedialogs.cpp src\shapes_ext.cpp src\stickers.cpp ^
+   src\app.cpp src\capture.cpp src\output.cpp src\png_encode_fast.cpp third_party\fpng\fpng.cpp src\overlay.cpp tools\readme_capture.cpp src\toast.cpp src\recorder.cpp src\mainwindow.cpp src\clipboard_shelf.cpp src\cursor_video.cpp src\i18n.cpp src\sharex_import.cpp src\colorpicker.cpp src\combine.cpp src\imageops.cpp src\imagedialogs.cpp src\shapes_ext.cpp src\stickers.cpp ^
    build\readme-native\zipshot.res /Fobuild\readme-native\ /Fe:build\readme-native\zipshot-demo.exe ^
    /link /LTCG /OPT:REF /OPT:ICF /DYNAMICBASE /NXCOMPAT /guard:cf /SUBSYSTEM:WINDOWS /MANIFEST:EMBED /MANIFESTINPUT:src\zipshot.manifest ^
    user32.lib gdi32.lib shell32.lib shlwapi.lib ole32.lib oleaut32.lib windowscodecs.lib d2d1.lib dwrite.lib ^

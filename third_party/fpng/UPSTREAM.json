@@ -1,0 +1,10 @@
+{
+  "project": "richgel999/fpng",
+  "commit": "925796543b9d26b8edfcdcecd94c1dac280f29fc",
+  "license": "Unlicense; full text at end of fpng.cpp",
+  "files": {
+    "fpng.cpp": "b2b953f53f4b472b427bfb04a0ee1839ba66e8f32a02580e7a09d31313edd975",
+    "fpng.h": "604c7e3757dba53b32f7e2523927c7e02ad90939d631a76f94f0690efa2c1fc9",
+    "README.md": "fc8afca6480e401853ce06dca142b2576f82d60ec8542de3af6fb7d6a846ec55"
+  }
+}

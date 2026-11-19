@@ -529,6 +529,48 @@ void CursorFollowCases(const std::wstring& video, const std::wstring& image) {
           GetFileAttributesW((shelf::Directory() + L"\\Вставка_" + std::to_wstring(beforeStore + 1) + L".png").c_str()) != INVALID_FILE_ATTRIBUTES,
           "paste completes safely after window replacement and releases global busy state");
 }
+
+void LargeSelectionIntegrity() {
+    auto original = std::move(g_mw->catalog);
+    const auto oldFilter = g_mw->filter;
+    const bool oldOrder = g_mw->oldestFirst;
+    std::vector<std::wstring> evenPaths;
+    g_mw->catalog.clear();
+    for (unsigned i = 0; i < 10199; ++i) {
+        gallery::Item item;
+        item.name = (i % 2 ? L"Other_" : L"Снимок_") + std::to_wstring(i) + L".png";
+        item.path = test::root + L"\\metadata-only\\" + item.name;
+        item.time = i;
+        if (!(i % 2)) evenPaths.push_back(item.path);
+        g_mw->catalog.push_back(std::move(item));
+    }
+    g_mw->filter = gallery::Filter::All;
+    g_mw->oldestFirst = false;
+    Query(L"");
+    RebuildView();
+    SelectAll();
+    Check(g_mw->files.size() == 10199 && g_mw->picked.size() == 10199,
+          "large native gallery retains all10,199 selected paths without a display cap");
+    g_mw->picked.push_back(test::root + L"\\not-in-catalog.png");
+    const auto kept = g_mw->catalog[100].path;
+    const auto hidden = g_mw->catalog[101].path;
+    g_mw->sel = IndexOf(kept);
+    g_mw->anchor = IndexOf(hidden);
+    Query(L"сНиМоК_");
+    Check(g_mw->files.size() == 5100 && g_mw->picked == evenPaths && SelectedPath() == kept && g_mw->anchor == -1,
+          "large Unicode filter prunes only hidden and stale selections, preserving chronological pick order and focus");
+    Query(L"no-such-large-selection");
+    Check(g_mw->files.empty() && g_mw->picked.empty() && g_mw->sel == -1 && g_mw->anchor == -1,
+          "large no-match filter clears selected paths and anchors safely");
+    Query(L"");
+    Check(g_mw->catalog.size() == 10199 && g_mw->files.size() == 10199,
+          "clearing the large filter restores every metadata item");
+    g_mw->catalog = std::move(original);
+    g_mw->filter = oldFilter;
+    g_mw->oldestFirst = oldOrder;
+    g_mw->picked.clear();
+    RebuildView();
+}
 }  // namespace test
 
 int wmain(int argc, wchar_t** argv) {
@@ -691,6 +733,7 @@ int wmain(int argc, wchar_t** argv) {
                 test::foregroundBlocked > 0 && test::topLevelShowBlocked > 0,
                 "test window never activates and all top-level show requests are blocked");
     test::CursorFollowCases(video, archive);
+    test::LargeSelectionIntegrity();
     std::weak_ptr<Worker> stopping = g_worker;
     DestroyWindow(g_mw->hwnd);
     test::Check(test::Wait([&] { return stopping.expired(); }), "owned thumbnail worker exits after window teardown");

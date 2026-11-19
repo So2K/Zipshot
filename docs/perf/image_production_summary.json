@@ -1,0 +1,2155 @@
+{
+  "schema": 1,
+  "scope": "actual production forcedPNG and defaultAuto file APIs; not whole UI",
+  "manifest": {
+    "schema": 1,
+    "n_warm": 20,
+    "scope": "actual production forcedPNG and defaultAuto file APIs; not whole UI",
+    "source_sha256": {
+      "src/output.cpp": "992a84130f7197d4af7f68648d44aeac99c3f4bbe6087a846aa069240bd166c6",
+      "src/png_encode_fast.cpp": "b201c637e697816dd48dc47481dcf0553f46c21a21a27655e2b8445b27e4b233",
+      "src/png_limit_stream.h": "947193ec0c3cf63bddadadc0279fac01757888329a408e2c1a758f563bcb41cd",
+      "third_party/fpng/fpng.cpp": "b2b953f53f4b472b427bfb04a0ee1839ba66e8f32a02580e7a09d31313edd975",
+      "tools/perf/image_production.cpp": "16c999831e8f534cae5c7e60428c0230a38c5471933566a118078f83b13c1a0c",
+      "tools/perf/image_sharex.cs": "f4aec5d2b1d2823f061c0e87fa57b8f307ed118bdf2779cdc1e455298d443861"
+    },
+    "exe_sha256": {
+      "build/perf/images/image_production.exe": "e8cc66c68976dec67b881529f8606b6ea4cc73f523980e1c8bf54806e696b637",
+      "build/perf/images/sharex-runtime/image_sharex.dll": "8d1701df992d89bd3c56b1434791e9aa9d428531d7b12bfc88f8ed0b11d7b487"
+    },
+    "cases": [
+      {
+        "id": "1920x1080-ui",
+        "width": 1920,
+        "height": 1080,
+        "kind": "ui",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/1920x1080-ui",
+        "input_sha256": "d80a96996e2274e5377721e3c72cb03d59e758ba9c5dc143e645b8dc147942d2",
+        "elapsed_s": {
+          "production": 1.0939999999827705,
+          "stock": 1.6410000000032596
+        },
+        "csv_sha256": {
+          "production.csv": "ebdf975e94ca05eba3f42b723d12ea419029f6c7885aee8ec9d554c8ae63cc34",
+          "sharex.csv": "84c0fc992d16a1725728675f087c6b4e9bcfe1128cfa70599df464e2f56c2ac7"
+        },
+        "production_folder": "build/perf/images/production-v1/1920x1080-ui",
+        "production_png_sha256": "592b1d286744c6514b4453e137b698dd3e33b7722c109b7106a4d9cb939c009d"
+      },
+      {
+        "id": "1920x1080-text",
+        "width": 1920,
+        "height": 1080,
+        "kind": "text",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/1920x1080-text",
+        "input_sha256": "fb607851be37410a6b7a82140bebb054774748acf8841d91a5f0786d82379b60",
+        "elapsed_s": {
+          "production": 1.2339999999967404,
+          "stock": 1.6410000000032596
+        },
+        "csv_sha256": {
+          "production.csv": "107acb59f41260b8201ee16ef04a6c005bece02020349f4ffb79e2b052c76645",
+          "sharex.csv": "27c44f324df24def4e32d15cb3385884d51ab66899e40410b08a2642f2b17799"
+        },
+        "production_folder": "build/perf/images/production-v1/1920x1080-text",
+        "production_png_sha256": "8f4b8db679819be9d2e30d93713b28baac2c80ad93f2bb16ae5bd1b646b4b8a6"
+      },
+      {
+        "id": "1920x1080-alpha-ui",
+        "width": 1920,
+        "height": 1080,
+        "kind": "alpha-ui",
+        "alpha": true,
+        "folder": "build/perf/images/corpus-v1/1920x1080-alpha-ui",
+        "input_sha256": "36e56628d1ceed714b7930f4d0e12af564398d3ce8e540f7d8591d8fbe59a844",
+        "elapsed_s": {
+          "production": 0.7810000000172295,
+          "stock": 1.75
+        },
+        "csv_sha256": {
+          "production.csv": "5e5ca10e6627893cbb26dce2939b66c8d94fc8ecfa739ff5bf842873f4e0f259",
+          "sharex.csv": "7a8fb35e0142d7dbcab5a2d4073787f9130332b52d1bd6a90aa3494e2ef67bca"
+        },
+        "production_folder": "build/perf/images/production-v1/1920x1080-alpha-ui",
+        "production_png_sha256": "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884"
+      },
+      {
+        "id": "1920x1080-alpha",
+        "width": 1920,
+        "height": 1080,
+        "kind": "alpha",
+        "alpha": true,
+        "folder": "build/perf/images/corpus-v1/1920x1080-alpha",
+        "input_sha256": "853a327277b1b88c00e73bcfff2c165059ae9675f49ac265d4674ef066467bcf",
+        "elapsed_s": {
+          "production": 3.3119999999762513,
+          "stock": 6.10999999998603
+        },
+        "csv_sha256": {
+          "production.csv": "70387d2df6caed34c6832d6fd13818928be69c157a4b205f704d326a3a801fd0",
+          "sharex.csv": "d568a855fa0b31c20ea51c5e620c961fe2d8e0d1d5fa767bb3f97134ba911078"
+        },
+        "production_folder": "build/perf/images/production-v1/1920x1080-alpha",
+        "production_png_sha256": "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718"
+      },
+      {
+        "id": "1920x1080-photo",
+        "width": 1920,
+        "height": 1080,
+        "kind": "photo",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/1920x1080-photo",
+        "input_sha256": "d07e0a8cce6f15ca863673920d98f7d61782f2418a71c4b2c2133ca46502fbeb",
+        "elapsed_s": {
+          "production": 3.5939999999827705,
+          "stock": 4.063000000023749
+        },
+        "csv_sha256": {
+          "production.csv": "b3de152b25dc22ba8b140031e1810f987497dd759563a76239b48a0c23765263",
+          "sharex.csv": "28682e260d9a31616121637ea1968e14f4dd3ddaf4bafb88106b8618f50c5300"
+        },
+        "production_folder": "build/perf/images/production-v1/1920x1080-photo",
+        "production_png_sha256": "34f086c7d943a1f0d735b9fa4c2e480d27f10c7485f77d3e07787bb9d3ac17bf"
+      },
+      {
+        "id": "1920x1080-entropy",
+        "width": 1920,
+        "height": 1080,
+        "kind": "entropy",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/1920x1080-entropy",
+        "input_sha256": "c1299e2f233c35ab429d991807bf3d09e98e0695b1d62bbc03da03131ed01395",
+        "elapsed_s": {
+          "production": 3.1560000000172295,
+          "stock": 6.3439999999827705
+        },
+        "csv_sha256": {
+          "production.csv": "da423353997f6e33eb2fefee8e440313a0670466392c062845bbc8f0303addf9",
+          "sharex.csv": "0b69d1e72c3796824c2fb70cf8a77aa9a104e8df5d8da28f06ccf5c283736ed7"
+        },
+        "production_folder": "build/perf/images/production-v1/1920x1080-entropy",
+        "production_png_sha256": "5e2547ee9df69785c6fbdb9f70f5fcf9f671175de9bd4fbb591d58fdbf2e4d87"
+      },
+      {
+        "id": "3840x2160-ui",
+        "width": 3840,
+        "height": 2160,
+        "kind": "ui",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/3840x2160-ui",
+        "input_sha256": "2a223469aaf96cc4db6f6d149b73dc29989ffe9267feccad125bd671ea982863",
+        "elapsed_s": {
+          "production": 4.0310000000172295,
+          "stock": 5.905999999959022
+        },
+        "csv_sha256": {
+          "production.csv": "c2d31c79de6a862d73e6b1815f77bd7b303146ea0b286b57bbc780b6fd6229ac",
+          "sharex.csv": "30f403422b53ff7fc5af8b81060b0b15e0cadc923a7e9d2c11fb7d4ded6b319a"
+        },
+        "production_folder": "build/perf/images/production-v1/3840x2160-ui",
+        "production_png_sha256": "309c0903286e0a7202cb870b4b34c116eb2e2e7d9021938acbe28ff2078d079f"
+      },
+      {
+        "id": "3840x2160-text",
+        "width": 3840,
+        "height": 2160,
+        "kind": "text",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/3840x2160-text",
+        "input_sha256": "204fc0768dbc045d9c414391e6a2e85b10949db5edcc301a499191b30fb3f528",
+        "elapsed_s": {
+          "production": 4.453000000037719,
+          "stock": 6.25
+        },
+        "csv_sha256": {
+          "production.csv": "b45708da0804a638172287891b0bef163bc7609422d3efa788849de4c8ed4e54",
+          "sharex.csv": "9d13f940a563c1a11b7aa5c03952e1e1cda1e49f20e70cd686008d7b69bb7450"
+        },
+        "production_folder": "build/perf/images/production-v1/3840x2160-text",
+        "production_png_sha256": "a18c5db4185e9b90db9b19304f7e80d9d82afd1855bd20fdf8e0606375a0aa74"
+      },
+      {
+        "id": "3840x2160-alpha-ui",
+        "width": 3840,
+        "height": 2160,
+        "kind": "alpha-ui",
+        "alpha": true,
+        "folder": "build/perf/images/corpus-v1/3840x2160-alpha-ui",
+        "input_sha256": "af1fa8a1f080d6788d2c80f17fbdbd8ab0bb255a55b265817de589775a73f63b",
+        "elapsed_s": {
+          "production": 2.75,
+          "stock": 6.14100000000326
+        },
+        "csv_sha256": {
+          "production.csv": "eb765915deed46f61bac87f00dede790864b38a9b183d5025389e7952e6843f8",
+          "sharex.csv": "d91f1ed2a263d625244c1c5b3548b90136162e49e2b55a16953ae0b3ad261133"
+        },
+        "production_folder": "build/perf/images/production-v1/3840x2160-alpha-ui",
+        "production_png_sha256": "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5"
+      },
+      {
+        "id": "3840x2160-alpha",
+        "width": 3840,
+        "height": 2160,
+        "kind": "alpha",
+        "alpha": true,
+        "folder": "build/perf/images/corpus-v1/3840x2160-alpha",
+        "input_sha256": "d7a7a4b1d17819b7def3ea3abbb847ead5f7a09dc4ec57b3288b38cbbd0bf7a6",
+        "elapsed_s": {
+          "production": 13.296999999962281,
+          "stock": 21.31200000003446
+        },
+        "csv_sha256": {
+          "production.csv": "079a9b085306f8b1b878fc79425ec7b29dabd4a07145cee16e6eed1f6b26ac96",
+          "sharex.csv": "a194de0a1efdfdedd6fb953220e2dd1f48a33a0d765fd7d985df53724f850bac"
+        },
+        "production_folder": "build/perf/images/production-v1/3840x2160-alpha",
+        "production_png_sha256": "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75"
+      },
+      {
+        "id": "3840x2160-photo",
+        "width": 3840,
+        "height": 2160,
+        "kind": "photo",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/3840x2160-photo",
+        "input_sha256": "f612f7cee47ad7be291621dc4e5ad002e1d63cc281bd4b8a95cd98feeedbb92c",
+        "elapsed_s": {
+          "production": 9.5,
+          "stock": 12.030999999959022
+        },
+        "csv_sha256": {
+          "production.csv": "bf5070ce2125107678d3df172b524f8ebf2dd501453b9063d83fe0d1e3690255",
+          "sharex.csv": "a47548fef9aa3e296ef1aa76d6ed92b46c9e2ced26e846a474ee20907a11c31c"
+        },
+        "production_folder": "build/perf/images/production-v1/3840x2160-photo",
+        "production_png_sha256": "5ddf7a2277bf889d7cebc8260e5046e7ed0f32d477ac8598f477c4dcbc604116"
+      },
+      {
+        "id": "3840x2160-entropy",
+        "width": 3840,
+        "height": 2160,
+        "kind": "entropy",
+        "alpha": false,
+        "folder": "build/perf/images/corpus-v1/3840x2160-entropy",
+        "input_sha256": "775bc1b16ee89c2d63aef2f5a6624a93ac6d2aeb7d86848148c38f5dafe9f77e",
+        "elapsed_s": {
+          "production": 9.40600000001723,
+          "stock": 21.17200000002049
+        },
+        "csv_sha256": {
+          "production.csv": "dd474d8c6ddb62f260dbc037dfc0703c94f04127513af0bb36d55419f687225d",
+          "sharex.csv": "a9819e68e3da0910dee72ffe3f9679544956c09e34cad1a21135248054fa1f12"
+        },
+        "production_folder": "build/perf/images/production-v1/3840x2160-entropy",
+        "production_png_sha256": "7c51cb611dc711c4cdca4a9748850652e2462063a011906bf488e8f93bf84d04"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "1920x1080-ui",
+      "width": 1920,
+      "height": 1080,
+      "kind": "ui",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/1920x1080-ui",
+      "input_sha256": "d80a96996e2274e5377721e3c72cb03d59e758ba9c5dc143e645b8dc147942d2",
+      "elapsed_s": {
+        "production": 1.0939999999827705,
+        "stock": 1.6410000000032596
+      },
+      "csv_sha256": {
+        "production.csv": "ebdf975e94ca05eba3f42b723d12ea419029f6c7885aee8ec9d554c8ae63cc34",
+        "sharex.csv": "84c0fc992d16a1725728675f087c6b4e9bcfe1128cfa70599df464e2f56c2ac7"
+      },
+      "production_folder": "build/perf/images/production-v1/1920x1080-ui",
+      "production_png_sha256": "592b1d286744c6514b4453e137b698dd3e33b7722c109b7106a4d9cb939c009d",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 6.8375,
+          "median_ms": 6.44825,
+          "p95_ms": 6.6486,
+          "min_ms": 6.0985,
+          "max_ms": 6.6754,
+          "mean_ms": 6.423295,
+          "stdev_ms": 0.1664762397302896,
+          "megapixels_per_second": 321.5756212925988,
+          "encoded_bytes": [
+            137419
+          ],
+          "decoded_sha256": [
+            "d80a96996e2274e5377721e3c72cb03d59e758ba9c5dc143e645b8dc147942d2"
+          ],
+          "encoded_sha256": [
+            "592b1d286744c6514b4453e137b698dd3e33b7722c109b7106a4d9cb939c009d"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 9.1578,
+          "median_ms": 8.8826,
+          "p95_ms": 9.2165,
+          "min_ms": 8.5183,
+          "max_ms": 9.5612,
+          "mean_ms": 8.89246,
+          "stdev_ms": 0.26393627500432354,
+          "megapixels_per_second": 233.44516245243508,
+          "encoded_bytes": [
+            137419
+          ],
+          "decoded_sha256": [
+            "d80a96996e2274e5377721e3c72cb03d59e758ba9c5dc143e645b8dc147942d2"
+          ],
+          "encoded_sha256": [
+            "592b1d286744c6514b4453e137b698dd3e33b7722c109b7106a4d9cb939c009d"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 27.1459,
+          "median_ms": 26.30085,
+          "p95_ms": 26.7612,
+          "min_ms": 24.9362,
+          "max_ms": 26.8912,
+          "mean_ms": 26.047945,
+          "stdev_ms": 0.653204672103541,
+          "megapixels_per_second": 78.84155835267681,
+          "encoded_bytes": [
+            73851
+          ],
+          "decoded_sha256": [
+            "d80a96996e2274e5377721e3c72cb03d59e758ba9c5dc143e645b8dc147942d2"
+          ],
+          "encoded_sha256": [
+            "6de874810133c15378a507a0fa62ed4323ac43049538b1364768df4fb54c310e"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 6.2271,
+          "median_ms": 5.972799999999999,
+          "p95_ms": 6.1,
+          "min_ms": 5.8908,
+          "max_ms": 6.4218,
+          "mean_ms": 6.01142,
+          "stdev_ms": 0.11520789263898455,
+          "megapixels_per_second": 347.1738548084651,
+          "encoded_bytes": [
+            137419
+          ],
+          "decoded_sha256": [
+            "d80a96996e2274e5377721e3c72cb03d59e758ba9c5dc143e645b8dc147942d2"
+          ],
+          "encoded_sha256": [
+            "592b1d286744c6514b4453e137b698dd3e33b7722c109b7106a4d9cb939c009d"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 32.89460003376007,
+          "median_ms": 31.905449986457825,
+          "p95_ms": 34.36379998922348,
+          "min_ms": 31.453000009059906,
+          "max_ms": 34.510399997234344,
+          "mean_ms": 32.346535003185274,
+          "stdev_ms": 0.9707066431664098,
+          "megapixels_per_second": 64.9920311696006,
+          "encoded_bytes": [
+            124415
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 33.18569999933243,
+          "median_ms": 31.714049994945526,
+          "p95_ms": 35.068499982357025,
+          "min_ms": 31.142099976539612,
+          "max_ms": 39.0527999997139,
+          "mean_ms": 32.695054998993875,
+          "stdev_ms": 1.92681488643545,
+          "megapixels_per_second": 65.38426975837154,
+          "encoded_bytes": [
+            124415
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "PNG",
+      "png_file_ratio": 3.5703566517624936,
+      "auto_ratio_same_format": 1.2130957739562722,
+      "representative_png": {
+        "bytes": 137419,
+        "sha256": "592b1d286744c6514b4453e137b698dd3e33b7722c109b7106a4d9cb939c009d",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000780000004380802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "1920x1080-text",
+      "width": 1920,
+      "height": 1080,
+      "kind": "text",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/1920x1080-text",
+      "input_sha256": "fb607851be37410a6b7a82140bebb054774748acf8841d91a5f0786d82379b60",
+      "elapsed_s": {
+        "production": 1.2339999999967404,
+        "stock": 1.6410000000032596
+      },
+      "csv_sha256": {
+        "production.csv": "107acb59f41260b8201ee16ef04a6c005bece02020349f4ffb79e2b052c76645",
+        "sharex.csv": "27c44f324df24def4e32d15cb3385884d51ab66899e40410b08a2642f2b17799"
+      },
+      "production_folder": "build/perf/images/production-v1/1920x1080-text",
+      "production_png_sha256": "8f4b8db679819be9d2e30d93713b28baac2c80ad93f2bb16ae5bd1b646b4b8a6",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 7.0702,
+          "median_ms": 6.6997,
+          "p95_ms": 6.9117,
+          "min_ms": 6.5487,
+          "max_ms": 7.0183,
+          "mean_ms": 6.71534,
+          "stdev_ms": 0.11810618950757826,
+          "megapixels_per_second": 309.5063958087676,
+          "encoded_bytes": [
+            334812
+          ],
+          "decoded_sha256": [
+            "fb607851be37410a6b7a82140bebb054774748acf8841d91a5f0786d82379b60"
+          ],
+          "encoded_sha256": [
+            "8f4b8db679819be9d2e30d93713b28baac2c80ad93f2bb16ae5bd1b646b4b8a6"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 9.7837,
+          "median_ms": 9.5238,
+          "p95_ms": 10.2131,
+          "min_ms": 9.2729,
+          "max_ms": 10.4528,
+          "mean_ms": 9.653415,
+          "stdev_ms": 0.34460692523664216,
+          "megapixels_per_second": 217.72821772821774,
+          "encoded_bytes": [
+            334812
+          ],
+          "decoded_sha256": [
+            "fb607851be37410a6b7a82140bebb054774748acf8841d91a5f0786d82379b60"
+          ],
+          "encoded_sha256": [
+            "8f4b8db679819be9d2e30d93713b28baac2c80ad93f2bb16ae5bd1b646b4b8a6"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 30.4302,
+          "median_ms": 27.72385,
+          "p95_ms": 29.7027,
+          "min_ms": 27.0324,
+          "max_ms": 29.7521,
+          "mean_ms": 28.26317,
+          "stdev_ms": 1.0686596406123348,
+          "megapixels_per_second": 74.79480663760626,
+          "encoded_bytes": [
+            186490
+          ],
+          "decoded_sha256": [
+            "fb607851be37410a6b7a82140bebb054774748acf8841d91a5f0786d82379b60"
+          ],
+          "encoded_sha256": [
+            "46376bb96b025f0f90f7738f6412964718349fe1051b94f36b494fdc46b42568"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 7.3587,
+          "median_ms": 7.0377,
+          "p95_ms": 7.4279,
+          "min_ms": 6.5461,
+          "max_ms": 7.4545,
+          "mean_ms": 6.98227,
+          "stdev_ms": 0.2951159327950181,
+          "megapixels_per_second": 294.6417153331344,
+          "encoded_bytes": [
+            334812
+          ],
+          "decoded_sha256": [
+            "fb607851be37410a6b7a82140bebb054774748acf8841d91a5f0786d82379b60"
+          ],
+          "encoded_sha256": [
+            "8f4b8db679819be9d2e30d93713b28baac2c80ad93f2bb16ae5bd1b646b4b8a6"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 32.578900039196014,
+          "median_ms": 31.915399998426437,
+          "p95_ms": 34.125299990177155,
+          "min_ms": 31.322800040245056,
+          "max_ms": 44.578599989414215,
+          "mean_ms": 32.8679250061512,
+          "stdev_ms": 2.902380827439482,
+          "megapixels_per_second": 64.9717691178001,
+          "encoded_bytes": [
+            268983
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 32.658099949359894,
+          "median_ms": 31.966050028800964,
+          "p95_ms": 33.07260000705719,
+          "min_ms": 31.518499970436096,
+          "max_ms": 42.87490004301071,
+          "mean_ms": 32.57124000489712,
+          "stdev_ms": 2.4591375670794458,
+          "megapixels_per_second": 64.86882170714603,
+          "encoded_bytes": [
+            268983
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "PNG",
+      "png_file_ratio": 3.3564386094627108,
+      "auto_ratio_same_format": 1.151189318887039,
+      "representative_png": {
+        "bytes": 334812,
+        "sha256": "8f4b8db679819be9d2e30d93713b28baac2c80ad93f2bb16ae5bd1b646b4b8a6",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000780000004380802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "1920x1080-alpha-ui",
+      "width": 1920,
+      "height": 1080,
+      "kind": "alpha-ui",
+      "alpha": true,
+      "folder": "build/perf/images/corpus-v1/1920x1080-alpha-ui",
+      "input_sha256": "36e56628d1ceed714b7930f4d0e12af564398d3ce8e540f7d8591d8fbe59a844",
+      "elapsed_s": {
+        "production": 0.7810000000172295,
+        "stock": 1.75
+      },
+      "csv_sha256": {
+        "production.csv": "5e5ca10e6627893cbb26dce2939b66c8d94fc8ecfa739ff5bf842873f4e0f259",
+        "sharex.csv": "7a8fb35e0142d7dbcab5a2d4073787f9130332b52d1bd6a90aa3494e2ef67bca"
+      },
+      "production_folder": "build/perf/images/production-v1/1920x1080-alpha-ui",
+      "production_png_sha256": "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 8.4263,
+          "median_ms": 8.2747,
+          "p95_ms": 8.4862,
+          "min_ms": 7.9792,
+          "max_ms": 10.0282,
+          "mean_ms": 8.316585,
+          "stdev_ms": 0.4279753488658455,
+          "megapixels_per_second": 250.59518774094533,
+          "encoded_bytes": [
+            158794
+          ],
+          "decoded_sha256": [
+            "36e56628d1ceed714b7930f4d0e12af564398d3ce8e540f7d8591d8fbe59a844"
+          ],
+          "encoded_sha256": [
+            "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 10.6672,
+          "median_ms": 10.71725,
+          "p95_ms": 11.4784,
+          "min_ms": 10.4878,
+          "max_ms": 11.5356,
+          "mean_ms": 10.78163,
+          "stdev_ms": 0.27470440975135835,
+          "megapixels_per_second": 193.48246985000816,
+          "encoded_bytes": [
+            158794
+          ],
+          "decoded_sha256": [
+            "36e56628d1ceed714b7930f4d0e12af564398d3ce8e540f7d8591d8fbe59a844"
+          ],
+          "encoded_sha256": [
+            "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 8.8522,
+          "median_ms": 8.7681,
+          "p95_ms": 8.9506,
+          "min_ms": 8.5965,
+          "max_ms": 9.0485,
+          "mean_ms": 8.80053,
+          "stdev_ms": 0.10242537257617584,
+          "megapixels_per_second": 236.49365312895608,
+          "encoded_bytes": [
+            158794
+          ],
+          "decoded_sha256": [
+            "36e56628d1ceed714b7930f4d0e12af564398d3ce8e540f7d8591d8fbe59a844"
+          ],
+          "encoded_sha256": [
+            "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 5.4978,
+          "median_ms": 4.48565,
+          "p95_ms": 4.6079,
+          "min_ms": 4.3747,
+          "max_ms": 5.9208,
+          "mean_ms": 4.5506400000000005,
+          "stdev_ms": 0.3296262403325764,
+          "megapixels_per_second": 462.27414087144564,
+          "encoded_bytes": [
+            158794
+          ],
+          "decoded_sha256": [
+            "36e56628d1ceed714b7930f4d0e12af564398d3ce8e540f7d8591d8fbe59a844"
+          ],
+          "encoded_sha256": [
+            "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 34.04689997434616,
+          "median_ms": 33.18160003423691,
+          "p95_ms": 35.27310001850128,
+          "min_ms": 32.627400040626526,
+          "max_ms": 38.8507000207901,
+          "mean_ms": 33.97105500102043,
+          "stdev_ms": 1.5464400388569133,
+          "megapixels_per_second": 62.4924656394041,
+          "encoded_bytes": [
+            205609
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 32.745100021362305,
+          "median_ms": 33.147549986839294,
+          "p95_ms": 53.09369999170303,
+          "min_ms": 32.62200003862381,
+          "max_ms": 54.01759999990463,
+          "mean_ms": 35.365359991788864,
+          "stdev_ms": 6.257044001323704,
+          "megapixels_per_second": 62.556659566794224,
+          "encoded_bytes": [
+            205609
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "PNG",
+      "png_file_ratio": 3.0929156254486267,
+      "auto_ratio_same_format": 3.7843546531445704,
+      "representative_png": {
+        "bytes": 158794,
+        "sha256": "090ffee6bd6ab1066b2b391a026d689f8a74f9f41a76094dba6ac5ea674a1884",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000780000004380806000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "1920x1080-alpha",
+      "width": 1920,
+      "height": 1080,
+      "kind": "alpha",
+      "alpha": true,
+      "folder": "build/perf/images/corpus-v1/1920x1080-alpha",
+      "input_sha256": "853a327277b1b88c00e73bcfff2c165059ae9675f49ac265d4674ef066467bcf",
+      "elapsed_s": {
+        "production": 3.3119999999762513,
+        "stock": 6.10999999998603
+      },
+      "csv_sha256": {
+        "production.csv": "70387d2df6caed34c6832d6fd13818928be69c157a4b205f704d326a3a801fd0",
+        "sharex.csv": "d568a855fa0b31c20ea51c5e620c961fe2d8e0d1d5fa767bb3f97134ba911078"
+      },
+      "production_folder": "build/perf/images/production-v1/1920x1080-alpha",
+      "production_png_sha256": "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 18.6481,
+          "median_ms": 18.119500000000002,
+          "p95_ms": 18.7176,
+          "min_ms": 17.2006,
+          "max_ms": 19.0369,
+          "mean_ms": 18.00173,
+          "stdev_ms": 0.575523028118542,
+          "megapixels_per_second": 114.44024393609092,
+          "encoded_bytes": [
+            7107628
+          ],
+          "decoded_sha256": [
+            "853a327277b1b88c00e73bcfff2c165059ae9675f49ac265d4674ef066467bcf"
+          ],
+          "encoded_sha256": [
+            "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 23.421,
+          "median_ms": 23.2258,
+          "p95_ms": 32.0823,
+          "min_ms": 22.384,
+          "max_ms": 33.5815,
+          "mean_ms": 24.28408,
+          "stdev_ms": 3.003757937475549,
+          "megapixels_per_second": 89.28002480000688,
+          "encoded_bytes": [
+            7107628
+          ],
+          "decoded_sha256": [
+            "853a327277b1b88c00e73bcfff2c165059ae9675f49ac265d4674ef066467bcf"
+          ],
+          "encoded_sha256": [
+            "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 18.8239,
+          "median_ms": 19.15685,
+          "p95_ms": 20.2749,
+          "min_ms": 18.8769,
+          "max_ms": 20.4329,
+          "mean_ms": 19.429135,
+          "stdev_ms": 0.5623569350463608,
+          "megapixels_per_second": 108.24326546378973,
+          "encoded_bytes": [
+            7107628
+          ],
+          "decoded_sha256": [
+            "853a327277b1b88c00e73bcfff2c165059ae9675f49ac265d4674ef066467bcf"
+          ],
+          "encoded_sha256": [
+            "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 23.3109,
+          "median_ms": 22.525750000000002,
+          "p95_ms": 24.3,
+          "min_ms": 21.8922,
+          "max_ms": 24.7351,
+          "mean_ms": 22.64795,
+          "stdev_ms": 0.7695968004501824,
+          "megapixels_per_second": 92.05464856886007,
+          "encoded_bytes": [
+            7107628
+          ],
+          "decoded_sha256": [
+            "853a327277b1b88c00e73bcfff2c165059ae9675f49ac265d4674ef066467bcf"
+          ],
+          "encoded_sha256": [
+            "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 107.74000000953674,
+          "median_ms": 96.92010000348091,
+          "p95_ms": 101.36259996891022,
+          "min_ms": 92.53909999132156,
+          "max_ms": 102.6389000415802,
+          "mean_ms": 96.609270003438,
+          "stdev_ms": 3.1046250418001162,
+          "megapixels_per_second": 21.39494284390468,
+          "encoded_bytes": [
+            1220248
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 181.3870000243187,
+          "median_ms": 177.64204999804497,
+          "p95_ms": 186.89120000600815,
+          "min_ms": 175.4264999628067,
+          "max_ms": 187.05229997634888,
+          "mean_ms": 179.8166000008583,
+          "stdev_ms": 4.188171254930071,
+          "megapixels_per_second": 11.672911903588261,
+          "encoded_bytes": [
+            7084390
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "JPEG",
+      "png_file_ratio": 7.64847927727118,
+      "auto_ratio_same_format": null,
+      "representative_png": {
+        "bytes": 7107628,
+        "sha256": "bfda7836acaae4ad9b9687ef1a2f1510b0a981f83f034fdf7d38f375b84d6718",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000780000004380806000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "1920x1080-photo",
+      "width": 1920,
+      "height": 1080,
+      "kind": "photo",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/1920x1080-photo",
+      "input_sha256": "d07e0a8cce6f15ca863673920d98f7d61782f2418a71c4b2c2133ca46502fbeb",
+      "elapsed_s": {
+        "production": 3.5939999999827705,
+        "stock": 4.063000000023749
+      },
+      "csv_sha256": {
+        "production.csv": "b3de152b25dc22ba8b140031e1810f987497dd759563a76239b48a0c23765263",
+        "sharex.csv": "28682e260d9a31616121637ea1968e14f4dd3ddaf4bafb88106b8618f50c5300"
+      },
+      "production_folder": "build/perf/images/production-v1/1920x1080-photo",
+      "production_png_sha256": "34f086c7d943a1f0d735b9fa4c2e480d27f10c7485f77d3e07787bb9d3ac17bf",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 14.9778,
+          "median_ms": 14.1387,
+          "p95_ms": 15.0188,
+          "min_ms": 13.3657,
+          "max_ms": 15.1532,
+          "mean_ms": 14.172095,
+          "stdev_ms": 0.5788934166739342,
+          "megapixels_per_second": 146.6612913492754,
+          "encoded_bytes": [
+            4578331
+          ],
+          "decoded_sha256": [
+            "d07e0a8cce6f15ca863673920d98f7d61782f2418a71c4b2c2133ca46502fbeb"
+          ],
+          "encoded_sha256": [
+            "34f086c7d943a1f0d735b9fa4c2e480d27f10c7485f77d3e07787bb9d3ac17bf"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 19.2516,
+          "median_ms": 18.5606,
+          "p95_ms": 19.7949,
+          "min_ms": 18.0035,
+          "max_ms": 19.8581,
+          "mean_ms": 18.803755,
+          "stdev_ms": 0.6998565668651044,
+          "megapixels_per_second": 111.7205262760902,
+          "encoded_bytes": [
+            4578331
+          ],
+          "decoded_sha256": [
+            "d07e0a8cce6f15ca863673920d98f7d61782f2418a71c4b2c2133ca46502fbeb"
+          ],
+          "encoded_sha256": [
+            "34f086c7d943a1f0d735b9fa4c2e480d27f10c7485f77d3e07787bb9d3ac17bf"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 85.0757,
+          "median_ms": 80.4586,
+          "p95_ms": 88.8553,
+          "min_ms": 79.3876,
+          "max_ms": 93.1599,
+          "mean_ms": 82.56136000000001,
+          "stdev_ms": 3.8984011829952716,
+          "megapixels_per_second": 25.772260516588652,
+          "encoded_bytes": [
+            724774
+          ],
+          "decoded_sha256": [
+            "225945f9dea45aed8b79cd64d693d123f644c26f624ec0c002d964608ac41709"
+          ],
+          "encoded_sha256": [
+            "66bd497b2477e82f071dbcde32075d6c1dca045cee74b60be8d2644d555375fa"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 18.9079,
+          "median_ms": 18.738799999999998,
+          "p95_ms": 19.0021,
+          "min_ms": 18.6664,
+          "max_ms": 19.256,
+          "mean_ms": 18.78735,
+          "stdev_ms": 0.13624811539015286,
+          "megapixels_per_second": 110.65809977159691,
+          "encoded_bytes": [
+            4578331
+          ],
+          "decoded_sha256": [
+            "d07e0a8cce6f15ca863673920d98f7d61782f2418a71c4b2c2133ca46502fbeb"
+          ],
+          "encoded_sha256": [
+            "34f086c7d943a1f0d735b9fa4c2e480d27f10c7485f77d3e07787bb9d3ac17bf"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 90.38850003480911,
+          "median_ms": 90.03584998846054,
+          "p95_ms": 94.44940000772476,
+          "min_ms": 87.83340001106262,
+          "max_ms": 99.53710001707077,
+          "mean_ms": 91.06480500102043,
+          "stdev_ms": 2.8367695217321756,
+          "megapixels_per_second": 23.030826057240123,
+          "encoded_bytes": [
+            690928
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 84.70810002088547,
+          "median_ms": 88.95329999923706,
+          "p95_ms": 93.61220002174377,
+          "min_ms": 84.17739999294281,
+          "max_ms": 109.16049998998642,
+          "mean_ms": 89.68947499990463,
+          "stdev_ms": 5.539550331474094,
+          "megapixels_per_second": 23.311108188429042,
+          "encoded_bytes": [
+            3201484
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "JPEG",
+      "stock_auto_format": "JPEG",
+      "png_file_ratio": 4.7925875240691065,
+      "auto_ratio_same_format": 1.119033266654659,
+      "representative_png": {
+        "bytes": 4578331,
+        "sha256": "34f086c7d943a1f0d735b9fa4c2e480d27f10c7485f77d3e07787bb9d3ac17bf",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000780000004380802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": true
+    },
+    {
+      "id": "1920x1080-entropy",
+      "width": 1920,
+      "height": 1080,
+      "kind": "entropy",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/1920x1080-entropy",
+      "input_sha256": "c1299e2f233c35ab429d991807bf3d09e98e0695b1d62bbc03da03131ed01395",
+      "elapsed_s": {
+        "production": 3.1560000000172295,
+        "stock": 6.3439999999827705
+      },
+      "csv_sha256": {
+        "production.csv": "da423353997f6e33eb2fefee8e440313a0670466392c062845bbc8f0303addf9",
+        "sharex.csv": "0b69d1e72c3796824c2fb70cf8a77aa9a104e8df5d8da28f06ccf5c283736ed7"
+      },
+      "production_folder": "build/perf/images/production-v1/1920x1080-entropy",
+      "production_png_sha256": "5e2547ee9df69785c6fbdb9f70f5fcf9f671175de9bd4fbb591d58fdbf2e4d87",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 15.4951,
+          "median_ms": 15.163,
+          "p95_ms": 21.6514,
+          "min_ms": 14.5961,
+          "max_ms": 23.387,
+          "mean_ms": 15.9646,
+          "stdev_ms": 2.3119317102007098,
+          "megapixels_per_second": 136.75394051309107,
+          "encoded_bytes": [
+            6222464
+          ],
+          "decoded_sha256": [
+            "c1299e2f233c35ab429d991807bf3d09e98e0695b1d62bbc03da03131ed01395"
+          ],
+          "encoded_sha256": [
+            "5e2547ee9df69785c6fbdb9f70f5fcf9f671175de9bd4fbb591d58fdbf2e4d87"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 21.0133,
+          "median_ms": 20.36545,
+          "p95_ms": 21.6357,
+          "min_ms": 19.8706,
+          "max_ms": 21.9979,
+          "mean_ms": 20.49636,
+          "stdev_ms": 0.5588901590605589,
+          "megapixels_per_second": 101.819503129074,
+          "encoded_bytes": [
+            6222464
+          ],
+          "decoded_sha256": [
+            "c1299e2f233c35ab429d991807bf3d09e98e0695b1d62bbc03da03131ed01395"
+          ],
+          "encoded_sha256": [
+            "5e2547ee9df69785c6fbdb9f70f5fcf9f671175de9bd4fbb591d58fdbf2e4d87"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 58.8958,
+          "median_ms": 54.60085,
+          "p95_ms": 59.7128,
+          "min_ms": 54.0776,
+          "max_ms": 60.6482,
+          "mean_ms": 55.5131,
+          "stdev_ms": 1.8813680923592206,
+          "megapixels_per_second": 37.977430754283134,
+          "encoded_bytes": [
+            1861450
+          ],
+          "decoded_sha256": [
+            "74fab14d0e97d06abac6e4ac1dd3ae891f0f96f5bd3e36b483d3eb04ed92922f"
+          ],
+          "encoded_sha256": [
+            "f3bc65ae093f3a974ad1b362fdcf6dbd3eab72add7b70cb99afd0ffb7522f45e"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 5.5804,
+          "median_ms": 5.99725,
+          "p95_ms": 6.3215,
+          "min_ms": 5.4801,
+          "max_ms": 6.4168,
+          "mean_ms": 5.971105,
+          "stdev_ms": 0.2988565092675396,
+          "megapixels_per_second": 345.75847263329024,
+          "encoded_bytes": [
+            6222464
+          ],
+          "decoded_sha256": [
+            "c1299e2f233c35ab429d991807bf3d09e98e0695b1d62bbc03da03131ed01395"
+          ],
+          "encoded_sha256": [
+            "5e2547ee9df69785c6fbdb9f70f5fcf9f671175de9bd4fbb591d58fdbf2e4d87"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 99.00720000267029,
+          "median_ms": 100.96359997987747,
+          "p95_ms": 106.22699999809265,
+          "min_ms": 96.10740000009537,
+          "max_ms": 107.01769995689392,
+          "mean_ms": 101.1427100032568,
+          "stdev_ms": 3.572013177028843,
+          "megapixels_per_second": 20.538094921469504,
+          "encoded_bytes": [
+            1711141
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 195.89310002326965,
+          "median_ms": 185.53599998354912,
+          "p95_ms": 196.4472000002861,
+          "min_ms": 177.68669998645782,
+          "max_ms": 225.4235000014305,
+          "mean_ms": 187.4074999898672,
+          "stdev_ms": 10.92111596308712,
+          "megapixels_per_second": 11.176267679500794,
+          "encoded_bytes": [
+            7175744
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "JPEG",
+      "stock_auto_format": "JPEG",
+      "png_file_ratio": 9.110331467438684,
+      "auto_ratio_same_format": 1.849121396093238,
+      "representative_png": {
+        "bytes": 6222464,
+        "sha256": "5e2547ee9df69785c6fbdb9f70f5fcf9f671175de9bd4fbb591d58fdbf2e4d87",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000780000004380802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": true
+    },
+    {
+      "id": "3840x2160-ui",
+      "width": 3840,
+      "height": 2160,
+      "kind": "ui",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/3840x2160-ui",
+      "input_sha256": "2a223469aaf96cc4db6f6d149b73dc29989ffe9267feccad125bd671ea982863",
+      "elapsed_s": {
+        "production": 4.0310000000172295,
+        "stock": 5.905999999959022
+      },
+      "csv_sha256": {
+        "production.csv": "c2d31c79de6a862d73e6b1815f77bd7b303146ea0b286b57bbc780b6fd6229ac",
+        "sharex.csv": "30f403422b53ff7fc5af8b81060b0b15e0cadc923a7e9d2c11fb7d4ded6b319a"
+      },
+      "production_folder": "build/perf/images/production-v1/3840x2160-ui",
+      "production_png_sha256": "309c0903286e0a7202cb870b4b34c116eb2e2e7d9021938acbe28ff2078d079f",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 24.7702,
+          "median_ms": 27.580849999999998,
+          "p95_ms": 30.6841,
+          "min_ms": 24.3985,
+          "max_ms": 31.0984,
+          "mean_ms": 27.873755,
+          "stdev_ms": 2.4698298723585674,
+          "megapixels_per_second": 300.730398084178,
+          "encoded_bytes": [
+            328554
+          ],
+          "decoded_sha256": [
+            "2a223469aaf96cc4db6f6d149b73dc29989ffe9267feccad125bd671ea982863"
+          ],
+          "encoded_sha256": [
+            "309c0903286e0a7202cb870b4b34c116eb2e2e7d9021938acbe28ff2078d079f"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 30.7851,
+          "median_ms": 27.66385,
+          "p95_ms": 29.8243,
+          "min_ms": 27.2469,
+          "max_ms": 30.2221,
+          "mean_ms": 28.19438,
+          "stdev_ms": 1.030801340603258,
+          "megapixels_per_second": 299.8281150309881,
+          "encoded_bytes": [
+            328554
+          ],
+          "decoded_sha256": [
+            "2a223469aaf96cc4db6f6d149b73dc29989ffe9267feccad125bd671ea982863"
+          ],
+          "encoded_sha256": [
+            "309c0903286e0a7202cb870b4b34c116eb2e2e7d9021938acbe28ff2078d079f"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 96.639,
+          "median_ms": 99.594,
+          "p95_ms": 105.444,
+          "min_ms": 94.273,
+          "max_ms": 107.812,
+          "mean_ms": 99.92695499999999,
+          "stdev_ms": 3.595117002923622,
+          "megapixels_per_second": 83.28212542924273,
+          "encoded_bytes": [
+            171764
+          ],
+          "decoded_sha256": [
+            "2a223469aaf96cc4db6f6d149b73dc29989ffe9267feccad125bd671ea982863"
+          ],
+          "encoded_sha256": [
+            "0d1cd3c47635ce78c409d4ff10652569fd522878e91c16573d0b4cb19fd9dd43"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 22.2894,
+          "median_ms": 22.98375,
+          "p95_ms": 24.299,
+          "min_ms": 21.9386,
+          "max_ms": 24.8049,
+          "mean_ms": 23.037195,
+          "stdev_ms": 0.8671025396019844,
+          "megapixels_per_second": 360.8810572687225,
+          "encoded_bytes": [
+            328554
+          ],
+          "decoded_sha256": [
+            "2a223469aaf96cc4db6f6d149b73dc29989ffe9267feccad125bd671ea982863"
+          ],
+          "encoded_sha256": [
+            "309c0903286e0a7202cb870b4b34c116eb2e2e7d9021938acbe28ff2078d079f"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 121.26139998435974,
+          "median_ms": 121.80335000157356,
+          "p95_ms": 127.85769999027252,
+          "min_ms": 119.68979996442795,
+          "max_ms": 129.42599999904633,
+          "mean_ms": 122.84468999803066,
+          "stdev_ms": 2.9997469236789462,
+          "megapixels_per_second": 68.09664922921122,
+          "encoded_bytes": [
+            328123
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 129.03600001335144,
+          "median_ms": 122.92619997262955,
+          "p95_ms": 131.14729994535446,
+          "min_ms": 119.64190000295639,
+          "max_ms": 132.79070001840591,
+          "mean_ms": 124.5062150001526,
+          "stdev_ms": 4.328142150090288,
+          "megapixels_per_second": 67.47463113515924,
+          "encoded_bytes": [
+            328123
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "PNG",
+      "png_file_ratio": 4.443568049010877,
+      "auto_ratio_same_format": 1.222998875450063,
+      "representative_png": {
+        "bytes": 328554,
+        "sha256": "309c0903286e0a7202cb870b4b34c116eb2e2e7d9021938acbe28ff2078d079f",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000f00000008700802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "3840x2160-text",
+      "width": 3840,
+      "height": 2160,
+      "kind": "text",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/3840x2160-text",
+      "input_sha256": "204fc0768dbc045d9c414391e6a2e85b10949db5edcc301a499191b30fb3f528",
+      "elapsed_s": {
+        "production": 4.453000000037719,
+        "stock": 6.25
+      },
+      "csv_sha256": {
+        "production.csv": "b45708da0804a638172287891b0bef163bc7609422d3efa788849de4c8ed4e54",
+        "sharex.csv": "9d13f940a563c1a11b7aa5c03952e1e1cda1e49f20e70cd686008d7b69bb7450"
+      },
+      "production_folder": "build/perf/images/production-v1/3840x2160-text",
+      "production_png_sha256": "a18c5db4185e9b90db9b19304f7e80d9d82afd1855bd20fdf8e0606375a0aa74",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 26.7064,
+          "median_ms": 27.502650000000003,
+          "p95_ms": 28.1167,
+          "min_ms": 27.0851,
+          "max_ms": 32.533,
+          "mean_ms": 27.75218,
+          "stdev_ms": 1.1603303144046166,
+          "megapixels_per_second": 301.5854835806731,
+          "encoded_bytes": [
+            738190
+          ],
+          "decoded_sha256": [
+            "204fc0768dbc045d9c414391e6a2e85b10949db5edcc301a499191b30fb3f528"
+          ],
+          "encoded_sha256": [
+            "a18c5db4185e9b90db9b19304f7e80d9d82afd1855bd20fdf8e0606375a0aa74"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 30.1637,
+          "median_ms": 29.032049999999998,
+          "p95_ms": 31.2641,
+          "min_ms": 28.593,
+          "max_ms": 31.3459,
+          "mean_ms": 29.5488,
+          "stdev_ms": 0.9915332343077775,
+          "megapixels_per_second": 285.6980475026738,
+          "encoded_bytes": [
+            738190
+          ],
+          "decoded_sha256": [
+            "204fc0768dbc045d9c414391e6a2e85b10949db5edcc301a499191b30fb3f528"
+          ],
+          "encoded_sha256": [
+            "a18c5db4185e9b90db9b19304f7e80d9d82afd1855bd20fdf8e0606375a0aa74"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 112.411,
+          "median_ms": 109.916,
+          "p95_ms": 132.198,
+          "min_ms": 103.36,
+          "max_ms": 134.501,
+          "mean_ms": 113.12315,
+          "stdev_ms": 9.122551231772603,
+          "megapixels_per_second": 75.4612613268314,
+          "encoded_bytes": [
+            427725
+          ],
+          "decoded_sha256": [
+            "204fc0768dbc045d9c414391e6a2e85b10949db5edcc301a499191b30fb3f528"
+          ],
+          "encoded_sha256": [
+            "8719710f759054e27a8d863b1822f8460fd5b46022d1ff6c41da66de69640b24"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 23.8837,
+          "median_ms": 23.80705,
+          "p95_ms": 25.8578,
+          "min_ms": 23.4905,
+          "max_ms": 26.8043,
+          "mean_ms": 24.23978,
+          "stdev_ms": 0.9640548819275911,
+          "megapixels_per_second": 348.400998863782,
+          "encoded_bytes": [
+            738190
+          ],
+          "decoded_sha256": [
+            "204fc0768dbc045d9c414391e6a2e85b10949db5edcc301a499191b30fb3f528"
+          ],
+          "encoded_sha256": [
+            "a18c5db4185e9b90db9b19304f7e80d9d82afd1855bd20fdf8e0606375a0aa74"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 146.55619996786118,
+          "median_ms": 123.26894998550415,
+          "p95_ms": 197.10689997673035,
+          "min_ms": 112.91110002994537,
+          "max_ms": 319.2529000043869,
+          "mean_ms": 142.92438000440598,
+          "stdev_ms": 49.78657608002786,
+          "megapixels_per_second": 67.28701754152512,
+          "encoded_bytes": [
+            643380
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 114.9196999669075,
+          "median_ms": 116.20509999990463,
+          "p95_ms": 139.23590004444122,
+          "min_ms": 112.7833999991417,
+          "max_ms": 152.14550000429153,
+          "mean_ms": 120.01128000617027,
+          "stdev_ms": 9.934916140274538,
+          "megapixels_per_second": 71.3772459212789,
+          "encoded_bytes": [
+            643380
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "PNG",
+      "png_file_ratio": 4.002648796757536,
+      "auto_ratio_same_format": 1.12148322342065,
+      "representative_png": {
+        "bytes": 738190,
+        "sha256": "a18c5db4185e9b90db9b19304f7e80d9d82afd1855bd20fdf8e0606375a0aa74",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000f00000008700802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "3840x2160-alpha-ui",
+      "width": 3840,
+      "height": 2160,
+      "kind": "alpha-ui",
+      "alpha": true,
+      "folder": "build/perf/images/corpus-v1/3840x2160-alpha-ui",
+      "input_sha256": "af1fa8a1f080d6788d2c80f17fbdbd8ab0bb255a55b265817de589775a73f63b",
+      "elapsed_s": {
+        "production": 2.75,
+        "stock": 6.14100000000326
+      },
+      "csv_sha256": {
+        "production.csv": "eb765915deed46f61bac87f00dede790864b38a9b183d5025389e7952e6843f8",
+        "sharex.csv": "d91f1ed2a263d625244c1c5b3548b90136162e49e2b55a16953ae0b3ad261133"
+      },
+      "production_folder": "build/perf/images/production-v1/3840x2160-alpha-ui",
+      "production_png_sha256": "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 31.318,
+          "median_ms": 31.96475,
+          "p95_ms": 38.991,
+          "min_ms": 30.3927,
+          "max_ms": 39.1338,
+          "mean_ms": 32.93991,
+          "stdev_ms": 2.87127846307639,
+          "megapixels_per_second": 259.4858398704823,
+          "encoded_bytes": [
+            389110
+          ],
+          "decoded_sha256": [
+            "af1fa8a1f080d6788d2c80f17fbdbd8ab0bb255a55b265817de589775a73f63b"
+          ],
+          "encoded_sha256": [
+            "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 36.6568,
+          "median_ms": 34.22635,
+          "p95_ms": 36.4018,
+          "min_ms": 33.7353,
+          "max_ms": 37.2426,
+          "mean_ms": 34.638345,
+          "stdev_ms": 1.0418981582088283,
+          "megapixels_per_second": 242.33960092151224,
+          "encoded_bytes": [
+            389110
+          ],
+          "decoded_sha256": [
+            "af1fa8a1f080d6788d2c80f17fbdbd8ab0bb255a55b265817de589775a73f63b"
+          ],
+          "encoded_sha256": [
+            "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 34.3464,
+          "median_ms": 33.3219,
+          "p95_ms": 33.8636,
+          "min_ms": 31.6609,
+          "max_ms": 34.481,
+          "mean_ms": 33.116615,
+          "stdev_ms": 0.7571520032853027,
+          "megapixels_per_second": 248.91737866088067,
+          "encoded_bytes": [
+            389110
+          ],
+          "decoded_sha256": [
+            "af1fa8a1f080d6788d2c80f17fbdbd8ab0bb255a55b265817de589775a73f63b"
+          ],
+          "encoded_sha256": [
+            "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 15.9961,
+          "median_ms": 15.9991,
+          "p95_ms": 16.8431,
+          "min_ms": 15.8518,
+          "max_ms": 17.0956,
+          "mean_ms": 16.16496,
+          "stdev_ms": 0.3738964497797414,
+          "megapixels_per_second": 518.4291616403423,
+          "encoded_bytes": [
+            389110
+          ],
+          "decoded_sha256": [
+            "af1fa8a1f080d6788d2c80f17fbdbd8ab0bb255a55b265817de589775a73f63b"
+          ],
+          "encoded_sha256": [
+            "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 131.21719998121262,
+          "median_ms": 127.0086000263691,
+          "p95_ms": 131.9714000225067,
+          "min_ms": 122.11500000953674,
+          "max_ms": 133.7727000117302,
+          "mean_ms": 127.02698500752449,
+          "stdev_ms": 3.524322737086951,
+          "megapixels_per_second": 65.30581392345042,
+          "encoded_bytes": [
+            484328
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 128.73500001430511,
+          "median_ms": 128.97220000624657,
+          "p95_ms": 133.29589998722076,
+          "min_ms": 123.08329999446869,
+          "max_ms": 134.92220002412796,
+          "mean_ms": 128.69368500709533,
+          "stdev_ms": 3.3090002339766404,
+          "megapixels_per_second": 64.31153380029397,
+          "encoded_bytes": [
+            484328
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "PNG",
+      "png_file_ratio": 3.768213671812699,
+      "auto_ratio_same_format": 3.8115653677121983,
+      "representative_png": {
+        "bytes": 389110,
+        "sha256": "73c2d0bf3f2adc3c37b9156916c00a8923be826c502dd52e444d5a8ce6f8ffd5",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000f00000008700806000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "3840x2160-alpha",
+      "width": 3840,
+      "height": 2160,
+      "kind": "alpha",
+      "alpha": true,
+      "folder": "build/perf/images/corpus-v1/3840x2160-alpha",
+      "input_sha256": "d7a7a4b1d17819b7def3ea3abbb847ead5f7a09dc4ec57b3288b38cbbd0bf7a6",
+      "elapsed_s": {
+        "production": 13.296999999962281,
+        "stock": 21.31200000003446
+      },
+      "csv_sha256": {
+        "production.csv": "079a9b085306f8b1b878fc79425ec7b29dabd4a07145cee16e6eed1f6b26ac96",
+        "sharex.csv": "a194de0a1efdfdedd6fb953220e2dd1f48a33a0d765fd7d985df53724f850bac"
+      },
+      "production_folder": "build/perf/images/production-v1/3840x2160-alpha",
+      "production_png_sha256": "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 68.8051,
+          "median_ms": 69.20655,
+          "p95_ms": 82.0122,
+          "min_ms": 67.9812,
+          "max_ms": 106.488,
+          "mean_ms": 71.999925,
+          "stdev_ms": 8.65979704386431,
+          "megapixels_per_second": 119.84992749963698,
+          "encoded_bytes": [
+            28428603
+          ],
+          "decoded_sha256": [
+            "d7a7a4b1d17819b7def3ea3abbb847ead5f7a09dc4ec57b3288b38cbbd0bf7a6"
+          ],
+          "encoded_sha256": [
+            "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 85.1093,
+          "median_ms": 88.0741,
+          "p95_ms": 91.0937,
+          "min_ms": 84.5859,
+          "max_ms": 91.4913,
+          "mean_ms": 87.77537,
+          "stdev_ms": 2.2911108050807782,
+          "megapixels_per_second": 94.17524561704292,
+          "encoded_bytes": [
+            28428603
+          ],
+          "decoded_sha256": [
+            "d7a7a4b1d17819b7def3ea3abbb847ead5f7a09dc4ec57b3288b38cbbd0bf7a6"
+          ],
+          "encoded_sha256": [
+            "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 77.3969,
+          "median_ms": 78.03354999999999,
+          "p95_ms": 82.3762,
+          "min_ms": 76.7823,
+          "max_ms": 87.3423,
+          "mean_ms": 79.098225,
+          "stdev_ms": 2.407404434978183,
+          "megapixels_per_second": 106.29274203211313,
+          "encoded_bytes": [
+            28428603
+          ],
+          "decoded_sha256": [
+            "d7a7a4b1d17819b7def3ea3abbb847ead5f7a09dc4ec57b3288b38cbbd0bf7a6"
+          ],
+          "encoded_sha256": [
+            "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 88.1377,
+          "median_ms": 89.1827,
+          "p95_ms": 94.7834,
+          "min_ms": 85.9602,
+          "max_ms": 94.9352,
+          "mean_ms": 89.578035,
+          "stdev_ms": 2.8082214861058077,
+          "megapixels_per_second": 93.00458496995493,
+          "encoded_bytes": [
+            28428603
+          ],
+          "decoded_sha256": [
+            "d7a7a4b1d17819b7def3ea3abbb847ead5f7a09dc4ec57b3288b38cbbd0bf7a6"
+          ],
+          "encoded_sha256": [
+            "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 231.78139996528625,
+          "median_ms": 228.04925000667572,
+          "p95_ms": 237.005499958992,
+          "min_ms": 219.72690004110336,
+          "max_ms": 240.86929994821548,
+          "mean_ms": 228.13573500216006,
+          "stdev_ms": 5.939735946503017,
+          "megapixels_per_second": 36.37109089267865,
+          "encoded_bytes": [
+            4872583
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 726.7950000166893,
+          "median_ms": 741.1981500089169,
+          "p95_ms": 817.7289999723434,
+          "min_ms": 720.7214000225067,
+          "max_ms": 819.183699965477,
+          "mean_ms": 750.3863450020551,
+          "stdev_ms": 32.29225573640089,
+          "megapixels_per_second": 11.190529819725286,
+          "encoded_bytes": [
+            28193208
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "PNG",
+      "stock_auto_format": "JPEG",
+      "png_file_ratio": 8.41561991560421,
+      "auto_ratio_same_format": null,
+      "representative_png": {
+        "bytes": 28428603,
+        "sha256": "2f7936553f0bacf57ed7bacdfa837abbe324ee1cefab8a0768c63b0e8c285e75",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000f00000008700806000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": null
+    },
+    {
+      "id": "3840x2160-photo",
+      "width": 3840,
+      "height": 2160,
+      "kind": "photo",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/3840x2160-photo",
+      "input_sha256": "f612f7cee47ad7be291621dc4e5ad002e1d63cc281bd4b8a95cd98feeedbb92c",
+      "elapsed_s": {
+        "production": 9.5,
+        "stock": 12.030999999959022
+      },
+      "csv_sha256": {
+        "production.csv": "bf5070ce2125107678d3df172b524f8ebf2dd501453b9063d83fe0d1e3690255",
+        "sharex.csv": "a47548fef9aa3e296ef1aa76d6ed92b46c9e2ced26e846a474ee20907a11c31c"
+      },
+      "production_folder": "build/perf/images/production-v1/3840x2160-photo",
+      "production_png_sha256": "5ddf7a2277bf889d7cebc8260e5046e7ed0f32d477ac8598f477c4dcbc604116",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 56.631,
+          "median_ms": 56.72485,
+          "p95_ms": 66.6243,
+          "min_ms": 55.8367,
+          "max_ms": 71.1715,
+          "mean_ms": 58.06593,
+          "stdev_ms": 3.896962271078657,
+          "megapixels_per_second": 146.22162949747772,
+          "encoded_bytes": [
+            18316868
+          ],
+          "decoded_sha256": [
+            "f612f7cee47ad7be291621dc4e5ad002e1d63cc281bd4b8a95cd98feeedbb92c"
+          ],
+          "encoded_sha256": [
+            "5ddf7a2277bf889d7cebc8260e5046e7ed0f32d477ac8598f477c4dcbc604116"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 71.7937,
+          "median_ms": 68.9336,
+          "p95_ms": 73.2105,
+          "min_ms": 67.2651,
+          "max_ms": 73.9483,
+          "mean_ms": 69.75133,
+          "stdev_ms": 2.137941113880607,
+          "megapixels_per_second": 120.32448617220051,
+          "encoded_bytes": [
+            18316868
+          ],
+          "decoded_sha256": [
+            "f612f7cee47ad7be291621dc4e5ad002e1d63cc281bd4b8a95cd98feeedbb92c"
+          ],
+          "encoded_sha256": [
+            "5ddf7a2277bf889d7cebc8260e5046e7ed0f32d477ac8598f477c4dcbc604116"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 100.751,
+          "median_ms": 101.80250000000001,
+          "p95_ms": 109.383,
+          "min_ms": 99.2986,
+          "max_ms": 111.09,
+          "mean_ms": 103.056185,
+          "stdev_ms": 3.729524412925228,
+          "megapixels_per_second": 81.47540581026988,
+          "encoded_bytes": [
+            2876642
+          ],
+          "decoded_sha256": [
+            "cede24b320d0325c67307cc6cdaa9f7f9f740368b94da15dff5bf4546be55999"
+          ],
+          "encoded_sha256": [
+            "8c4c41f24ff74e54ee26a4f7947a4035e4413f9da658fe5b4c64dba89131eac2"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 72.3747,
+          "median_ms": 73.24865,
+          "p95_ms": 77.5793,
+          "min_ms": 72.0315,
+          "max_ms": 78.7481,
+          "mean_ms": 73.97201,
+          "stdev_ms": 1.8743104143573497,
+          "megapixels_per_second": 113.23621664017017,
+          "encoded_bytes": [
+            18316868
+          ],
+          "decoded_sha256": [
+            "f612f7cee47ad7be291621dc4e5ad002e1d63cc281bd4b8a95cd98feeedbb92c"
+          ],
+          "encoded_sha256": [
+            "5ddf7a2277bf889d7cebc8260e5046e7ed0f32d477ac8598f477c4dcbc604116"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 195.4258999824524,
+          "median_ms": 195.91899999976158,
+          "p95_ms": 202.81410002708435,
+          "min_ms": 189.65579998493195,
+          "max_ms": 203.30159997940063,
+          "mean_ms": 195.55255999565125,
+          "stdev_ms": 4.194442519380559,
+          "megapixels_per_second": 42.33586329049298,
+          "encoded_bytes": [
+            2740480
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 339.1351999640465,
+          "median_ms": 338.30019998550415,
+          "p95_ms": 369.4419000148773,
+          "min_ms": 328.67120003700256,
+          "max_ms": 373.7538999915123,
+          "mean_ms": 341.79175000190736,
+          "stdev_ms": 11.73109425868729,
+          "megapixels_per_second": 24.51786904162459,
+          "encoded_bytes": [
+            12069697
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "JPEG",
+      "stock_auto_format": "JPEG",
+      "png_file_ratio": 4.907624148245619,
+      "auto_ratio_same_format": 1.9245008717837142,
+      "representative_png": {
+        "bytes": 18316868,
+        "sha256": "5ddf7a2277bf889d7cebc8260e5046e7ed0f32d477ac8598f477c4dcbc604116",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000f00000008700802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": true
+    },
+    {
+      "id": "3840x2160-entropy",
+      "width": 3840,
+      "height": 2160,
+      "kind": "entropy",
+      "alpha": false,
+      "folder": "build/perf/images/corpus-v1/3840x2160-entropy",
+      "input_sha256": "775bc1b16ee89c2d63aef2f5a6624a93ac6d2aeb7d86848148c38f5dafe9f77e",
+      "elapsed_s": {
+        "production": 9.40600000001723,
+        "stock": 21.17200000002049
+      },
+      "csv_sha256": {
+        "production.csv": "dd474d8c6ddb62f260dbc037dfc0703c94f04127513af0bb36d55419f687225d",
+        "sharex.csv": "a9819e68e3da0910dee72ffe3f9679544956c09e34cad1a21135248054fa1f12"
+      },
+      "production_folder": "build/perf/images/production-v1/3840x2160-entropy",
+      "production_png_sha256": "7c51cb611dc711c4cdca4a9748850652e2462063a011906bf488e8f93bf84d04",
+      "statistics": {
+        "zipshot-production/png-encode-memory": {
+          "n": 20,
+          "first_timed_ms": 61.0145,
+          "median_ms": 62.1307,
+          "p95_ms": 72.0114,
+          "min_ms": 60.1416,
+          "max_ms": 76.4582,
+          "mean_ms": 63.249485,
+          "stdev_ms": 4.059743345825409,
+          "megapixels_per_second": 133.4992201922721,
+          "encoded_bytes": [
+            24887369
+          ],
+          "decoded_sha256": [
+            "775bc1b16ee89c2d63aef2f5a6624a93ac6d2aeb7d86848148c38f5dafe9f77e"
+          ],
+          "encoded_sha256": [
+            "7c51cb611dc711c4cdca4a9748850652e2462063a011906bf488e8f93bf84d04"
+          ]
+        },
+        "zipshot-production/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 75.3031,
+          "median_ms": 75.35579999999999,
+          "p95_ms": 78.0975,
+          "min_ms": 73.6032,
+          "max_ms": 78.5762,
+          "mean_ms": 75.8968,
+          "stdev_ms": 1.4517488861442438,
+          "megapixels_per_second": 110.06982873249306,
+          "encoded_bytes": [
+            24887369
+          ],
+          "decoded_sha256": [
+            "775bc1b16ee89c2d63aef2f5a6624a93ac6d2aeb7d86848148c38f5dafe9f77e"
+          ],
+          "encoded_sha256": [
+            "7c51cb611dc711c4cdca4a9748850652e2462063a011906bf488e8f93bf84d04"
+          ]
+        },
+        "zipshot-production/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 90.9575,
+          "median_ms": 87.0326,
+          "p95_ms": 92.8055,
+          "min_ms": 84.9597,
+          "max_ms": 93.6413,
+          "mean_ms": 87.668515,
+          "stdev_ms": 2.5755839714468016,
+          "megapixels_per_second": 95.30222008764531,
+          "encoded_bytes": [
+            7436142
+          ],
+          "decoded_sha256": [
+            "110da8dc824977662e796cb2823abba368a66bccf84d69243075c75cc335dfeb"
+          ],
+          "encoded_sha256": [
+            "dabe9cb0bd806c48c3b46599e5911178900cccdb324bca58beab58d8bab45cbb"
+          ]
+        },
+        "zipshot-production/png-decode-file": {
+          "n": 20,
+          "first_timed_ms": 23.1013,
+          "median_ms": 21.81475,
+          "p95_ms": 25.7698,
+          "min_ms": 21.1189,
+          "max_ms": 28.782,
+          "mean_ms": 22.555095,
+          "stdev_ms": 1.9518953853208532,
+          "megapixels_per_second": 380.21980540689214,
+          "encoded_bytes": [
+            24887369
+          ],
+          "decoded_sha256": [
+            "775bc1b16ee89c2d63aef2f5a6624a93ac6d2aeb7d86848148c38f5dafe9f77e"
+          ],
+          "encoded_sha256": [
+            "7c51cb611dc711c4cdca4a9748850652e2462063a011906bf488e8f93bf84d04"
+          ]
+        },
+        "sharex-22.4.0/save-auto-default": {
+          "n": 20,
+          "first_timed_ms": 243.4530000090599,
+          "median_ms": 242.30929997563362,
+          "p95_ms": 252.03460001945496,
+          "min_ms": 236.16359996795654,
+          "max_ms": 257.6362000107765,
+          "mean_ms": 243.41252000033856,
+          "stdev_ms": 5.969677039398148,
+          "megapixels_per_second": 34.23063002878584,
+          "encoded_bytes": [
+            6834946
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        },
+        "sharex-22.4.0/png-encode-file-forced": {
+          "n": 20,
+          "first_timed_ms": 746.3780999779701,
+          "median_ms": 727.2005000114441,
+          "p95_ms": 747.3111000061035,
+          "min_ms": 705.994500041008,
+          "max_ms": 751.3634999990463,
+          "mean_ms": 727.7189700096845,
+          "stdev_ms": 11.824092990470575,
+          "megapixels_per_second": 11.405932751516906,
+          "encoded_bytes": [
+            28556636
+          ],
+          "decoded_sha256": [],
+          "encoded_sha256": []
+        }
+      },
+      "native_auto_format": "JPEG",
+      "stock_auto_format": "JPEG",
+      "png_file_ratio": 9.650225994700397,
+      "auto_ratio_same_format": 2.7841211221500175,
+      "representative_png": {
+        "bytes": 24887369,
+        "sha256": "7c51cb611dc711c4cdca4a9748850652e2462063a011906bf488e8f93bf84d04",
+        "chunks": [
+          "IHDR",
+          "sRGB",
+          "gAMA",
+          "fdEC",
+          "IDAT",
+          "IEND"
+        ],
+        "metadata": {
+          "IHDR": "00000f00000008700802000000",
+          "sRGB": "00",
+          "gAMA": "0000b18f"
+        },
+        "crc_and_complete_file": true
+      },
+      "representative_png_exact_source": true,
+      "representative_auto_jpeg_exact_old_wic": true
+    }
+  ],
+  "notes": [
+    "Twenty warm timings per operation; nearest-rank p95; ambient background load uncontrolled.",
+    "First means first timed call, not independent cold-process startup.",
+    "Native and stock raw source construction excluded; actual encoder and completed file write included.",
+    "Representative PNG output checked against exact source pixels/alpha and baseline color/DPI metadata; representative AutoJPEG checked byte-for-byte against original WIC JPEG.",
+    "Stock Alpha uses its native premultiplied representation. High-entropy alpha automatic save formats differ and are excluded from Auto ratio.",
+    "JPEG codec settings are nominal q90/4:2:0; native JPEG bytes/decision remain exactly its previous WIC output, not necessarily identical to the competing codec.",
+    "No full UI/app latency, universal superiority, durability flush or memory claim is inferred."
+  ],
+  "png_file_ratio_range": [
+    3.0929156254486267,
+    9.650225994700397
+  ],
+  "auto_same_format_ratio_range": [
+    1.119033266654659,
+    3.8115653677121983
+  ],
+  "auto_same_format_cases": 10
+}

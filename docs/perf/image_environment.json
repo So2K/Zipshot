@@ -1,0 +1,17 @@
+{
+  "captured_utc": "2026-11-19T09:21:24.1988331Z",
+  "cpu": {
+    "Name": "AMD Ryzen 9 7950X 16-Core Processor            ",
+    "NumberOfCores": 16,
+    "NumberOfLogicalProcessors": 32,
+    "MaxClockSpeed": 4501
+  },
+  "os": {
+    "Caption": "Microsoft Windows 11 IoT Enterprise LTSC",
+    "Version": "10.0.26100",
+    "BuildNumber": "26100",
+    "TotalVisibleMemorySize": 32694836
+  },
+  "affinity_mask": 15,
+  "priority": "BelowNormal"
+}

@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 zipshot.ini*
 media/frames/
+tools/perf/obj/
+tools/perf/bin/

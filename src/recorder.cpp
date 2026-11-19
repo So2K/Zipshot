@@ -708,7 +708,8 @@ CursorCompletion CompleteCursorVideo(const std::wstring& ffmpeg, const std::wstr
                                      int width, int height, double fps, double duration,
                                      const std::vector<cursor_follow::Sample>& samples) {
     CursorCompletion completion;
-    const cursor_video::Result saved = cursor_video::SaveTrack(original, width, height, fps, duration, samples);
+    cursor_video::PreparedSource prepared;
+    const cursor_video::Result saved = cursor_video::SaveTrackPrepared(original, width, height, fps, duration, samples, prepared);
     if (!saved.ok) {
         Log(L"recorder: cursor sidecar failed: %s", saved.error.c_str());
         completion.warning = Tr(L"Видео сохранено; данные курсора недоступны", L"Video saved; cursor data unavailable");
@@ -720,12 +721,11 @@ CursorCompletion CompleteCursorVideo(const std::wstring& ffmpeg, const std::wstr
         anyEnabled |= samples[i].enabled && !samples[i].paused && end > samples[i].t;
     }
     if (!anyEnabled) return completion;  // Sidecar still supports later manual application.
-    cursor_video::Track track;
     std::wstring error;
     std::wstring focused = FocusedOutputPath(original);
-    bool ok = !focused.empty() && cursor_video::LoadTrack(original, track, &error);
+    bool ok = !focused.empty();
     if (ok) {
-        const auto rendered = cursor_video::Render(ffmpeg, original, track, focused);
+        const auto rendered = cursor_video::RenderPrepared(ffmpeg, prepared, focused);
         ok = rendered.ok;
         error = rendered.error;
     }

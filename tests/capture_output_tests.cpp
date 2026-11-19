@@ -10,6 +10,7 @@ HWND g_main = nullptr;
 HICON g_icon = nullptr;
 static std::wstring testDir;
 std::wstring ExeDir() { return testDir; }
+std::wstring ZipshotIni() { return testDir + L"\\zipshot.ini"; }
 void Log(const wchar_t*, ...) {}
 static void UnexpectedUiCall() { void (*volatile fail)() = &std::abort; fail(); }
 void RunOnMain(std::function<void()>) { UnexpectedUiCall(); }
@@ -34,6 +35,21 @@ std::wstring IniString(const wchar_t* section, const wchar_t* key, const wchar_t
 #include "../src/capture.cpp"
 #include "../src/output.cpp"
 #include "../src/recorder.cpp"
+
+// This suite calls only recording-rectangle normalization. Any video completion
+// work would violate its no-process/no-capture contract and must fail closed.
+namespace cursor_video {
+struct PreparedSource::State {};
+PreparedSource::PreparedSource() = default;
+PreparedSource::~PreparedSource() = default;
+Result SaveTrackPrepared(const std::wstring&, int, int, double, double,
+                         const std::vector<cursor_follow::Sample>&, PreparedSource&) {
+    UnexpectedUiCall(); return {};
+}
+Result RenderPrepared(const std::wstring&, const PreparedSource&, const std::wstring&, bool) {
+    UnexpectedUiCall(); return {};
+}
+}
 
 static int failures = 0;
 static void Check(bool ok, const char* message) {

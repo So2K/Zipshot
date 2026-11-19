@@ -1,0 +1,19 @@
+{
+  "fpng": {
+    "commit": "925796543b9d26b8edfcdcecd94c1dac280f29fc",
+    "files": {
+      "fpng.cpp": "b2b953f53f4b472b427bfb04a0ee1839ba66e8f32a02580e7a09d31313edd975",
+      "fpng.h": "604c7e3757dba53b32f7e2523927c7e02ad90939d631a76f94f0690efa2c1fc9",
+      "README.md": "fc8afca6480e401853ce06dca142b2576f82d60ec8542de3af6fb7d6a846ec55"
+    }
+  },
+  "fpnge": {
+    "commit": "097ebccf3d3db443d9a8f238b1deed010a82f961",
+    "files": {
+      "fpnge.cc": "5b7abd85021011a7217122928229600af4d0010b0f678589d7a2b46206283ccd",
+      "fpnge.h": "171081b7b222ff6858816f8da48f54d82534d46ad28c3d83a94e887f2f31a775",
+      "README.md": "048871df8c694cbc3a517a9fe327451cebd0534bd453637dcdc1a1e9eaee7388",
+      "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    }
+  }
+}

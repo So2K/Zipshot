@@ -4,3 +4,8 @@ media/runtime/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-
 tools/runtime-compare/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # Matplotlib emits intentional spaces inside multiline SVG path attributes.
 media/runtime/*.svg -whitespace
+# Measured provenance and pinned vendor bytes must survive a fresh checkout.
+docs/perf/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tools/perf/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Keep upstream formatting as well as content byte-identical to the pinned hash.
+third_party/fpng/** -text -whitespace

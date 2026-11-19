@@ -10,7 +10,7 @@ call "%ZIPSHOT_VS%\VC\Auxiliary\Build\vcvars64.bat" >nul || exit /b 1
 :toolchain_ready
 cd /d "%~dp0.."
 if not exist build\tests mkdir build\tests
-cl /nologo /O2 /Gy /W4 /EHsc /std:c++20 /utf-8 /MT /DUNICODE /D_UNICODE tests\capture_output_tests.cpp /Fobuild\tests\ /Fe:build\tests\capture_output_tests.exe /link /OPT:REF user32.lib gdi32.lib dwmapi.lib d3d11.lib dxgi.lib ole32.lib oleaut32.lib shell32.lib shlwapi.lib windowscodecs.lib winmm.lib advapi32.lib || exit /b 1
+cl /nologo /O2 /Gy /W4 /EHsc /std:c++20 /utf-8 /MT /DUNICODE /D_UNICODE tests\capture_output_tests.cpp src\png_encode_fast.cpp third_party\fpng\fpng.cpp /Fobuild\tests\ /Fe:build\tests\capture_output_tests.exe /link /OPT:REF user32.lib gdi32.lib dwmapi.lib d3d11.lib dxgi.lib ole32.lib oleaut32.lib shell32.lib shlwapi.lib windowscodecs.lib winmm.lib advapi32.lib || exit /b 1
 set "ZIPSHOT_TEST_RUN=build\tests\run-%RANDOM%-%RANDOM%"
 build\tests\capture_output_tests.exe "%ZIPSHOT_TEST_RUN%"
 exit /b %errorlevel%

@@ -197,19 +197,35 @@ struct Workspace {
 };
 } // namespace
 
+struct PreparedSource::State {
+    std::wstring source;
+    Track track;
+    Handle input;
+};
+PreparedSource::PreparedSource() = default;
+PreparedSource::~PreparedSource() = default;
+PreparedSource::PreparedSource(PreparedSource&&) noexcept = default;
+PreparedSource& PreparedSource::operator=(PreparedSource&&) noexcept = default;
+
 std::wstring TrackPath(const std::wstring& original) { return original+L".cursor.json"; }
 Result SaveTrack(const std::wstring& original,int width,int height,double fps,double duration,const std::vector<cursor_follow::Sample>& samples) {
+    PreparedSource prepared;
+    return SaveTrackPrepared(original,width,height,fps,duration,samples,prepared);
+}
+Result SaveTrackPrepared(const std::wstring& original,int width,int height,double fps,double duration,const std::vector<cursor_follow::Sample>& samples,PreparedSource& out) {
+    out.state_.reset();
     try {
-        std::wstring source=Full(original);Track track;track.width=width;track.height=height;track.fps=fps;track.duration=duration;track.samples=samples;
-        Handle file(CreateFileW(source.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr));
-        if(!file||!Identity(file.h,track.sourceBytes,track.sourceSha256))return Error(L"Не удалось прочитать исходное видео.",L"Could not read the original video.");
+        auto state=std::make_unique<PreparedSource::State>();state->source=Full(original);
+        Track& track=state->track;track.width=width;track.height=height;track.fps=fps;track.duration=duration;track.samples=samples;
+        state->input.h=CreateFileW(state->source.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
+        if(!state->input||!Identity(state->input.h,track.sourceBytes,track.sourceSha256))return Error(L"Не удалось прочитать исходное видео.",L"Could not read the original video.");
         if(!Valid(track))return Error(L"Некорректные данные трека курсора.",L"Invalid cursor track data.");
         const std::string encoded = Encode(track);
         if(encoded.size() > MaxTrackBytes)return Error(L"Трек курсора слишком большой. Исходное видео сохранено.",L"Cursor track is too large. The original video is retained.");
-        std::wstring final=TrackPath(source);if(Exists(final))return Error(L"Трек курсора уже существует.",L"Cursor track already exists.");
-        Workspace work;work.temp=Unique(Parent(source),L".json.tmp");
+        std::wstring final=TrackPath(state->source);if(Exists(final))return Error(L"Трек курсора уже существует.",L"Cursor track already exists.");
+        Workspace work;work.temp=Unique(Parent(state->source),L".json.tmp");
         if(!WriteNew(work.temp,encoded,&work.tempOwned)||!MoveFileExW(work.temp.c_str(),final.c_str(),MOVEFILE_WRITE_THROUGH))return Error(L"Не удалось сохранить трек курсора.",L"Could not save the cursor track.");
-        work.published=true;return {true,{}};
+        work.published=true;out.state_=std::move(state);return {true,{}};
     }catch(...){return Error(L"Не удалось сохранить трек курсора.",L"Could not save the cursor track.");}
 }
 bool LoadTrack(const std::wstring& original,Track& out,std::wstring* error) {
@@ -222,15 +238,30 @@ bool LoadTrack(const std::wstring& original,Track& out,std::wstring* error) {
         out=std::move(track);return true;
     }catch(...){if(error)*error=Tr(L"Не удалось прочитать трек курсора.",L"Could not read the cursor track.");return false;}
 }
+namespace {
+Result RenderVerified(const std::wstring& executable,const std::wstring& source,const Track& track,const std::wstring& output,bool forceAllFollow);
+}
 Result Render(const std::wstring& executable,const std::wstring& original,const Track& track,const std::wstring& output,bool forceAllFollow) {
     try {
         if(!Valid(track))return Error(L"Нет корректного трека курсора.",L"No valid cursor track.");
-        std::wstring ffmpeg=Full(executable),source=Full(original),out=Full(output);
-        if(ffmpeg.empty()||!Exists(ffmpeg))return Error(L"Не найден ffmpeg.exe.",L"ffmpeg.exe was not found.");
-        if(out.empty()||Parent(out).empty()||Exists(out))return Error(L"Выберите новое имя выходного файла.",L"Choose a new output filename.");
+        const std::wstring source=Full(original);
         Handle input(CreateFileW(source.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr));uint64_t sourceBytes=0;std::string sourceHash;
         if(!input||!Identity(input.h,sourceBytes,sourceHash))return Error(L"Не удалось прочитать исходное видео.",L"Could not read the original video.");
         if(sourceBytes!=track.sourceBytes||sourceHash!=track.sourceSha256)return Error(L"Трек относится к другому или изменённому видео.",L"Track belongs to another or modified video.");
+        return RenderVerified(executable,source,track,output,forceAllFollow);
+    }catch(...){return Error(L"Не удалось обработать видео. Исходник сохранён.",L"Could not process the video. The original is unchanged.");}
+}
+Result RenderPrepared(const std::wstring& executable,const PreparedSource& prepared,const std::wstring& output,bool forceAllFollow) {
+    if(!prepared.state_||!prepared.state_->input)return Error(L"Нет проверенного исходного видео.",L"No verified source video.");
+    return RenderVerified(executable,prepared.state_->source,prepared.state_->track,output,forceAllFollow);
+}
+namespace {
+Result RenderVerified(const std::wstring& executable,const std::wstring& source,const Track& track,const std::wstring& output,bool forceAllFollow) {
+    try {
+        if(!Valid(track))return Error(L"Нет корректного трека курсора.",L"No valid cursor track.");
+        std::wstring ffmpeg=Full(executable),out=Full(output);
+        if(ffmpeg.empty()||!Exists(ffmpeg))return Error(L"Не найден ffmpeg.exe.",L"ffmpeg.exe was not found.");
+        if(out.empty()||Parent(out).empty()||Exists(out))return Error(L"Выберите новое имя выходного файла.",L"Choose a new output filename.");
         Info before;if(!Probe(ffmpeg,source,before))return Error(L"Не удалось проверить параметры исходного видео.",L"Could not verify the original video metadata.");
         if(before.width!=track.width||before.height!=track.height)return Error(L"Размер видео не совпадает с треком курсора.",L"Video dimensions do not match the cursor track.");
         double fps=before.fps>0&&before.fps<=240?before.fps:track.fps;
@@ -266,4 +297,5 @@ Result Render(const std::wstring& executable,const std::wstring& original,const 
         work.published=true;return {true,{}};
     }catch(...){return Error(L"Не удалось обработать видео. Исходник сохранён.",L"Could not process the video. The original is unchanged.");}
 }
+} // namespace
 } // namespace cursor_video

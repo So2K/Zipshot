@@ -11,6 +11,7 @@
 #include <shlwapi.h>
 #include <wrl/client.h>
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include <map>
 #include <numeric>
@@ -392,6 +393,62 @@ bool HasBoxNodes(Tool t) {
 }
 
 void BoxBlurPass(std::vector<uint32_t>& src, std::vector<uint32_t>& dst, int w, int h, int r, bool horiz) {
+    // Preserve the original arithmetic for small images and unusually large radii.
+    // Larger images benefit from exact division lookup and sequential row access.
+    if (w > 0 && h > 0 && r >= 0 && r <= 256 && (uint64_t)w * h >= 4096 &&
+        src.size() >= (size_t)w * h && dst.size() >= (size_t)w * h) {
+        static thread_local int cachedRadius = -1;
+        static thread_local std::vector<uint8_t> quotient;
+        const int div = 2 * r + 1;
+        if (cachedRadius != r) {
+            quotient.resize((size_t)255 * div + 1);
+            for (size_t i = 0; i < quotient.size(); ++i) quotient[i] = (uint8_t)(i / div);
+            cachedRadius = r;
+        }
+        const uint8_t* average = quotient.data();  // resolve the per-thread table once, outside pixel loops
+        if (horiz) {
+            for (int y = 0; y < h; ++y) {
+                const uint32_t* row = src.data() + (size_t)y * w;
+                uint32_t* out = dst.data() + (size_t)y * w;
+                int sr = 0, sg = 0, sb = 0;
+                for (int x = -r; x <= r; ++x) {
+                    const uint32_t p = row[std::clamp(x, 0, w - 1)];
+                    sr += p >> 16 & 255; sg += p >> 8 & 255; sb += p & 255;
+                }
+                for (int x = 0; x < w; ++x) {
+                    out[x] = 0xFF000000u | (uint32_t)average[sr] << 16 | (uint32_t)average[sg] << 8 | average[sb];
+                    const uint32_t a = row[std::min(x + r + 1, w - 1)], b = row[std::max(x - r, 0)];
+                    sr += (int)(a >> 16 & 255) - (int)(b >> 16 & 255);
+                    sg += (int)(a >> 8 & 255) - (int)(b >> 8 & 255);
+                    sb += (int)(a & 255) - (int)(b & 255);
+                }
+            }
+        } else {
+            // Each column keeps the same rolling sum as before, but the loop walks
+            // adjacent pixels instead of striding through the full image per column.
+            std::vector<int> sr(w), sg(w), sb(w);
+            for (int y = -r; y <= r; ++y) {
+                const uint32_t* row = src.data() + (size_t)std::clamp(y, 0, h - 1) * w;
+                for (int x = 0; x < w; ++x) {
+                    const uint32_t p = row[x];
+                    sr[x] += p >> 16 & 255; sg[x] += p >> 8 & 255; sb[x] += p & 255;
+                }
+            }
+            for (int y = 0; y < h; ++y) {
+                uint32_t* out = dst.data() + (size_t)y * w;
+                const uint32_t* add = src.data() + (size_t)std::min(y + r + 1, h - 1) * w;
+                const uint32_t* remove = src.data() + (size_t)std::max(y - r, 0) * w;
+                for (int x = 0; x < w; ++x) {
+                    out[x] = 0xFF000000u | (uint32_t)average[sr[x]] << 16 | (uint32_t)average[sg[x]] << 8 | average[sb[x]];
+                    const uint32_t a = add[x], b = remove[x];
+                    sr[x] += (int)(a >> 16 & 255) - (int)(b >> 16 & 255);
+                    sg[x] += (int)(a >> 8 & 255) - (int)(b >> 8 & 255);
+                    sb[x] += (int)(a & 255) - (int)(b & 255);
+                }
+            }
+        }
+        return;
+    }
     int n = horiz ? w : h, lines = horiz ? h : w;
     size_t step = horiz ? 1 : w;
     for (int l = 0; l < lines; ++l) {
@@ -1077,8 +1134,21 @@ struct Editor {
     // everything outside it transparent, as ShareX does for non-rectangular regions.
     Image Export(const D2D1_RECT_F* area = nullptr, ID2D1Geometry* mask = nullptr) {
         Image out;
+        if (!img || img->w <= 0 || img->h <= 0 ||
+            (uint64_t)img->w * img->h > UINT_MAX / 4 ||
+            img->px.size() < (size_t)img->w * img->h) return out;
+        if (!area && !mask && shapes.empty() && !img->alpha && img->px.size() == (size_t)img->w * img->h) {
+            out = *img;
+            // Opaque D2D bitmap uploads ignore source alpha; its output is always255.
+            for (uint32_t& pixel : out.px) pixel |= 0xFF000000u;
+            return out;
+        }
         D2D1_RECT_F c = area ? *area : Crop();
+        if (!std::isfinite(c.left) || !std::isfinite(c.top) || !std::isfinite(c.right) || !std::isfinite(c.bottom) ||
+            c.right - c.left < 1 || c.bottom - c.top < 1 ||
+            (double)(c.right - c.left) > INT_MAX || (double)(c.bottom - c.top) > INT_MAX) return out;
         int w = (int)(c.right - c.left), h = (int)(c.bottom - c.top);
+        if (w <= 0 || h <= 0 || (uint64_t)w * h > UINT_MAX / 4) return out;
         ComPtr<IWICImagingFactory> wic;
         if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wic)))) return out;
         ComPtr<IWICBitmap> bmp;

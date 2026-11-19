@@ -2,12 +2,14 @@
 #include "shapes_ext.h"
 #include "sharex_import.h"
 #include "capture_ext.h"
+#include "encoded_png.h"
 #include <ole2.h>
 #include <dwmapi.h>
 #include <shellapi.h>
 #include <shlwapi.h>
 #include <psapi.h>
 #include <algorithm>
+#include <atomic>
 #include <cstdarg>
 #include <cstdio>
 #include <thread>
@@ -48,6 +50,8 @@ NOTIFYICONDATAW g_nid{};
 std::wstring g_failedHotkeys;
 std::wstring g_lastPath;
 bool g_testMode = false;
+std::atomic_uint g_stillJobs{0};
+uint64_t g_clipboardCaptureEpoch = 0;  // UI-thread capture ordering, not a global clipboard monitor.
 
 // Tray menu ids that are not shared commands.
 constexpr int kTrayPause = 900, kTrayAbort = 901, kAudioNone = 2000;
@@ -85,33 +89,62 @@ void FinishStill(Image img, std::wstring path, const wchar_t* title) {
     auto sp = std::make_shared<Image>(std::move(img));
     bool copy = GetSettingBool(L"AfterCopy", true), save = GetSettingBool(L"AfterSave", true);
     bool toast = GetSettingBool(L"AfterToast", true), editor = GetSettingBool(L"AfterEditor", false);
-    if (copy) CopyImageToClipboard(*sp);
+    const bool prepareAlpha = copy && sp->alpha;
+    const uint64_t clipboardEpoch = copy ? ++g_clipboardCaptureEpoch : 0;
+    const DWORD clipboardSequence = prepareAlpha ? GetClipboardSequenceNumber() : 0;
+    if (copy && !prepareAlpha) CopyImageToClipboard(*sp);
     PlayUiSound(S_Capture);
-    if (!save) {
+    if (!save && !prepareAlpha) {
         if (editor) OpenEditor(sp, L"");
         else if (toast) ShowToast(sp, L"", title);
         return;
     }
     std::wstring t = title;
-    std::thread([sp, path, t, toast, editor]() mutable {
-        CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-        bool ok = SaveImageAuto(*sp, path);
-        CoUninitialize();
-        RunOnMain([sp, path, t, ok, toast, editor] {
+    ++g_stillJobs;
+    try {
+      std::thread([sp, path, t, toast, editor, save, prepareAlpha, clipboardEpoch, clipboardSequence]() mutable {
+        const HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+        bool ok = false;
+        try {
+            PreparedPngPtr prepared;
+            if (prepareAlpha) prepared = PreparePng(sp);
+            if (prepareAlpha && prepared) {
+                // Only the small native clipboard transaction runs on the UI thread.
+                // A newer capture or manual copy made while encoding wins over this task.
+                RunOnMain([prepared, clipboardEpoch, clipboardSequence] {
+                    CopyPreparedImageToClipboard(prepared, [clipboardEpoch, clipboardSequence] {
+                        return g_clipboardCaptureEpoch == clipboardEpoch &&
+                               GetClipboardSequenceNumber() == clipboardSequence;
+                    });
+                });
+            }
+            if (prepareAlpha && !prepared) ok = false;
+            else ok = !save || (prepared ? SavePreparedImageAuto(prepared, path) : SaveImageAuto(*sp, path));
+        } catch (...) { ok = false; }
+        if (SUCCEEDED(com)) CoUninitialize();
+        RunOnMain([sp, path, t, ok, toast, editor, save] {
+            --g_stillJobs;
             if (!ok) {
                 PlayUiSound(S_Error);
                 MessageBoxW(nullptr, (Tr(L"Не удалось сохранить ", L"Could not save ") + path).c_str(), L"Zipshot", MB_ICONERROR);
                 return;
             }
-            g_lastPath = path;
-            PlayUiSound(S_TaskDone);
-            Log(L"saved %s", path.c_str());
-            if (!g_testMode) MainWindowNotifyCapture(path);
+            if (save) {
+                g_lastPath = path;
+                PlayUiSound(S_TaskDone);
+                Log(L"saved %s", path.c_str());
+                if (!g_testMode) MainWindowNotifyCapture(path);
+            }
             if (g_testMode) PostQuitMessage(0);
-            else if (editor) OpenEditor(sp, path);
-            else if (toast) ShowToast(sp, path, t);
+            else if (editor) OpenEditor(sp, save ? path : L"");
+            else if (toast) ShowToast(sp, save ? path : L"", t);
         });
-    }).detach();
+      }).detach();
+    } catch (...) {
+        --g_stillJobs;
+        PlayUiSound(S_Error);
+        MessageBoxW(nullptr, Tr(L"Не удалось начать сохранение изображения", L"Could not start saving the image"), L"Zipshot", MB_ICONERROR);
+    }
 }
 
 bool ShowCursorSetting() { return GetSettingBool(L"ShowCursor", true); }
@@ -309,7 +342,7 @@ void Run(int cmd) {
         g_quitAfterSave = true;
         KillTimer(g_main, kTrayClickTimer);
         if (RecorderActive()) RecorderStop();
-        if (RecorderBusy() || MainWindowMediaBusy()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
+        if (RecorderBusy() || MainWindowMediaBusy() || g_stillJobs.load()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
         else DestroyWindow(g_main);
         break;
     case C_ShowMain: ShowMainWindow(); break;
@@ -435,7 +468,7 @@ LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         return 0;
     case WM_TIMER:
         if (w == kQuitAfterSaveTimer) {
-            if (!RecorderBusy() && !MainWindowMediaBusy()) {
+            if (!RecorderBusy() && !MainWindowMediaBusy() && !g_stillJobs.load()) {
                 KillTimer(h, kQuitAfterSaveTimer);
                 DestroyWindow(h);
             }
@@ -645,7 +678,11 @@ void RunOnMain(std::function<void()> fn) {
     PostMessageW(g_main, WM_RUN, 0, (LPARAM) new std::function<void()>(std::move(fn)));
 }
 
-void TrimMemory() { SetProcessWorkingSetSize(GetCurrentProcess(), (SIZE_T)-1, (SIZE_T)-1); }
+void TrimMemory() {
+    // Image, thumbnail and GPU buffers are released by their owners. Forcing the
+    // entire process out of RAM here only causes page faults on the next action;
+    // let Windows reclaim resident pages when there is actual memory pressure.
+}
 
 std::wstring ExeDir() {
     wchar_t buf[MAX_PATH];
