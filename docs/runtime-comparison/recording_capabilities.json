@@ -1,0 +1,43 @@
+﻿{
+    "schema_version":  1,
+    "scope":  "Capability inventory only. Listing an encoder is not proof it initializes in Windows Sandbox.",
+    "ffmpeg":  {
+                   "sha256":  "ad8f211bc894755e0061c55ab280ae00e8d3d4f15a8cc4372b24cfa247b5942e",
+                   "version":  "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+                   "bytes":  242496512
+               },
+    "ffprobe":  {
+                    "bytes":  242291712,
+                    "sha256":  "9df3b0b5275e830961df6d94e1f7a71121a7abd5ff708e9fec8a0b6084a55015"
+                },
+    "encoders":  [
+                     " V....D gif                  GIF (Graphics Interchange Format)",
+                     " V....D libx264              libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (codec h264)",
+                     " V....D libx264rgb           libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 RGB (codec h264)",
+                     " V....D h264_nvenc           NVIDIA NVENC H.264 encoder (codec h264)"
+                 ],
+    "filters":  [
+                    " .. palettegen        V-\u003eV       Find the optimal palette for a given stream.",
+                    " .. paletteuse        VV-\u003eV      Use a palette to downsample an input video stream.",
+                    " .. ddagrab           |-\u003eV       Grab Windows Desktop images using Desktop Duplication API",
+                    " .. testsrc2          |-\u003eV       Generate another test pattern."
+                ],
+    "devices":  [
+                    " D  dshow           DirectShow capture",
+                    " D  gdigrab         GDI API Windows frame grabber",
+                    " D  lavfi           Libavfilter virtual input device"
+                ],
+    "zipshot_contract":  {
+                             "gif":  "lossless libx264rgb MKV segments then palettegen/paletteuse",
+                             "video_defaults":  "ddagrab+NVENC, fallback ddagrab+x264, fallback gdigrab+x264",
+                             "source":  "src/recorder.cpp",
+                             "selector_note":  "Current release has preset and CRF settings but no encoder/backend selector."
+                         },
+    "sharex_legacy_contract":  {
+                                   "gif":  "libx264 lossless intermediary and FFmpeg palettegen/paletteuse",
+                                   "source":  "Installed ShareX.ScreenCaptureLib.dll metadata and decompiled ScreenRecordingOptions/ScreenRecorder",
+                                   "video_defaults":  "gdigrab and libx264, source and codec configurable; supports actual custom FFmpeg commands",
+                                   "version":  "18.0.1",
+                                   "scope_note":  "Do not generalize the 18.0.1 pipeline to newer ShareX releases."
+                               }
+}

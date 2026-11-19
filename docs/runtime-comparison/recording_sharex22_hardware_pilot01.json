@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "scope": "Official unmodified ShareX 22.4.0 full GUI, actual default native recorder, controlled through supported CLI tasks in a clean Windows Sandbox.",
+  "io_note": "Hot media and settings are guest-local; completed files are copied to the host task mapping after process sampling.",
+  "logical_processors": 32,
+  "fixture_tick_origin": [
+    32,
+    32
+  ],
+  "cases": [
+    {
+      "name": "sharex22-video30-native-hardware",
+      "timed_out": false,
+      "wall_seconds": 13.996386699999999,
+      "parent_cpu_seconds": 3.296875,
+      "ffmpeg_descendants_cpu_seconds": 0,
+      "tree_cpu_seconds": 3.296875,
+      "tree_peak_concurrent_private_bytes": 122376192,
+      "tree_peak_concurrent_working_set_bytes": 217247744,
+      "parent_peak_sampled_private_bytes": 122376192,
+      "parent_peak_sampled_working_set_bytes": 217247744,
+      "children_peak_concurrent_private_bytes": 0,
+      "children_peak_concurrent_working_set_bytes": 0,
+      "first_successful_capture_child_observed_seconds": null,
+      "steady_capture": null,
+      "native_request_to_file_window": null,
+      "native_result": null,
+      "configured_profile": "native-hardware",
+      "configured_bitrate_kbps": 10000,
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 0,
+        "conversion_children_cpu_seconds": 0,
+        "other_or_failed_children_cpu_seconds": 0,
+        "capture_child_last_alive_observed_seconds": null,
+        "conversion_children_observed_span_seconds": null,
+        "post_capture_to_process_exit_seconds": null,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 5348,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 3.296875,
+          "private_bytes": 122376192,
+          "working_set_bytes": 217276416,
+          "peak_working_set_bytes": 217276416,
+          "alive": false,
+          "exit_code": 4294967295
+        }
+      ],
+      "artifacts": []
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "source_selection_manifest_sha256": "70e13cf2d7aba9111cf4fa4e95a82a4978894bc6cb62955e9553b73834fc235e",
+  "assets": [
+    {
+      "asset": "hotkey-region",
+      "verification": {
+        "full_decode_pass": true,
+        "mp4": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1920,
+              "height": 1080,
+              "pix_fmt": "yuv420p",
+              "avg_frame_rate": "30/1",
+              "nb_read_frames": "165"
+            }
+          ],
+          "format": {
+            "duration": "5.500000"
+          }
+        },
+        "gif": {
+          "size": [
+            960,
+            540
+          ],
+          "frames": 83,
+          "loop": 0,
+          "duration_seconds": 5.54
+        },
+        "clock_endpoint_consistency": true,
+        "causal_source_frame_selection": true,
+        "input_badge": "INPUT SENT",
+        "independent_source_roi_checks": [
+          {
+            "source_video_roi": [
+              245,
+              138,
+              615,
+              346
+            ],
+            "os_pointer_hotspot_masked": true,
+            "first_source_changed_frame_pts": 17.0,
+            "first_source_frame_change_ms": 401.10830000000067,
+            "median_source_period_ms": 33.99999999999892,
+            "inside_readback_interval_plus_one_source_period": true
+          },
+          {
+            "source_video_roi": [
+              245,
+              138,
+              615,
+              346
+            ],
+            "os_pointer_hotspot_masked": true,
+            "first_source_changed_frame_pts": 19.633,
+            "first_source_frame_change_ms": 289.3535999999983,
+            "median_source_period_ms": 33.00000000000125,
+            "inside_readback_interval_plus_one_source_period": true
+          }
+        ]
+      },
+      "sha256": {
+        ".mp4": "721e43afa67a049cf1c169ddb1e640b044aa2d6fe9b10914b15369db4ebe79d4",
+        ".gif": "fd90a119eb83c44419fc7e684f0e79ef00341f1e73ccc21c8aace046faaa51cd",
+        ".json": "0bb3c650b9ac8804a15a7a507ebc0d35cce2fc09540a07e7ff68b6bc580f24bb"
+      }
+    },
+    {
+      "asset": "hotkey-png",
+      "verification": {
+        "full_decode_pass": true,
+        "mp4": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1920,
+              "height": 1080,
+              "pix_fmt": "yuv420p",
+              "avg_frame_rate": "30/1",
+              "nb_read_frames": "165"
+            }
+          ],
+          "format": {
+            "duration": "5.500000"
+          }
+        },
+        "gif": {
+          "size": [
+            960,
+            540
+          ],
+          "frames": 83,
+          "loop": 0,
+          "duration_seconds": 5.54
+        },
+        "clock_endpoint_consistency": true,
+        "causal_source_frame_selection": true,
+        "input_badge": "INPUT SENT"
+      },
+      "sha256": {
+        ".mp4": "37ea9ce4fa0f5778bdc9c1d27715d3622a9c0019b489f90c838ad25b53a8a270",
+        ".gif": "220f522f234d61aabe23e8474cfb9041e34b743994083d18e8e8b071d1374bd7",
+        ".json": "b88bf702f51fd2398fc041638afc992edff793cc832f9be52baa7498686fa3e0"
+      }
+    }
+  ],
+  "interface": {
+    "dimensions": [
+      1600,
+      1260
+    ],
+    "source_crops": [
+      {
+        "app": "sharex22",
+        "source": "cap-v02-sharex22-region/capture-endpoint-1.bmp",
+        "source_sha256": "1a8f70d41a6520a5a6a692774a001dc840609e395c1aa0afcb926008d19f0a29",
+        "toolbar_source_crop": [
+          691,
+          0,
+          2291,
+          96
+        ],
+        "toolbar_output_size": [
+          1504,
+          96
+        ],
+        "loupe_source_crop": [
+          1260,
+          760,
+          1980,
+          1280
+        ],
+        "loupe_output_size": [
+          720,
+          520
+        ]
+      },
+      {
+        "app": "zipshot",
+        "source": "cap-v02-zipshot-region/capture-endpoint-2.bmp",
+        "source_sha256": "22c12301a3cfb97bfb3262aac5ab5ed6cc2d2548465aa07dd3f8453e7dd7a98a",
+        "toolbar_source_crop": [
+          691,
+          0,
+          2291,
+          96
+        ],
+        "toolbar_output_size": [
+          1504,
+          96
+        ],
+        "loupe_source_crop": [
+          1260,
+          760,
+          1980,
+          1280
+        ],
+        "loupe_output_size": [
+          720,
+          520
+        ]
+      }
+    ],
+    "sha256": "4b3009e0457e286df1ff1c2a6dc1aebd547f6850b1abfe30c3590ade42e5121e"
+  },
+  "source_rate_note": "Observed source rates 22.6\u201325.2 fps are labelled. Output CFR30/GIF15 sample the timeline, with no motion interpolation.",
+  "scope": "Actual guest SendInput demonstrations; recorded examples separate from canonical n=30 unrecorded measurements.",
+  "original_artifacts_modified": false,
+  "font_policy": "Locally installed Ubuntu fonts rasterized; no font binaries copied."
+}

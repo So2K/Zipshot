@@ -1,0 +1,8 @@
+{
+  "source_run": "editor-pairs/native-freehand-20261118-025333",
+  "source_frame_sha256": "eb1205aeec4c92b5374708c8001d7718f19996b3f4317026f91c5fec088261ac",
+  "scope": "Genuine final editor frame with separate cover typography, not a recreated application UI.",
+  "capture_measured_calls": 120,
+  "editor_runs": 20,
+  "output_sha256": "9c5b413cc951a49537c4b2a0850af02908c749e446aa8433960fbbd50bb26c6a"
+}

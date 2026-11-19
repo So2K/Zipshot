@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "source_manifest_sha256": "5a02a817f5d34aafedf20de608b3c0776f67747c8a8be743af7853a110696542",
+  "assets": [
+    {
+      "case": "arrow",
+      "duration_s": 3.8333333333333335,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 58,
+        "gif_duration_s": 3.87,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "3c2faa8a0df1916acbd26db002f34c7d643c99e8cdc10ecda8736df35dc81444",
+        ".gif": "d6eb0c711a3e7fc20d16e1a27638684ea1b3f264dd7aa037c7fa373d521b85d9",
+        ".json": "4178af6856ec209e4d56cdc678adbcf902a94c79218290e0bdbc3451f50f0c5e"
+      }
+    },
+    {
+      "case": "freehand",
+      "duration_s": 3.8333333333333335,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 58,
+        "gif_duration_s": 3.87,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "eeec1f7a4605c7e41424db08f653e4f635541a07701c1fabd2fdd1f6d9929f84",
+        ".gif": "125511e60142fdfd0bdf2a5aa38d918ed626ecf09f380617ebaf39186876470f",
+        ".json": "32a161c08695c9364dd01b91cfe9c88f5e82c4c1ed3b68428bfc97a88fa67ad2"
+      }
+    },
+    {
+      "case": "blur",
+      "duration_s": 6.933333333333334,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 104,
+        "gif_duration_s": 6.94,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "0599f6d6bbd980cfddf797e02d2237e96684890e9e9342c2d26bd2969e900a43",
+        ".gif": "455fbb390d568771a0bef9ca86f5cc58fdfe9763bbbd501fa1fbfa7f99568cf1",
+        ".json": "f86b24f582d827a511cd988123c39323fe2b73fdb33799a09710d51c4663960d"
+      }
+    },
+    {
+      "case": "zoom",
+      "duration_s": 4.733333333333333,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 71,
+        "gif_duration_s": 4.74,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "0ca81acb24b050a2f03de831c720da28ce1ccdbf9b3b97d8f21ba1d853915d6c",
+        ".gif": "bfa6347bf918d01114a1da2be49c831995a8a8f0e3997d33fb2a74c16a7756bb",
+        ".json": "d5e42356528fe1e29d6dd41afaa0fa8c11d999e4cd62e535eb95ac55fbe78dcb"
+      }
+    },
+    {
+      "case": "undo",
+      "duration_s": 4.733333333333333,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 71,
+        "gif_duration_s": 4.74,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "72a6672ae745785ea7e3934e82252848b2d5df53f8420a0e00ddc0c42ab430b6",
+        ".gif": "2d7592330f5aac22fafc4dc5369b16c9ea398708d5569e4b56498440684fce90",
+        ".json": "f2e3d71fa33dfac8ccb70c23b3e91d16de0d6533f312db0fd9d75da5f7707067"
+      }
+    },
+    {
+      "case": "text",
+      "duration_s": 2.8666666666666667,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 43,
+        "gif_duration_s": 2.87,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "65892556bc6db67670435dbc35640fb19c120a4329c0fe3b63414d485016e131",
+        ".gif": "1dfd13f6c36f48db14b64baccc9eeda06430d866f433323c3f0c1fd7a98d538f",
+        ".json": "786391f9cc7ef57d2c234c0af9630e717a4c27dacf2d6a34cf00a81bc3e4cd22"
+      }
+    },
+    {
+      "case": "pixelate",
+      "duration_s": 3.8333333333333335,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 58,
+        "gif_duration_s": 3.87,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "1b93cc009f2ae42cf312aaacf87498b9146159b1fd2b692c194423e641924917",
+        ".gif": "4db9994ab622aadf48566616b3078c15f738fef5a97c14dcd19da3a9677f576e",
+        ".json": "879edcbfa18a29c7a2c929d34c9b9199594d39d32678639d96e2f70da27d715a"
+      }
+    },
+    {
+      "case": "colorpicker",
+      "duration_s": 3.8666666666666667,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 58,
+        "gif_duration_s": 3.87,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "401a1f32ec042d1d97b1bf2d96505a7ff94ea866f794b63617390feb773de1fa",
+        ".gif": "ae68fe371d6b8752ac87c55278e6f28ae64ce404cc6aa1f1a6ea7395cd6cdcd4",
+        ".json": "71667d7bf7c401cb721d82de9cf8371e9e2fac0a41dc28eb1e5e3a8bb47dba4e"
+      }
+    }
+  ],
+  "scope": "Actual editor input demonstrations; one sequence per app, source windows unchanged. No UI latency winner claimed.",
+  "time_policy": "Epoch PTS normalized by first source PTS; chronological 1x causal frame sampling. No speed changes or motion interpolation.",
+  "font_policy": "Installed Ubuntu fonts rasterized for external captions; no font binaries copied.",
+  "original_sources_modified": false,
+  "region_assets": [
+    {
+      "case": "arrow",
+      "asset": "editor-region-arrow",
+      "duration_s": 7.966666666666667,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 120,
+        "gif_duration_s": 8.0,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "bec8a84a8937321b182c46ee72132b78c3fc3050b30423adeb8dd90b041de183",
+        ".gif": "f93a3185cfa073305ad9575f3b4f03b1374ee76e833e5819dca46248e72a8c61",
+        ".json": "7fa680ac1a60528954b8b6b3f95cf54a6c3a458e0fe6842b3299890c646ab723"
+      }
+    },
+    {
+      "case": "freehand",
+      "asset": "editor-region-freehand",
+      "duration_s": 7.7,
+      "verification": {
+        "full_decode_pass": true,
+        "gif_frames": 116,
+        "gif_duration_s": 7.74,
+        "gif_loop": 0
+      },
+      "sha256": {
+        ".mp4": "8d1e7b84b1dbafe9c11ecf0bbb3c39d1d781c03615fdb3f205b76001de1bb3ed",
+        ".gif": "404f613722cd5038c2dfbd87f14223ca90c006ff73fa5977b903569e145cd942",
+        ".json": "c8eaac7494492ec70c3e3b428c79fbe757fbe4593d74bbe33e051a8798152ec6"
+      }
+    }
+  ],
+  "region_source_manifest_sha256": "99a22569c4af28f8da606302834b8c17db98b441213ffdb70f25926b032f5abc",
+  "region_scope": "Actual full-app region overlays; original input chronology, visible drawing only, no save/speed claim.",
+  "final_visual_review": {
+    "status": "pass",
+    "standalone": "First and last composite contact sheet reviewed; genuine actions visible, no response-time winner captions.",
+    "region": "Independent audit_editor review of both final drawing crops matched previously reviewed actual raw frames; paths, cursor, defaults and scope captions readable.",
+    "review_limit": "Static visual review does not itself establish response latency. Epoch normalization, phase alignment and source hashes are checked separately by the composer."
+  }
+}

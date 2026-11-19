@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "case": "zoom",
+  "title": "Zoom",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 4.733333333333333,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-extras/sharex22-zoom-20261118-025827",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "15b4ce0c07d2a4541b22020435aa7073320764761b4d72416668244b984eb3d0",
+      "source_size": [
+        1302,
+        956
+      ],
+      "source_first_epoch_pts": 1794999516.083,
+      "source_last_epoch_pts": 1794999520.4,
+      "source_real_duration_s": 4.317,
+      "source_observed_fps": 31.966643502432245,
+      "first_relevant_phase_s": 0.6059441566467285,
+      "complete_input_sequence_s": 3.5066192566467285,
+      "input_sequence_duration_s": 2.9006751,
+      "camera_hold_after_sequence_source_s": 3.7066192566467286,
+      "phases": [
+        {
+          "name": "zoom",
+          "video_offset_s": 0.6059441566467285,
+          "duration_s": 2.9006751
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-zoom-sharex22-source-first.png",
+          "sha256": "69c0e0d447cc9f49b9e0f54c6070526af08e58b60feb709447d3c71a124bd778"
+        },
+        "last": {
+          "file": "editor-zoom-sharex22-source-last.png",
+          "sha256": "1ec1e9792099e263eca5609f125802996b9521aca26445b93e9d3c755dfb849a"
+        }
+      },
+      "full_window_fit_scale": 0.6328451882845189,
+      "full_window_padding": [
+        18,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-extras/native-zoom-20261118-025814",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "0f6cbca8abaa34364b75fd3e2596ddf992b532ae1c4d9d2bf8e0cdb2388dca1d",
+      "source_size": [
+        1280,
+        900
+      ],
+      "source_first_epoch_pts": 1794999498.817,
+      "source_last_epoch_pts": 1794999503.017,
+      "source_real_duration_s": 4.2,
+      "source_observed_fps": 32.14285714285714,
+      "first_relevant_phase_s": 0.5817663669586182,
+      "complete_input_sequence_s": 3.4825672669586183,
+      "input_sequence_duration_s": 2.9008009,
+      "camera_hold_after_sequence_source_s": 3.6825672669586185,
+      "phases": [
+        {
+          "name": "zoom",
+          "video_offset_s": 0.5817663669586182,
+          "duration_s": 2.9008009
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-zoom-native-source-first.png",
+          "sha256": "b9b4b1a218a5abf85d87f921c147711d4b9d335c41321e215ad1f308628922ef"
+        },
+        "last": {
+          "file": "editor-zoom-native-source-last.png",
+          "sha256": "4f5462f4617c23842621fe6a8510371d8c6b082455e3d554819b284b03089a21"
+        }
+      },
+      "full_window_fit_scale": 0.671875,
+      "full_window_padding": [
+        0,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    }
+  ],
+  "output_sha256": "0ca81acb24b050a2f03de831c720da28ce1ccdbf9b3b97d8f21ba1d853915d6c",
+  "gif_sha256": "bfa6347bf918d01114a1da2be49c831995a8a8f0e3997d33fb2a74c16a7756bb"
+}

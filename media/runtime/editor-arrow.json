@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "case": "arrow",
+  "title": "Arrow",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 3.8333333333333335,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-pairs/sharex22-arrow-20261118-025316",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "73fbac90b00e5d3c040965a4047c36c5c6894cd68171e811e02d33011a28a0ae",
+      "source_size": [
+        1302,
+        956
+      ],
+      "source_first_epoch_pts": 1794999205.083,
+      "source_last_epoch_pts": 1794999208.367,
+      "source_real_duration_s": 3.284,
+      "source_observed_fps": 31.973203410475033,
+      "first_relevant_phase_s": 0.5974326133728027,
+      "complete_input_sequence_s": 2.5982712133728025,
+      "input_sequence_duration_s": 2.0008386,
+      "camera_hold_after_sequence_source_s": 2.7982712133728027,
+      "phases": [
+        {
+          "name": "arrow",
+          "video_offset_s": 0.5974326133728027,
+          "duration_s": 2.0008386
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-arrow-sharex22-source-first.png",
+          "sha256": "5cea29c5e17ba6e54793817ad7bf05323b2e4c37547e7585e42de43f0c455c96"
+        },
+        "last": {
+          "file": "editor-arrow-sharex22-source-last.png",
+          "sha256": "916287a03f82ab05949d583b1eb9a45fbd1bff429b400d7285bd74a724ab1baf"
+        }
+      },
+      "full_window_fit_scale": 0.6328451882845189,
+      "full_window_padding": [
+        18,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-pairs/native-arrow-20261118-025303",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "d743a21d3cea13f8ad68c75553e62a7a1a2d74dfc1615f2b6a4038259f69b0b3",
+      "source_size": [
+        1280,
+        900
+      ],
+      "source_first_epoch_pts": 1794999188.233,
+      "source_last_epoch_pts": 1794999191.767,
+      "source_real_duration_s": 3.534,
+      "source_observed_fps": 31.975099037917374,
+      "first_relevant_phase_s": 0.7045032978057861,
+      "complete_input_sequence_s": 2.705214597805786,
+      "input_sequence_duration_s": 2.0007113,
+      "camera_hold_after_sequence_source_s": 2.905214597805786,
+      "phases": [
+        {
+          "name": "arrow",
+          "video_offset_s": 0.7045032978057861,
+          "duration_s": 2.0007113
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-arrow-native-source-first.png",
+          "sha256": "77cbcf71e7303929f786d5c4a42bde1260986ca44375cc2459e054380c9524aa"
+        },
+        "last": {
+          "file": "editor-arrow-native-source-last.png",
+          "sha256": "a45b2e3b6ee6e7242141fa9d5a1ea3c93ee9307091fec6c8b504e5ae3ec96b38"
+        }
+      },
+      "full_window_fit_scale": 0.671875,
+      "full_window_padding": [
+        0,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    }
+  ],
+  "output_sha256": "3c2faa8a0df1916acbd26db002f34c7d643c99e8cdc10ecda8736df35dc81444",
+  "gif_sha256": "d6eb0c711a3e7fc20d16e1a27638684ea1b3f264dd7aa037c7fa373d521b85d9"
+}

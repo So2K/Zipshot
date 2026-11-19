@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "case": "text",
+  "title": "Text",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 2.8666666666666667,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-more/sharex22-text-20261118-030412",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "e18482da5babe3b7f6e6fdb0e509a8fa6efefdcb5eaabdfac53fc4c00d396a4d",
+      "source_size": [
+        1302,
+        956
+      ],
+      "source_first_epoch_pts": 1794999860.55,
+      "source_last_epoch_pts": 1794999863.233,
+      "source_real_duration_s": 2.683,
+      "source_observed_fps": 32.053671263511,
+      "first_relevant_phase_s": 0.8133485317230225,
+      "complete_input_sequence_s": 1.8763925317230226,
+      "input_sequence_duration_s": 1.063044,
+      "camera_hold_after_sequence_source_s": 2.0763925317230227,
+      "phases": [
+        {
+          "name": "text",
+          "video_offset_s": 0.8133485317230225,
+          "duration_s": 1.063044
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-text-sharex22-source-first.png",
+          "sha256": "afca051ac03cfb0d9d5f373a0717dc4383d95059f7df707827489d97ab0ba53c"
+        },
+        "last": {
+          "file": "editor-text-sharex22-source-last.png",
+          "sha256": "4c6af878a8a958eb613f678c3e7cc4ff93f7cd2a697fc1d2922a96e4ecfc82f8"
+        }
+      },
+      "full_window_fit_scale": 0.6328451882845189,
+      "full_window_padding": [
+        18,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-more/native-text-20261118-030401",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "8d74f76fb5ef3cffcbd6b71a4f8970f2003bdecf3a32dee565e85b5a86ea1453",
+      "source_size": [
+        1280,
+        900
+      ],
+      "source_first_epoch_pts": 1794999845.5,
+      "source_last_epoch_pts": 1794999848.017,
+      "source_real_duration_s": 2.517,
+      "source_observed_fps": 32.18116805721097,
+      "first_relevant_phase_s": 0.8333916664123535,
+      "complete_input_sequence_s": 1.8362588664123536,
+      "input_sequence_duration_s": 1.0028672,
+      "camera_hold_after_sequence_source_s": 2.0362588664123535,
+      "phases": [
+        {
+          "name": "text",
+          "video_offset_s": 0.8333916664123535,
+          "duration_s": 1.0028672
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-text-native-source-first.png",
+          "sha256": "461418ad6048aeff0dbfbc09fdd82524dfde325b18572bd13416bda3356d153f"
+        },
+        "last": {
+          "file": "editor-text-native-source-last.png",
+          "sha256": "4cfe3e175356511b3878afa2fc75696e5127f9ea7e16a74849e8ce2c2d7e5234"
+        }
+      },
+      "full_window_fit_scale": 0.671875,
+      "full_window_padding": [
+        0,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    }
+  ],
+  "output_sha256": "65892556bc6db67670435dbc35640fb19c120a4329c0fe3b63414d485016e131",
+  "gif_sha256": "1dfd13f6c36f48db14b64baccc9eeda06430d866f433323c3f0c1fd7a98d538f"
+}

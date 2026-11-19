@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "scope": "Official unmodified ShareX 22.4.0 full GUI, actual default native recorder, controlled through supported CLI tasks in a clean Windows Sandbox.",
+  "io_note": "Hot media and settings are guest-local; completed files are copied to the host task mapping after process sampling.",
+  "logical_processors": 32,
+  "fixture_tick_origin": [
+    32,
+    32
+  ],
+  "cases": [
+    {
+      "name": "sharex22-video60-native-software-allowed",
+      "timed_out": false,
+      "failure": null,
+      "cleanup_note": null,
+      "wall_seconds": 35.0536056,
+      "valid_media_count": 1,
+      "has_verified_moving_media": true,
+      "long_clip_data_ready": true,
+      "comparison_note": "Media validity and duration do not establish a codec quality match or a general performance ranking.",
+      "parent_cpu_seconds": 35,
+      "ffmpeg_descendants_cpu_seconds": 0,
+      "tree_cpu_seconds": 35,
+      "tree_peak_concurrent_private_bytes": 287948800,
+      "tree_peak_concurrent_working_set_bytes": 300417024,
+      "parent_peak_sampled_private_bytes": 287948800,
+      "parent_peak_sampled_working_set_bytes": 300417024,
+      "children_peak_concurrent_private_bytes": 0,
+      "children_peak_concurrent_working_set_bytes": 0,
+      "first_successful_capture_child_observed_seconds": null,
+      "steady_capture": null,
+      "native_request_to_file_window": {
+        "observed_seconds": 32.8002957,
+        "cpu_seconds": 33.546875,
+        "one_core_percent": 102.27613588251889,
+        "guest_machine_percent": 3.196129246328715,
+        "scope": "Observed product native-record request through completed-file observation. Includes setup bar, preparation and finalization; this is not a pure steady encoder interval."
+      },
+      "native_result": {
+        "encoder": "",
+        "audio_discontinuities": 0,
+        "hardware_accelerated": false,
+        "video_frames": 1800,
+        "dropped_video_frames": 0
+      },
+      "native_result_source": "guest_recording_result",
+      "configured_profile": "native-software-allowed",
+      "configured_bitrate_kbps": 10000,
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 0,
+        "conversion_children_cpu_seconds": 0,
+        "other_or_failed_children_cpu_seconds": 0,
+        "capture_child_last_alive_observed_seconds": null,
+        "conversion_children_observed_span_seconds": null,
+        "post_capture_to_process_exit_seconds": null,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 3600,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 35,
+          "private_bytes": 38023168,
+          "working_set_bytes": 111271936,
+          "peak_working_set_bytes": 300417024,
+          "alive": false,
+          "exit_code": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "relative_path": "sharex22-video60-native-software-allowed\\JAX93AydoV.mp4",
+          "ffprobe_exit": 0,
+          "bytes": 12133058,
+          "ffprobe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "width": 1920,
+                "height": 1080,
+                "pix_fmt": "yuv420p",
+                "r_frame_rate": "60/1",
+                "avg_frame_rate": "60/1",
+                "duration": "30.000000",
+                "bit_rate": "3233316",
+                "nb_read_frames": "1800"
+              }
+            ],
+            "format": {
+              "duration": "30.000000",
+              "size": "12133058",
+              "bit_rate": "3235482"
+            }
+          },
+          "sha256": "7df8782f4d939b4093c8e8d4126ddb1569d96d24b609ee24767973c30c048ffc",
+          "fixture_tick": {
+            "status": "decoded",
+            "full_decode_clean": true,
+            "frames": 1800,
+            "first_tick": 179,
+            "last_tick": 1078,
+            "ambiguous_frames": 0,
+            "repeated_tick_transitions": 1018,
+            "tick_jumps_over_one": 127,
+            "implausible_transitions": 13,
+            "unique_ticks": 770,
+            "deltas": {
+              "0": 1018,
+              "1": 641,
+              "2": 114,
+              "4": 2,
+              "5": 11,
+              "65533": 7,
+              "65534": 6
+            },
+            "interpretation": "Fixture is 30Hz. Repeated ticks are expected at 60fps, and jumps of two are expected at 15fps. These are fixture presentation observations, not an encoder internal dropped-frame counter."
+          },
+          "file_validation": {
+            "codec": "h264",
+            "width": 1920,
+            "height": 1080,
+            "decoded_frames": 1800,
+            "expected_dimensions_and_decodable_frames": true
+          }
+        }
+      ]
+    }
+  ]
+}

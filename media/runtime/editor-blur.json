@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "case": "blur",
+  "title": "Blur \u00b7 cold and repeat",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 6.933333333333334,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-extras/sharex22-blur-20261118-025719",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "17eaa2396c33cf18a0d2f7d56cf5a50b82f4a4021a5b8c6f46fc8eb2528049e6",
+      "source_size": [
+        1302,
+        956
+      ],
+      "source_first_epoch_pts": 1794999447.8,
+      "source_last_epoch_pts": 1794999454.183,
+      "source_real_duration_s": 6.383,
+      "source_observed_fps": 31.959893467021775,
+      "first_relevant_phase_s": 0.6077823638916016,
+      "complete_input_sequence_s": 5.730829269396972,
+      "input_sequence_duration_s": 5.123046905505371,
+      "camera_hold_after_sequence_source_s": 5.930829269396972,
+      "phases": [
+        {
+          "name": "blur_cold",
+          "video_offset_s": 0.6077823638916016,
+          "duration_s": 2.0008872
+        },
+        {
+          "name": "blur_repeat",
+          "video_offset_s": 3.7300195693969727,
+          "duration_s": 2.0008097
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-blur-sharex22-source-first.png",
+          "sha256": "98dbf2242431ea6e91f1bac18f7572988240a56f9433742fee4dd66cd307e5c9"
+        },
+        "last": {
+          "file": "editor-blur-sharex22-source-last.png",
+          "sha256": "558f6940b81ca488cbb8a602ca91cea6de0ba6ec8891916585bd9be3a9f77a77"
+        }
+      },
+      "full_window_fit_scale": 0.6328451882845189,
+      "full_window_padding": [
+        18,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-extras/native-blur-20261118-025704",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "2a2f6e0a9945e2a516f1c35c47c426abdeca07f71264f7bc79fce941d10dec4c",
+      "source_size": [
+        1280,
+        900
+      ],
+      "source_first_epoch_pts": 1794999428.25,
+      "source_last_epoch_pts": 1794999434.733,
+      "source_real_duration_s": 6.483,
+      "source_observed_fps": 32.08391176924263,
+      "first_relevant_phase_s": 0.621762752532959,
+      "complete_input_sequence_s": 5.732946902923584,
+      "input_sequence_duration_s": 5.111184150390625,
+      "camera_hold_after_sequence_source_s": 5.932946902923584,
+      "phases": [
+        {
+          "name": "blur_cold",
+          "video_offset_s": 0.621762752532959,
+          "duration_s": 2.0006273
+        },
+        {
+          "name": "blur_repeat",
+          "video_offset_s": 3.732266902923584,
+          "duration_s": 2.00068
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-blur-native-source-first.png",
+          "sha256": "a6b0140580ecfbaafa4df758799d8a18d3256b8f1c52d550ec0ea2c486c4d6c5"
+        },
+        "last": {
+          "file": "editor-blur-native-source-last.png",
+          "sha256": "f580ae2e6a201b4618947781017485ed4a50d773beae467dd755334a9b2100f4"
+        }
+      },
+      "full_window_fit_scale": 0.671875,
+      "full_window_padding": [
+        0,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    }
+  ],
+  "output_sha256": "0599f6d6bbd980cfddf797e02d2237e96684890e9e9342c2d26bd2969e900a43",
+  "gif_sha256": "455fbb390d568771a0bef9ca86f5cc58fdfe9763bbbd501fa1fbfa7f99568cf1"
+}

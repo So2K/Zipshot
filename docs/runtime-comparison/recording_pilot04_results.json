@@ -1,0 +1,636 @@
+{
+  "schema_version": 1,
+  "scope": "Clean Windows Sandbox only. Real product recording. Parent and FFmpeg children separately accounted.",
+  "io_note": "Active recording, fixture control, process samples and GPU samples use the guest local work drive. Completed cases are copied to the task-owned host mapping after sampling closes.",
+  "logical_processors": 32,
+  "fixture_tick_origin": [
+    32,
+    32
+  ],
+  "cases": [
+    {
+      "name": "zipshot-video30",
+      "timed_out": false,
+      "wall_seconds": 15.9795783,
+      "parent_cpu_seconds": 6.3125,
+      "ffmpeg_descendants_cpu_seconds": 4.140625,
+      "tree_cpu_seconds": 10.453125,
+      "tree_peak_concurrent_private_bytes": 1172455424,
+      "tree_peak_concurrent_working_set_bytes": 928813056,
+      "parent_peak_sampled_private_bytes": 2985984,
+      "parent_peak_sampled_working_set_bytes": 24297472,
+      "children_peak_concurrent_private_bytes": 1169559552,
+      "children_peak_concurrent_working_set_bytes": 904515584,
+      "first_successful_capture_child_observed_seconds": 6.481189199999999,
+      "steady_capture": {
+        "sampled_seconds": 4.3300208,
+        "cpu_seconds": 2.390625,
+        "one_core_percent": 55.21047381573779,
+        "guest_machine_percent": 1.725327306741806,
+        "note": "Starts two seconds after the successful capture FFmpeg child was first observed; interval is actual and may be shorter than the requested clip."
+      },
+      "native_request_to_file_window": null,
+      "native_result": null,
+      "configured_profile": "x264",
+      "configured_bitrate_kbps": null,
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 3.84375,
+        "conversion_children_cpu_seconds": 0,
+        "other_or_failed_children_cpu_seconds": 0.296875,
+        "capture_child_last_alive_observed_seconds": 12.8829905,
+        "conversion_children_observed_span_seconds": null,
+        "post_capture_to_process_exit_seconds": 3.0965878,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 2796,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 6.3125,
+          "private_bytes": 73728,
+          "working_set_bytes": 28672,
+          "peak_working_set_bytes": 31825920,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 8736,
+          "parent": 2796,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 0.265625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 41459712,
+          "alive": false,
+          "exit_code": 3752568763
+        },
+        {
+          "pid": 8740,
+          "parent": 8736,
+          "name": "conhost.exe",
+          "cpu_seconds": 0.015625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 7480,
+          "parent": 2796,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 3.84375,
+          "private_bytes": 81920,
+          "working_set_bytes": 36864,
+          "peak_working_set_bytes": 898555904,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 5040,
+          "parent": 7480,
+          "name": "conhost.exe",
+          "cpu_seconds": 0.015625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "relative_path": "zipshot-video30\\record.mp4",
+          "ffprobe_exit": 0,
+          "bytes": 269513,
+          "ffprobe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "width": 1920,
+                "height": 1080,
+                "pix_fmt": "yuv420p",
+                "r_frame_rate": "30/1",
+                "avg_frame_rate": "30/1",
+                "duration": "6.200000",
+                "nb_read_frames": "186"
+              }
+            ],
+            "format": {
+              "duration": "6.200000",
+              "size": "269513"
+            }
+          },
+          "sha256": "3465060d4a6ffdf7101abea99538ad1d6913f4aadb4307cf2d1981ce808fa9a2",
+          "fixture_tick": {
+            "status": "decoded",
+            "full_decode_clean": true,
+            "frames": 186,
+            "first_tick": 219,
+            "last_tick": 404,
+            "ambiguous_frames": 0,
+            "repeated_tick_transitions": 14,
+            "tick_jumps_over_one": 14,
+            "implausible_transitions": 0,
+            "unique_ticks": 172,
+            "deltas": {
+              "0": 14,
+              "1": 157,
+              "2": 14
+            },
+            "interpretation": "Fixture is 30Hz. Repeated ticks are expected at 60fps, and jumps of two are expected at 15fps. These are fixture presentation observations, not an encoder internal dropped-frame counter."
+          },
+          "file_validation": {
+            "codec": "h264",
+            "width": 1920,
+            "height": 1080,
+            "decoded_frames": 186,
+            "expected_dimensions_and_decodable_frames": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "sharex-video30",
+      "timed_out": false,
+      "wall_seconds": 16.6699889,
+      "parent_cpu_seconds": 3.453125,
+      "ffmpeg_descendants_cpu_seconds": 7.125,
+      "tree_cpu_seconds": 10.578125,
+      "tree_peak_concurrent_private_bytes": 1194852352,
+      "tree_peak_concurrent_working_set_bytes": 1020862464,
+      "parent_peak_sampled_private_bytes": 57167872,
+      "parent_peak_sampled_working_set_bytes": 120004608,
+      "children_peak_concurrent_private_bytes": 1137709056,
+      "children_peak_concurrent_working_set_bytes": 910696448,
+      "first_successful_capture_child_observed_seconds": 5.4529198,
+      "steady_capture": {
+        "sampled_seconds": 7.889147799999999,
+        "cpu_seconds": 5.578125,
+        "one_core_percent": 70.70630619951119,
+        "guest_machine_percent": 2.2095720687347247,
+        "note": "Starts two seconds after the successful capture FFmpeg child was first observed; interval is actual and may be shorter than the requested clip."
+      },
+      "native_request_to_file_window": null,
+      "native_result": null,
+      "configured_profile": "x264",
+      "configured_bitrate_kbps": null,
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 7.109375,
+        "conversion_children_cpu_seconds": 0,
+        "other_or_failed_children_cpu_seconds": 0.015625,
+        "capture_child_last_alive_observed_seconds": 15.416678899999999,
+        "conversion_children_observed_span_seconds": null,
+        "post_capture_to_process_exit_seconds": 1.2533100000000008,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 3060,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 3.453125,
+          "private_bytes": 86016,
+          "working_set_bytes": 40960,
+          "peak_working_set_bytes": 135114752,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 2108,
+          "parent": 3060,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 7.109375,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 907268096,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 1548,
+          "parent": 2108,
+          "name": "conhost.exe",
+          "cpu_seconds": 0.015625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 7004160,
+          "alive": false,
+          "exit_code": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "relative_path": "sharex-video30\\aRe5Q7jppL.mp4",
+          "ffprobe_exit": 0,
+          "bytes": 433581,
+          "ffprobe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "width": 1920,
+                "height": 1080,
+                "pix_fmt": "yuv420p",
+                "r_frame_rate": "30/1",
+                "avg_frame_rate": "8070/299",
+                "duration": "9.966667",
+                "nb_read_frames": "269"
+              }
+            ],
+            "format": {
+              "duration": "9.966667",
+              "size": "433581"
+            }
+          },
+          "sha256": "59124fcc4d6250685906feb80aa0dcdf57f5411cf8bd7045ab0d04fb33e637a7",
+          "fixture_tick": {
+            "status": "decoded",
+            "full_decode_clean": true,
+            "frames": 269,
+            "first_tick": 189,
+            "last_tick": 489,
+            "ambiguous_frames": 0,
+            "repeated_tick_transitions": 24,
+            "tick_jumps_over_one": 48,
+            "implausible_transitions": 0,
+            "unique_ticks": 245,
+            "deltas": {
+              "0": 24,
+              "1": 196,
+              "2": 40,
+              "3": 8
+            },
+            "interpretation": "Fixture is 30Hz. Repeated ticks are expected at 60fps, and jumps of two are expected at 15fps. These are fixture presentation observations, not an encoder internal dropped-frame counter."
+          },
+          "file_validation": {
+            "codec": "h264",
+            "width": 1920,
+            "height": 1080,
+            "decoded_frames": 269,
+            "expected_dimensions_and_decodable_frames": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "zipshot-gif15",
+      "timed_out": false,
+      "wall_seconds": 21.964308799999998,
+      "parent_cpu_seconds": 8.71875,
+      "ffmpeg_descendants_cpu_seconds": 6.53125,
+      "tree_cpu_seconds": 15.25,
+      "tree_peak_concurrent_private_bytes": 932352000,
+      "tree_peak_concurrent_working_set_bytes": 655667200,
+      "parent_peak_sampled_private_bytes": 3002368,
+      "parent_peak_sampled_working_set_bytes": 24326144,
+      "children_peak_concurrent_private_bytes": 929439744,
+      "children_peak_concurrent_working_set_bytes": 631607296,
+      "first_successful_capture_child_observed_seconds": 6.673737999999999,
+      "steady_capture": {
+        "sampled_seconds": 4.128644599999999,
+        "cpu_seconds": 0.96875,
+        "one_core_percent": 23.46411701312339,
+        "guest_machine_percent": 0.7332536566601059,
+        "note": "Starts two seconds after the successful capture FFmpeg child was first observed; interval is actual and may be shorter than the requested clip."
+      },
+      "native_request_to_file_window": null,
+      "native_result": null,
+      "configured_profile": "x264",
+      "configured_bitrate_kbps": null,
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 1.671875,
+        "conversion_children_cpu_seconds": 4.6875,
+        "other_or_failed_children_cpu_seconds": 0.171875,
+        "capture_child_last_alive_observed_seconds": 12.856470199999999,
+        "conversion_children_observed_span_seconds": 5.7982777999999975,
+        "post_capture_to_process_exit_seconds": 9.1078386,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 5932,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 8.71875,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 31850496,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 8888,
+          "parent": 5932,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 0.15625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 41426944,
+          "alive": false,
+          "exit_code": 3752568763
+        },
+        {
+          "pid": 4748,
+          "parent": 8888,
+          "name": "conhost.exe",
+          "cpu_seconds": 0,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 3604,
+          "parent": 5932,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 1.671875,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 633212928,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 2920,
+          "parent": 3604,
+          "name": "conhost.exe",
+          "cpu_seconds": 0,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 3596,
+          "parent": 5932,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 0.984375,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 211890176,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 5256,
+          "parent": 3596,
+          "name": "conhost.exe",
+          "cpu_seconds": 0.015625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 8532,
+          "parent": 5932,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 3.703125,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 241680384,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 3880,
+          "parent": 8532,
+          "name": "conhost.exe",
+          "cpu_seconds": 0,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "relative_path": "zipshot-gif15\\record.gif",
+          "ffprobe_exit": 0,
+          "bytes": 969511,
+          "ffprobe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "gif",
+                "width": 1920,
+                "height": 1080,
+                "pix_fmt": "bgra",
+                "r_frame_rate": "15/1",
+                "avg_frame_rate": "50/3",
+                "duration": "6.200000",
+                "nb_read_frames": "93"
+              }
+            ],
+            "format": {
+              "duration": "6.200000",
+              "size": "969511"
+            }
+          },
+          "sha256": "26e406d0eb081a9af3e25e7a13255394e258f4f6415666782ddad9ea029ee5c6",
+          "fixture_tick": {
+            "status": "decoded",
+            "full_decode_clean": true,
+            "frames": 93,
+            "first_tick": 211,
+            "last_tick": 396,
+            "ambiguous_frames": 0,
+            "repeated_tick_transitions": 0,
+            "tick_jumps_over_one": 81,
+            "implausible_transitions": 0,
+            "unique_ticks": 93,
+            "deltas": {
+              "1": 11,
+              "2": 69,
+              "3": 12
+            },
+            "interpretation": "Fixture is 30Hz. Repeated ticks are expected at 60fps, and jumps of two are expected at 15fps. These are fixture presentation observations, not an encoder internal dropped-frame counter."
+          },
+          "file_validation": {
+            "codec": "gif",
+            "width": 1920,
+            "height": 1080,
+            "decoded_frames": 93,
+            "expected_dimensions_and_decodable_frames": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "sharex-gif15",
+      "timed_out": false,
+      "wall_seconds": 24.3745573,
+      "parent_cpu_seconds": 5.75,
+      "ffmpeg_descendants_cpu_seconds": 12.140625,
+      "tree_cpu_seconds": 17.890625,
+      "tree_peak_concurrent_private_bytes": 1404276736,
+      "tree_peak_concurrent_working_set_bytes": 1459339264,
+      "parent_peak_sampled_private_bytes": 73043968,
+      "parent_peak_sampled_working_set_bytes": 136404992,
+      "children_peak_concurrent_private_bytes": 1339715584,
+      "children_peak_concurrent_working_set_bytes": 1335062528,
+      "first_successful_capture_child_observed_seconds": 5.4260198,
+      "steady_capture": {
+        "sampled_seconds": 7.7958647999999995,
+        "cpu_seconds": 2.328125,
+        "one_core_percent": 29.86358870666921,
+        "guest_machine_percent": 0.9332371470834128,
+        "note": "Starts two seconds after the successful capture FFmpeg child was first observed; interval is actual and may be shorter than the requested clip."
+      },
+      "native_request_to_file_window": null,
+      "native_result": null,
+      "configured_profile": "x264",
+      "configured_bitrate_kbps": null,
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 4.140625,
+        "conversion_children_cpu_seconds": 7.96875,
+        "other_or_failed_children_cpu_seconds": 0.03125,
+        "capture_child_last_alive_observed_seconds": 15.272880299999999,
+        "conversion_children_observed_span_seconds": 5.221626199999999,
+        "post_capture_to_process_exit_seconds": 9.101677,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 9128,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 5.75,
+          "private_bytes": 86016,
+          "working_set_bytes": 40960,
+          "peak_working_set_bytes": 157753344,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 5392,
+          "parent": 9128,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 4.140625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 115724288,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 8920,
+          "parent": 5392,
+          "name": "conhost.exe",
+          "cpu_seconds": 0.015625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 5892,
+          "parent": 9128,
+          "name": "ffmpeg.exe",
+          "cpu_seconds": 7.96875,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 1463848960,
+          "alive": false,
+          "exit_code": 0
+        },
+        {
+          "pid": 5696,
+          "parent": 5892,
+          "name": "conhost.exe",
+          "cpu_seconds": 0.015625,
+          "private_bytes": 77824,
+          "working_set_bytes": 32768,
+          "peak_working_set_bytes": 6995968,
+          "alive": false,
+          "exit_code": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "relative_path": "sharex-gif15\\gk0wCmyUlK.gif",
+          "ffprobe_exit": 0,
+          "bytes": 1328540,
+          "ffprobe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "gif",
+                "width": 1920,
+                "height": 1080,
+                "pix_fmt": "bgra",
+                "r_frame_rate": "15/1",
+                "avg_frame_rate": "50/3",
+                "duration": "10.000000",
+                "nb_read_frames": "150"
+              }
+            ],
+            "format": {
+              "duration": "10.000000",
+              "size": "1328540"
+            }
+          },
+          "sha256": "eb4d78fd7ca33dd40b21bff788a6bed28b646f221fbd38e016858806d159e02e",
+          "fixture_tick": {
+            "status": "decoded",
+            "full_decode_clean": true,
+            "frames": 150,
+            "first_tick": 170,
+            "last_tick": 468,
+            "ambiguous_frames": 0,
+            "repeated_tick_transitions": 1,
+            "tick_jumps_over_one": 135,
+            "implausible_transitions": 0,
+            "unique_ticks": 149,
+            "deltas": {
+              "0": 1,
+              "1": 13,
+              "2": 120,
+              "3": 15
+            },
+            "interpretation": "Fixture is 30Hz. Repeated ticks are expected at 60fps, and jumps of two are expected at 15fps. These are fixture presentation observations, not an encoder internal dropped-frame counter."
+          },
+          "file_validation": {
+            "codec": "gif",
+            "width": 1920,
+            "height": 1080,
+            "decoded_frames": 150,
+            "expected_dimensions_and_decodable_frames": true
+          }
+        }
+      ]
+    }
+  ]
+}

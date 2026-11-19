@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "case": "freehand",
+  "scope": "Actual full-app Ctrl+PrintScreen overlays with recorded cursor; visible drawing only, no region-save claim.",
+  "clock_metric": "Stroke input elapsed time, not UI response latency. No speed winner claimed.",
+  "input_alignment_output_s": 4.677720642089843,
+  "duration_seconds": 7.7,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-region/sharex22-freehand-20261118-031944",
+      "source_video_sha256": "9ffda7045046a96007aaeb016ded266facd179a0bef9ddf9573be1054c377cd2",
+      "source_size": [
+        2982,
+        1672
+      ],
+      "source_observed_fps": 18.88124227986589,
+      "actual_cursor_recorded": true,
+      "source_first_epoch_pts": 1795000791.833,
+      "source_last_epoch_pts": 1795000803.167,
+      "stroke_button_down_source_s": 4.916247129440308,
+      "stroke_complete_source_s": 6.912659264328003,
+      "stroke_duration_s": 1.996412134887695,
+      "hotkey_output_s": 0.5999999999999996,
+      "stroke_input_alignment_output_s": 4.677720642089843,
+      "camera_hold_after_sequence_source_s": 7.112659264328003,
+      "full_interface_proof_before_crop": {
+        "file": "editor-region-freehand-sharex22-full-interface.png",
+        "source_video_local_s": 4.4,
+        "sha256": "e4038b8f9d7fe35995d7af813558c3586661cb68e790f2cb4c313997bb247b90",
+        "label": "Actual full capture interface before tool selection and central presentation crop."
+      },
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-freehand-sharex22-source-first.png",
+          "sha256": "2731a6108b0bb0a6bf2e88d215f262cdafc0e2450bf04be6681a19a827ddc24c"
+        },
+        "last": {
+          "file": "editor-freehand-sharex22-source-last.png",
+          "sha256": "25eb11ea7333900050fd1bec62cd9202751de70f9ded0974653d6d60df105876"
+        }
+      },
+      "drawing_source_crop_xywh": [
+        700,
+        320,
+        1600,
+        1100
+      ],
+      "crop_policy": "Identical 1600\u00d71100 screen rectangle for both, fitted without stretching after stroke begins.",
+      "timeline": "Original source chronology before and after hotkey; only pre-recording first-frame padding before any input, if needed."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-region/native-freehand-20261118-031850",
+      "source_video_sha256": "0e0eb9220cc366b6a10465f3c8cf63934aaf7f1a047611b5d5318a1d01a959a0",
+      "source_size": [
+        2982,
+        1672
+      ],
+      "source_observed_fps": 20.530973451327434,
+      "actual_cursor_recorded": true,
+      "source_first_epoch_pts": 1795000736.933,
+      "source_last_epoch_pts": 1795000748.233,
+      "stroke_button_down_source_s": 4.90885066986084,
+      "stroke_complete_source_s": 6.904977054159546,
+      "stroke_duration_s": 1.996126384298706,
+      "hotkey_output_s": 0.600437498092651,
+      "stroke_input_alignment_output_s": 4.677720642089843,
+      "camera_hold_after_sequence_source_s": 7.104977054159546,
+      "full_interface_proof_before_crop": {
+        "file": "editor-region-freehand-native-full-interface.png",
+        "source_video_local_s": 4.4,
+        "sha256": "681769208eaaad86e5c8034836898e5b5104dc24dc8345d84e284a1d5dee1d64",
+        "label": "Actual full capture interface before tool selection and central presentation crop."
+      },
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-freehand-native-source-first.png",
+          "sha256": "4361b614f2ee565a3c7e2364352f332f6491de20ad1fcf80c8a41a64ee36f752"
+        },
+        "last": {
+          "file": "editor-freehand-native-source-last.png",
+          "sha256": "929303d676b302a81aa6c75e2b2a6578a898da11f1e29e7df6ea4c7d4eb7889f"
+        }
+      },
+      "drawing_source_crop_xywh": [
+        700,
+        320,
+        1600,
+        1100
+      ],
+      "crop_policy": "Identical 1600\u00d71100 screen rectangle for both, fitted without stretching after stroke begins.",
+      "timeline": "Original source chronology before and after hotkey; only pre-recording first-frame padding before any input, if needed."
+    }
+  ],
+  "chronology": "Actual stroke button-down aligned, source timestamps remain 1\u00d7; real Ctrl+PrtScn transitions included. No post-hotkey delay added, no motion interpolation.",
+  "output_sha256": "8d1e7b84b1dbafe9c11ecf0bbb3c39d1d781c03615fdb3f205b76001de1bb3ed",
+  "gif_sha256": "404f613722cd5038c2dfbd87f14223ca90c006ff73fa5977b903569e145cd942"
+}

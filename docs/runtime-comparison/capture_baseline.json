@@ -1,0 +1,473 @@
+{
+  "schema_version": 1,
+  "dataset": "Unmodified Zipshot 1.0.1 versus official ShareX 22.4.0 baseline",
+  "scope": "Warm full-application hotkeys through guest SendInput, not physical hardware input; measured in Windows Sandbox, separate from the prior host API benchmark.",
+  "environment": {
+    "os": {
+      "Caption": "Microsoft Windows 11 Enterprise LTSC",
+      "BuildNumber": "26100"
+    },
+    "gpu": [
+      {
+        "Name": "NVIDIA GeForce RTX 4070 Ti",
+        "DriverVersion": "10.0.26100.1150"
+      },
+      {
+        "Name": "Microsoft Remote Display Adapter",
+        "DriverVersion": "10.0.26100.1150"
+      }
+    ],
+    "logical_processors": 32,
+    "display": {
+      "height": 1672,
+      "width": 2982
+    },
+    "remote_session": true
+  },
+  "protocol": {
+    "blocks": 3,
+    "measured_per_block": 10,
+    "discarded_warmups_per_process": 3,
+    "order": "Zipshot first in blocks 1 and 3, ShareX first in block 2; region and full capture separate.",
+    "recorder_running_during_baseline": false,
+    "pixel_observer_roi": [
+      1280,
+      720
+    ],
+    "visual_response": "Last unchanged readback start through first changed readback end, with target-window evidence.",
+    "clipboard_file_response": "First observed valid clipboard image and closed WIC-readable file; includes observer validation overhead.",
+    "full_zipshot_toast": "Unobservable through screen APIs because production toast uses WDA_EXCLUDEFROMCAPTURE; missing values are not zero latency."
+  },
+  "measured_trials": 120,
+  "discarded_warmups": 36,
+  "summaries": [
+    {
+      "source_file": "derived/sharex22-full.json",
+      "source_sha256": "1d5f958086c8d901ce3a0778614cb00ec12f38d2a9e212a519d2fcff3068dcb0",
+      "scenario": "full",
+      "target_executable": "sharex.exe",
+      "desktop": {
+        "x": 0,
+        "y": 0,
+        "width": 2982,
+        "height": 1672
+      },
+      "observer_roi": {
+        "x": 1702,
+        "y": 952,
+        "width": 1280,
+        "height": 720
+      },
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "scope": "Full application global hotkey path; no product capture test/CLI API is invoked",
+      "measured_trials": 30,
+      "warmup_trials": 9,
+      "failed_trial_indices": [],
+      "controller_status": "pass",
+      "full_capture_dimensions_mismatch_indices": [],
+      "minimum_sample_count_gate_passed": true,
+      "max_observer_gap_ms": 73.8254,
+      "endpoints": {
+        "target_confirmed_visible_response": {
+          "n": 30,
+          "median_ms": 622.425,
+          "p95_ms": 746.415,
+          "min_ms": 591.323,
+          "max_ms": 771.814,
+          "estimate": "Observed upper bound, not an exact input-to-photon time.",
+          "median_lower_bound_ms": 571.4975,
+          "median_interval_width_ms": 50.60650000000004,
+          "unattributed_candidate_count": 0,
+          "missing_or_unconfirmed_count": 0
+        },
+        "clipboard_image_observed": {
+          "n": 30,
+          "median_ms": 447.6085,
+          "p95_ms": 549.762,
+          "min_ms": 444.395,
+          "max_ms": 603.179,
+          "missing_count": 0,
+          "estimate": "First observed valid image, including observer validation overhead."
+        },
+        "closed_wic_image_file_observed": {
+          "n": 30,
+          "median_ms": 529.5135,
+          "p95_ms": 622.749,
+          "min_ms": 497.413,
+          "max_ms": 682.928,
+          "missing_count": 0,
+          "estimate": "First observed valid image, including observer validation overhead."
+        }
+      },
+      "limitations": [
+        "Raw video and actual product settings still require review; the sample-count gate alone is not full validation.",
+        "Missing and failed trials are reported; successful-endpoint statistics are conditional on completion.",
+        "Visual-response intervals reflect compositor readback sampling uncertainty.",
+        "Unattributed visual changes require video review and are excluded from confirmed product-response statistics.",
+        "These are virtual-machine hotkey results, separate from the prior host capture API benchmark."
+      ],
+      "app": "sharex22",
+      "version": "22.4.0",
+      "block_count": 3,
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "source_jobs": [
+        "cap-b01-04-sharex22-full",
+        "cap-b02-03-sharex22-full",
+        "cap-b03-04-sharex22-full"
+      ]
+    },
+    {
+      "source_file": "derived/sharex22-region.json",
+      "source_sha256": "9e6dee5d58bf18ee2b0de9e9efffc1e0ee6018935b8fb825479044ef42a5c860",
+      "scenario": "region",
+      "target_executable": "sharex.exe",
+      "desktop": {
+        "x": 0,
+        "y": 0,
+        "width": 2982,
+        "height": 1672
+      },
+      "observer_roi": {
+        "x": 851,
+        "y": 476,
+        "width": 1280,
+        "height": 720
+      },
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "scope": "Full application global hotkey path; no product capture test/CLI API is invoked",
+      "measured_trials": 30,
+      "warmup_trials": 9,
+      "failed_trial_indices": [],
+      "controller_status": "pass",
+      "full_capture_dimensions_mismatch_indices": [],
+      "minimum_sample_count_gate_passed": true,
+      "max_observer_gap_ms": 76.2218,
+      "endpoints": {
+        "target_confirmed_visible_response": {
+          "n": 30,
+          "median_ms": 316.72900000000004,
+          "p95_ms": 349.398,
+          "min_ms": 285.214,
+          "max_ms": 379.16,
+          "estimate": "Observed upper bound, not an exact input-to-photon time.",
+          "median_lower_bound_ms": 258.79449999999997,
+          "median_interval_width_ms": 56.49550000000002,
+          "unattributed_candidate_count": 0,
+          "missing_or_unconfirmed_count": 0
+        }
+      },
+      "limitations": [
+        "Raw video and actual product settings still require review; the sample-count gate alone is not full validation.",
+        "Missing and failed trials are reported; successful-endpoint statistics are conditional on completion.",
+        "Visual-response intervals reflect compositor readback sampling uncertainty.",
+        "Unattributed visual changes require video review and are excluded from confirmed product-response statistics.",
+        "These are virtual-machine hotkey results, separate from the prior host capture API benchmark."
+      ],
+      "app": "sharex22",
+      "version": "22.4.0",
+      "block_count": 3,
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "source_jobs": [
+        "cap-b01-02-sharex22-region",
+        "cap-b02-01-sharex22-region",
+        "cap-b03-02-sharex22-region"
+      ]
+    },
+    {
+      "source_file": "derived/zipshot-full.json",
+      "source_sha256": "044998a696a77daac6659538114031d6582494015573a89ac1522b5cc6fcc95e",
+      "scenario": "full",
+      "target_executable": "zipshot.exe",
+      "desktop": {
+        "x": 0,
+        "y": 0,
+        "width": 2982,
+        "height": 1672
+      },
+      "observer_roi": {
+        "x": 1702,
+        "y": 952,
+        "width": 1280,
+        "height": 720
+      },
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "scope": "Full application global hotkey path; no product capture test/CLI API is invoked",
+      "measured_trials": 30,
+      "warmup_trials": 9,
+      "failed_trial_indices": [],
+      "controller_status": "pass",
+      "full_capture_dimensions_mismatch_indices": [],
+      "minimum_sample_count_gate_passed": true,
+      "max_observer_gap_ms": 260.796,
+      "endpoints": {
+        "target_confirmed_visible_response": {
+          "n": 0,
+          "median_ms": null,
+          "p95_ms": null,
+          "min_ms": null,
+          "max_ms": null,
+          "estimate": "Observed upper bound, not an exact input-to-photon time.",
+          "median_lower_bound_ms": null,
+          "median_interval_width_ms": null,
+          "unattributed_candidate_count": 0,
+          "missing_or_unconfirmed_count": 30
+        },
+        "clipboard_image_observed": {
+          "n": 30,
+          "median_ms": 300.4135,
+          "p95_ms": 372.875,
+          "min_ms": 89.2249,
+          "max_ms": 374.911,
+          "missing_count": 0,
+          "estimate": "First observed valid image, including observer validation overhead."
+        },
+        "closed_wic_image_file_observed": {
+          "n": 30,
+          "median_ms": 341.2715,
+          "p95_ms": 403.28,
+          "min_ms": 122.207,
+          "max_ms": 404.434,
+          "missing_count": 0,
+          "estimate": "First observed valid image, including observer validation overhead."
+        }
+      },
+      "limitations": [
+        "Raw video and actual product settings still require review; the sample-count gate alone is not full validation.",
+        "Missing and failed trials are reported; successful-endpoint statistics are conditional on completion.",
+        "Visual-response intervals reflect compositor readback sampling uncertainty.",
+        "Unattributed visual changes require video review and are excluded from confirmed product-response statistics.",
+        "These are virtual-machine hotkey results, separate from the prior host capture API benchmark."
+      ],
+      "app": "zipshot",
+      "version": "1.0.1.0",
+      "block_count": 3,
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "source_jobs": [
+        "cap-b01-03-zipshot-full",
+        "cap-b02-04-zipshot-full",
+        "cap-b03-03-zipshot-full"
+      ]
+    },
+    {
+      "source_file": "derived/zipshot-region.json",
+      "source_sha256": "60acb8f8e89f3a101032ae8e11a3f3fda4a1ea2630fd7f58b05c04c0c4295f75",
+      "scenario": "region",
+      "target_executable": "zipshot.exe",
+      "desktop": {
+        "x": 0,
+        "y": 0,
+        "width": 2982,
+        "height": 1672
+      },
+      "observer_roi": {
+        "x": 851,
+        "y": 476,
+        "width": 1280,
+        "height": 720
+      },
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "scope": "Full application global hotkey path; no product capture test/CLI API is invoked",
+      "measured_trials": 30,
+      "warmup_trials": 9,
+      "failed_trial_indices": [],
+      "controller_status": "pass",
+      "full_capture_dimensions_mismatch_indices": [],
+      "minimum_sample_count_gate_passed": true,
+      "max_observer_gap_ms": 120.904,
+      "endpoints": {
+        "target_confirmed_visible_response": {
+          "n": 30,
+          "median_ms": 216.684,
+          "p95_ms": 306.169,
+          "min_ms": 150.603,
+          "max_ms": 307.409,
+          "estimate": "Observed upper bound, not an exact input-to-photon time.",
+          "median_lower_bound_ms": 167.51600000000002,
+          "median_interval_width_ms": 53.49449999999999,
+          "unattributed_candidate_count": 0,
+          "missing_or_unconfirmed_count": 0
+        }
+      },
+      "limitations": [
+        "Raw video and actual product settings still require review; the sample-count gate alone is not full validation.",
+        "Missing and failed trials are reported; successful-endpoint statistics are conditional on completion.",
+        "Visual-response intervals reflect compositor readback sampling uncertainty.",
+        "Unattributed visual changes require video review and are excluded from confirmed product-response statistics.",
+        "These are virtual-machine hotkey results, separate from the prior host capture API benchmark."
+      ],
+      "app": "zipshot",
+      "version": "1.0.1.0",
+      "block_count": 3,
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "source_jobs": [
+        "cap-b01-01-zipshot-region",
+        "cap-b02-02-zipshot-region",
+        "cap-b03-01-zipshot-region"
+      ]
+    }
+  ],
+  "source_manifest": [
+    {
+      "job": "cap-b01-01-zipshot-region",
+      "raw_json_sha256": "da1b01b7f943bcfc19aa10262e632285132ba0fa76ae86b8a7f1fe56f4b2eb7a",
+      "metadata_sha256": "4205ae44ec17ea75ccf5e22e153cf873dcabaf051ec4bf3930598c41ec5ee6c4",
+      "app": "zipshot",
+      "app_version": "1.0.1.0",
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 18099874728,
+      "anchor_unix_100ns": 17949969994058222
+    },
+    {
+      "job": "cap-b01-02-sharex22-region",
+      "raw_json_sha256": "543795192a13c14873c5378918d74d3a75ed08fc2ca37f3cd1aaeef70428a387",
+      "metadata_sha256": "5e739422e12116114636c4ddadd2dd41c9e3317bd78ecc3085fa87b3347902c4",
+      "app": "sharex22",
+      "app_version": "22.4.0",
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 18464777675,
+      "anchor_unix_100ns": 17949970358961166
+    },
+    {
+      "job": "cap-b01-03-zipshot-full",
+      "raw_json_sha256": "99833ebe96f9c0b39cfc9f7b0d01facb761a64d0973fde3d6374055b27fa0ce8",
+      "metadata_sha256": "9392b99b38d95f0dbe665a6338c5a746707ba24dc186938131c8088a9e6c467e",
+      "app": "zipshot",
+      "app_version": "1.0.1.0",
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 18842273859,
+      "anchor_unix_100ns": 17949970736457353
+    },
+    {
+      "job": "cap-b01-04-sharex22-full",
+      "raw_json_sha256": "280060f9296677742f7b219f0889fc5cccd260769520e2ac201613630be6fccb",
+      "metadata_sha256": "b3d615af6740ce3535ba3cbeedb6abcac75a20e6d612c1fa108ffb974d69d5fa",
+      "app": "sharex22",
+      "app_version": "22.4.0",
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 19197899476,
+      "anchor_unix_100ns": 17949971092082969
+    },
+    {
+      "job": "cap-b02-01-sharex22-region",
+      "raw_json_sha256": "fd7b7b9dda3f5a9f8351d8841c103d34277cc6ede299b9cce9386ffa22d346d6",
+      "metadata_sha256": "5e739422e12116114636c4ddadd2dd41c9e3317bd78ecc3085fa87b3347902c4",
+      "app": "sharex22",
+      "app_version": "22.4.0",
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 19533194750,
+      "anchor_unix_100ns": 17949971427378243
+    },
+    {
+      "job": "cap-b02-02-zipshot-region",
+      "raw_json_sha256": "9e22bfdecb195f3c845c29a21b7210efa7193d5152c55fdc9b64a43101abe4f9",
+      "metadata_sha256": "4205ae44ec17ea75ccf5e22e153cf873dcabaf051ec4bf3930598c41ec5ee6c4",
+      "app": "zipshot",
+      "app_version": "1.0.1.0",
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 19907900056,
+      "anchor_unix_100ns": 17949971802083550
+    },
+    {
+      "job": "cap-b02-03-sharex22-full",
+      "raw_json_sha256": "302ae20eac0530eecf3a199a3faecf280465390862b041f2227855c258b814cb",
+      "metadata_sha256": "b3d615af6740ce3535ba3cbeedb6abcac75a20e6d612c1fa108ffb974d69d5fa",
+      "app": "sharex22",
+      "app_version": "22.4.0",
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 20266739149,
+      "anchor_unix_100ns": 17949972160922642
+    },
+    {
+      "job": "cap-b02-04-zipshot-full",
+      "raw_json_sha256": "c027c3bb26df510c295880c865d881c51a44e903e428d548d55b3f935e98ad0f",
+      "metadata_sha256": "9392b99b38d95f0dbe665a6338c5a746707ba24dc186938131c8088a9e6c467e",
+      "app": "zipshot",
+      "app_version": "1.0.1.0",
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 20584454488,
+      "anchor_unix_100ns": 17949972478637980
+    },
+    {
+      "job": "cap-b03-01-zipshot-region",
+      "raw_json_sha256": "32c996e4b646f84a21caa8d2585df5bbae572380b9813a267339514b6d01d88c",
+      "metadata_sha256": "4205ae44ec17ea75ccf5e22e153cf873dcabaf051ec4bf3930598c41ec5ee6c4",
+      "app": "zipshot",
+      "app_version": "1.0.1.0",
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 20923510006,
+      "anchor_unix_100ns": 17949972817693498
+    },
+    {
+      "job": "cap-b03-02-sharex22-region",
+      "raw_json_sha256": "3fd956460fdc5383b0c7de2adff92c11c8521a780f93a0d7a9b33f992dfc05fa",
+      "metadata_sha256": "5e739422e12116114636c4ddadd2dd41c9e3317bd78ecc3085fa87b3347902c4",
+      "app": "sharex22",
+      "app_version": "22.4.0",
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 21278631205,
+      "anchor_unix_100ns": 17949973172814700
+    },
+    {
+      "job": "cap-b03-03-zipshot-full",
+      "raw_json_sha256": "37287265db4985c8f1ecede0c6a9e0aeafb03308d4bc6cf43c5b3977160c38bb",
+      "metadata_sha256": "9392b99b38d95f0dbe665a6338c5a746707ba24dc186938131c8088a9e6c467e",
+      "app": "zipshot",
+      "app_version": "1.0.1.0",
+      "app_exe_sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 21651014395,
+      "anchor_unix_100ns": 17949973545197887
+    },
+    {
+      "job": "cap-b03-04-sharex22-full",
+      "raw_json_sha256": "ad98d26db32641a69060ca6d12a7d9fa45d2c72e2a8882fc405ec64311ffe78c",
+      "metadata_sha256": "b3d615af6740ce3535ba3cbeedb6abcac75a20e6d612c1fa108ffb974d69d5fa",
+      "app": "sharex22",
+      "app_version": "22.4.0",
+      "app_exe_sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+      "controller_sha256": "9A499E59B2C0A8FED13F3FA987D576A453C63C472A6261CB7C8EE7502B6F76B7",
+      "qpc_frequency": 10000000,
+      "anchor_qpc": 21990083840,
+      "anchor_unix_100ns": 17949973884267334
+    }
+  ],
+  "csv": {
+    "capture_trials.csv": {
+      "sha256": "da4a41c07f33b5b1187d4a83790e05d7868bc2eec033c45a13cc02dc63547f09"
+    },
+    "capture_frames.csv": {
+      "sha256": "c60ad7710bc7072f9dcf0d8a73a4b5c5dbd758c71517e4b45640bac5f178c726"
+    }
+  },
+  "limits": [
+    "No universal speed or memory claim.",
+    "Actual display is a virtual RDP/vGPU environment, not the physical host desktop.",
+    "Compositor readback sampling limits visual timing resolution; intervals and gaps are retained.",
+    "Recorded demonstrations are separate workloads with their own source clocks and observed frame rates."
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "series": "v02",
+  "artifact_root": "isolated session output folder",
+  "time_policy": "Original source timestamps retained. Trims shift only the origin; footage is not retimed or interpolated.",
+  "measurement_scope": "Recorded demonstrations have additional capture overhead and their own endpoint clocks; canonical unrecorded n=30 baseline remains separate.",
+  "clips": [
+    {
+      "app": "zipshot",
+      "version": "1.0.1.0",
+      "scenario": "region",
+      "case": "cap-v02-zipshot-region",
+      "selected_trial": 2,
+      "selection": "Closest to the median of its own three recorded valid trials; never best-case selection.",
+      "endpoint_field": "visible_upper_bound_ms",
+      "selected_endpoint_ms": 281.632,
+      "recorded_endpoint_values_ms": [
+        278.725,
+        338.157,
+        281.632
+      ],
+      "input_video_s": 19.3436464,
+      "endpoint_video_s": 19.6252783,
+      "visual_lower_video_s": 19.5126468,
+      "escape_video_s": 21.2272772,
+      "suggested_trim_start_s": 18.7436464,
+      "suggested_trim_end_s": 20.6252783,
+      "source_video": "cap-v02-zipshot-region/observer.mkv",
+      "source_video_sha256": "68673a2166797a5bf35b3b0121306883113af7a26e276c5b3cf3d6d122c3f5e4",
+      "source_results_sha256": "07b2e72f0ffc211eb0b51ccf5ae9596409fb464b16d31123d09fdb9c39ca6a47",
+      "source_metadata_sha256": "0ed5fc1185426909f09c8f4f851f6b8d2ea18a3d233cb012ebb4f0a67d17183b",
+      "source_display": {
+        "height": 1672,
+        "width": 2982
+      },
+      "source_recording_size": [
+        1920,
+        1076
+      ],
+      "source_frames": 559,
+      "source_duration_s": 22.2,
+      "actual_framecount_per_second": 25.18018018018018,
+      "packet_gap_median_ms": 33.00000000000125,
+      "packet_gap_max_ms": 100.00000000000142,
+      "requested_recording_fps": 30,
+      "full_desktop_video": true,
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "actual_proof_file": "cap-v02-zipshot-region/capture-endpoint-2.bmp",
+      "actual_proof_sha256": "22c12301a3cfb97bfb3262aac5ab5ed6cc2d2548465aa07dd3f8453e7dd7a98a",
+      "zipshot_toast_excluded_from_capture": false,
+      "region_post_evidence_hold_ms": 1500
+    },
+    {
+      "app": "zipshot",
+      "version": "1.0.1.0",
+      "scenario": "full",
+      "case": "cap-v02-zipshot-full",
+      "selected_trial": 1,
+      "selection": "Closest to the median of its own three recorded valid trials; never best-case selection.",
+      "endpoint_field": "file_observed_ms",
+      "selected_endpoint_ms": 367.53,
+      "recorded_endpoint_values_ms": [
+        402.354,
+        367.53,
+        218.298
+      ],
+      "input_video_s": 10.6894252,
+      "endpoint_video_s": 11.0569554,
+      "visual_lower_video_s": null,
+      "escape_video_s": null,
+      "suggested_trim_start_s": 10.0894252,
+      "suggested_trim_end_s": 12.0569554,
+      "source_video": "cap-v02-zipshot-full/observer.mkv",
+      "source_video_sha256": "71a58a670d2b01c8c0fb04eb37f6329b889ebc4b290eee614e74c0ce8156b858",
+      "source_results_sha256": "f93c2b0f5af0aef38819656ddd0478fa10f3d16a5c90dc2a08a13ea93baa1375",
+      "source_metadata_sha256": "ed21c4d0ad3f30bbe35813ae4a92ae72ec0da39e5abbf42a8a4f4be104d75e0a",
+      "source_display": {
+        "height": 1672,
+        "width": 2982
+      },
+      "source_recording_size": [
+        1920,
+        1076
+      ],
+      "source_frames": 323,
+      "source_duration_s": 13.966,
+      "actual_framecount_per_second": 23.127595589288273,
+      "packet_gap_median_ms": 33.99999999999981,
+      "packet_gap_max_ms": 100.00000000000142,
+      "requested_recording_fps": 30,
+      "full_desktop_video": true,
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "actual_proof_file": "cap-v02-zipshot-full/capture-saved-1.png",
+      "actual_proof_sha256": "f9130cbbe0182a930e97b228d24977fc8c75780b36b8494dd232fe72823d5947",
+      "zipshot_toast_excluded_from_capture": true,
+      "region_post_evidence_hold_ms": null
+    },
+    {
+      "app": "sharex22",
+      "version": "22.4.0",
+      "scenario": "region",
+      "case": "cap-v02-sharex22-region",
+      "selected_trial": 1,
+      "selection": "Closest to the median of its own three recorded valid trials; never best-case selection.",
+      "endpoint_field": "visible_upper_bound_ms",
+      "selected_endpoint_ms": 406.066,
+      "recorded_endpoint_values_ms": [
+        406.07,
+        406.066,
+        373.861
+      ],
+      "input_video_s": 16.5988917,
+      "endpoint_video_s": 17.0049579,
+      "visual_lower_video_s": 16.8818013,
+      "escape_video_s": 18.6114244,
+      "suggested_trim_start_s": 15.9988917,
+      "suggested_trim_end_s": 18.0049579,
+      "source_video": "cap-v02-sharex22-region/observer.mkv",
+      "source_video_sha256": "299625cac8cd8bbdb25dfa0f37b95daec269511c1f5bf0cd2af223e192e6460b",
+      "source_results_sha256": "7f51cd859596aa8b1a43380067dcac606dba724e531ebc6296c0cbaacd11ce29",
+      "source_metadata_sha256": "e310bbadba9cb24ef8d9151373468e607aff848a6a41958ecbaaa14778839ed5",
+      "source_display": {
+        "height": 1672,
+        "width": 2982
+      },
+      "source_recording_size": [
+        1920,
+        1076
+      ],
+      "source_frames": 569,
+      "source_duration_s": 22.733,
+      "actual_framecount_per_second": 25.029692517485593,
+      "packet_gap_median_ms": 33.00000000000125,
+      "packet_gap_max_ms": 100.00000000000142,
+      "requested_recording_fps": 30,
+      "full_desktop_video": true,
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "actual_proof_file": "cap-v02-sharex22-region/capture-endpoint-1.bmp",
+      "actual_proof_sha256": "1a8f70d41a6520a5a6a692774a001dc840609e395c1aa0afcb926008d19f0a29",
+      "zipshot_toast_excluded_from_capture": false,
+      "region_post_evidence_hold_ms": 1500
+    },
+    {
+      "app": "sharex22",
+      "version": "22.4.0",
+      "scenario": "full",
+      "case": "cap-v02-sharex22-full",
+      "selected_trial": 0,
+      "selection": "Closest to the median of its own three recorded valid trials; never best-case selection.",
+      "endpoint_field": "file_observed_ms",
+      "selected_endpoint_ms": 652.225,
+      "recorded_endpoint_values_ms": [
+        652.225,
+        527.963,
+        753.531
+      ],
+      "input_video_s": 8.5138936,
+      "endpoint_video_s": 9.1661182,
+      "visual_lower_video_s": null,
+      "escape_video_s": null,
+      "suggested_trim_start_s": 7.9138936,
+      "suggested_trim_end_s": 10.1661182,
+      "source_video": "cap-v02-sharex22-full/observer.mkv",
+      "source_video_sha256": "3dff0e895884bc2eceb14c7878e4a5210e24b6ba29d6624091b9f7c23424f8aa",
+      "source_results_sha256": "5f7b98737ad638a34c1a385e55aaf92af7b5ada238e13862c60b4feff7097a74",
+      "source_metadata_sha256": "9853e1998078179b7cef727ab41a6be488314b8abf7bc124898b5262d7a011f3",
+      "source_display": {
+        "height": 1672,
+        "width": 2982
+      },
+      "source_recording_size": [
+        1920,
+        1076
+      ],
+      "source_frames": 315,
+      "source_duration_s": 13.933,
+      "actual_framecount_per_second": 22.60819636833417,
+      "packet_gap_median_ms": 33.99999999999981,
+      "packet_gap_max_ms": 100.00000000000142,
+      "requested_recording_fps": 30,
+      "full_desktop_video": true,
+      "input_method": "Guest SendInput OS keyboard events; not hardware keystrokes",
+      "actual_proof_file": "cap-v02-sharex22-full/capture-saved-0.png",
+      "actual_proof_sha256": "2faa6908774871be546636a29dcee3d4dc9fc8d4a329c1c00d04d5fd048161fa",
+      "zipshot_toast_excluded_from_capture": false,
+      "region_post_evidence_hold_ms": null
+    }
+  ]
+}

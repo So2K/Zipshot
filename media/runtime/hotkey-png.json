@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "scope": "Actual full-app global hotkey path inside Windows Sandbox. SendInput OS events, not a hardware keyboard.",
+  "endpoint": "file",
+  "input_badge": "INPUT SENT",
+  "key_alignment_seconds": 0.8,
+  "duration_seconds": 5.5,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_sample_fps": 15,
+  "aspect_ratio_policy": "Source fits inside each viewport with neutral padding; no stretching.",
+  "timeline": "Causal sampling of original VFR timestamps at 1x. Camera continues 100 ms after its own observed endpoint, then holds that captured frame. No pre-result delay or motion interpolation.",
+  "static_details": "Only post-response context: genuine captured toolbar photo or actual product-saved PNG, labelled separately from source video.",
+  "notification_note": "Zipshot marks its toast WDA_EXCLUDEFROMCAPTURE. File-readiness timing does not depend on toast visibility, and the PNG preview is an actual saved file, not a reconstructed notification.",
+  "app_runs": [
+    {
+      "app_label": "ShareX 22.4.0",
+      "run": "cap-v02-sharex22-full",
+      "selected_trial": 0,
+      "selection": "Median of its own 3 recorded valid trials; no best-case selection.",
+      "raw_sha256": "5f7b98737ad638a34c1a385e55aaf92af7b5ada238e13862c60b4feff7097a74",
+      "video_sha256": "3dff0e895884bc2eceb14c7878e4a5210e24b6ba29d6624091b9f7c23424f8aa",
+      "key_video": 8.5138936,
+      "endpoint_video": 9.1661182,
+      "latency_ms": 652.2246000000002,
+      "readback_lower_ms": null,
+      "source_size": [
+        1920,
+        1076
+      ],
+      "observed_source_fps": 22.60819636833417,
+      "camera_hold_time_source_s": 9.2661182,
+      "camera_hold_frame_pts": 9.233,
+      "decoded_buffer_timeline": "Untimed RGB buffers; displayed positions use original source PTS, including ties.",
+      "output_input_marker_s": 0.8,
+      "output_endpoint_clock_stop_s": 1.4522246000000003,
+      "static_detail_photo_sha256": "30cfe711bcb3580e5c0e0f0e2831a93f666ad6b82ec735a0fda22f69d2449542",
+      "actual_saved_png_sha256": "2faa6908774871be546636a29dcee3d4dc9fc8d4a329c1c00d04d5fd048161fa"
+    },
+    {
+      "app_label": "Zipshot 1.0.1",
+      "run": "cap-v02-zipshot-full",
+      "selected_trial": 1,
+      "selection": "Median of its own 3 recorded valid trials; no best-case selection.",
+      "raw_sha256": "f93c2b0f5af0aef38819656ddd0478fa10f3d16a5c90dc2a08a13ea93baa1375",
+      "video_sha256": "71a58a670d2b01c8c0fb04eb37f6329b889ebc4b290eee614e74c0ce8156b858",
+      "key_video": 10.6894252,
+      "endpoint_video": 11.0569554,
+      "latency_ms": 367.5301999999991,
+      "readback_lower_ms": null,
+      "source_size": [
+        1920,
+        1076
+      ],
+      "observed_source_fps": 23.127595589288273,
+      "camera_hold_time_source_s": 11.1569554,
+      "camera_hold_frame_pts": 11.133,
+      "decoded_buffer_timeline": "Untimed RGB buffers; displayed positions use original source PTS, including ties.",
+      "output_input_marker_s": 0.8,
+      "output_endpoint_clock_stop_s": 1.1675301999999992,
+      "static_detail_photo_sha256": null,
+      "actual_saved_png_sha256": "f9130cbbe0182a930e97b228d24977fc8c75780b36b8494dd232fe72823d5947"
+    }
+  ],
+  "output_sha256": "37ea9ce4fa0f5778bdc9c1d27715d3622a9c0019b489f90c838ad25b53a8a270",
+  "gif_sha256": "220f522f234d61aabe23e8474cfb9041e34b743994083d18e8e8b071d1374bd7"
+}

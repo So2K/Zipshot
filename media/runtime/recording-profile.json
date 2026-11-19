@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "scope": "Actual saved MP4 excerpts only. Original synthetic fixture in a clean Windows Sandbox; no host desktop content.",
+  "sources": [
+    {
+      "product": "Zipshot 1.0.1",
+      "archive_relative_path": "session02/datasets/recording-factory-local-v30/zipshot-video30/record.mp4",
+      "sha256": "e03ecc70daea9b868f170c5db23ffb968fe3dc7dacc3715b673208b5d1e28ebe",
+      "profile": "Factory fallback software preset ultrafast, CRF23, actual DDA capture",
+      "frames": 851,
+      "duration_seconds": 28.4,
+      "observed_encoded_fps": 29.964788732394368,
+      "distinct_fixture_states_per_second": 27.605633802816904
+    },
+    {
+      "product": "ShareX 22.4.0",
+      "archive_relative_path": "session02/datasets/recording-local-sharex22-v30-r1/sharex22-video30-native-software-allowed/EVU9SaBTkM.mp4",
+      "sha256": "12ceeed94ba1729c75f4757a82ed51209ce060bfc1d57b59349de648001dd8f9",
+      "profile": "Official native recorder, software allowed, configured10000kbps; predeclared first local repetition",
+      "frames": 900,
+      "duration_seconds": 30.0,
+      "observed_encoded_fps": 30.0,
+      "distinct_fixture_states_per_second": 14.1
+    }
+  ],
+  "alignment": {
+    "recorded_fixture_tick": 220,
+    "zipshot_start_frame": 144,
+    "sharex_start_frame": 61,
+    "zipshot_original_pts": 4.8,
+    "sharex_original_pts": 2.033333,
+    "operation": "Trim to an identical recorded tick, reset timestamp origins only, preserve1xplayback; no interpolation or speed scaling"
+  },
+  "presentation": {
+    "video_seconds": 10,
+    "video_fps": 30,
+    "source_scale": "1920x1080 to832x468 each, Lanczos, no color/contrast edits",
+    "comparison_encoding": "x264 veryfast CRF18 yuv420p",
+    "gif": "Derived preview of the comparison MP4, 1280x720 at12fps; not either application's original GIF export"
+  },
+  "limitations": [
+    "Different encoder quality controls and capture backends; not an equal-quality codec test.",
+    "Not a capture-start latency race.",
+    "30Hzfixture and remote display cannot establish60distinct visual updates/s.",
+    "Resources use every local repetition, including the40CPU-second/16drop native outlier.",
+    "GPU load was not measurable by owned processID counters."
+  ],
+  "caption_bounds": [
+    {
+      "text": "Recording output, side by side",
+      "bounds": [
+        56,
+        52,
+        717,
+        97
+      ]
+    },
+    {
+      "text": "Real saved files  /  1920 \u00d7 1080  /  30 fps requested  /  audio and cursor off",
+      "bounds": [
+        56,
+        116,
+        895,
+        141
+      ]
+    },
+    {
+      "text": "Zipshot 1.0.1",
+      "bounds": [
+        82,
+        215,
+        276,
+        246
+      ]
+    },
+    {
+      "text": "Factory fallback \u00b7 x264 ultrafast \u00b7 CRF 23",
+      "bounds": [
+        82,
+        264,
+        495,
+        286
+      ]
+    },
+    {
+      "text": "File 30 fps \u00b7 27.6 distinct fixture states/s",
+      "bounds": [
+        82,
+        793,
+        476,
+        814
+      ]
+    },
+    {
+      "text": "ShareX 22.4.0",
+      "bounds": [
+        1006,
+        215,
+        1213,
+        240
+      ]
+    },
+    {
+      "text": "Native \u00b7 software allowed \u00b7 10,000 kbps configured",
+      "bounds": [
+        1006,
+        264,
+        1535,
+        286
+      ]
+    },
+    {
+      "text": "File 30 fps \u00b7 14.1 distinct fixture states/s",
+      "bounds": [
+        1006,
+        793,
+        1400,
+        814
+      ]
+    },
+    {
+      "text": "Same recorded fixture tick at the start. Playback 1\u00d7. No speed change.",
+      "bounds": [
+        56,
+        885,
+        940,
+        912
+      ]
+    },
+    {
+      "text": "Different encoding and quality controls. Windows Sandbox remote display and virtual GPU.",
+      "bounds": [
+        56,
+        932,
+        1052,
+        954
+      ]
+    },
+    {
+      "text": "This compares saved output. It is not a capture-start latency race or a normal-desktop FPS guarantee.",
+      "bounds": [
+        56,
+        976,
+        1054,
+        997
+      ]
+    }
+  ],
+  "outputs": {
+    "recording-profile.mp4": {
+      "sha256": "02c11426a99b1fa6fd334f7bcd8a8cd765cd53f6677b1b8cc6874c61a17e1ef1",
+      "bytes": 654026,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1920,
+            "height": 1080,
+            "avg_frame_rate": "30/1",
+            "nb_read_frames": "300"
+          }
+        ],
+        "format": {
+          "duration": "10.000000",
+          "size": "654026"
+        }
+      }
+    },
+    "recording-profile.gif": {
+      "sha256": "b2c975f9f229cce6f603db6552613a34ed370735e8028167b504193894b21ed3",
+      "bytes": 2282228,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 720,
+            "avg_frame_rate": "25/2",
+            "nb_read_frames": "120"
+          }
+        ],
+        "format": {
+          "duration": "10.000000",
+          "size": "2282228"
+        }
+      }
+    }
+  }
+}

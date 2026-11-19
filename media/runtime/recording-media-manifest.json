@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "fonts": [
+    "Ubuntu Regular",
+    "Ubuntu Bold"
+  ],
+  "palette": {
+    "background": "#13161d",
+    "zipshot": "#3a8dff",
+    "sharex": "#a8adb7"
+  },
+  "sources": [
+    {
+      "product": "Zipshot 1.0.1",
+      "archive_relative_path": "session02/datasets/recording-factory-local-v30/zipshot-video30/record.mp4",
+      "sha256": "e03ecc70daea9b868f170c5db23ffb968fe3dc7dacc3715b673208b5d1e28ebe",
+      "profile": "Factory fallback software preset ultrafast, CRF23, actual DDA capture",
+      "frames": 851,
+      "duration_seconds": 28.4,
+      "observed_encoded_fps": 29.964788732394368,
+      "distinct_fixture_states_per_second": 27.605633802816904
+    },
+    {
+      "product": "ShareX 22.4.0",
+      "archive_relative_path": "session02/datasets/recording-local-sharex22-v30-r1/sharex22-video30-native-software-allowed/EVU9SaBTkM.mp4",
+      "sha256": "12ceeed94ba1729c75f4757a82ed51209ce060bfc1d57b59349de648001dd8f9",
+      "profile": "Official native recorder, software allowed, configured10000kbps; predeclared first local repetition",
+      "frames": 900,
+      "duration_seconds": 30.0,
+      "observed_encoded_fps": 30.0,
+      "distinct_fixture_states_per_second": 14.1
+    }
+  ],
+  "assets": {
+    "recording-profile.mp4": {
+      "sha256": "02c11426a99b1fa6fd334f7bcd8a8cd765cd53f6677b1b8cc6874c61a17e1ef1",
+      "bytes": 654026
+    },
+    "recording-profile.gif": {
+      "sha256": "b2c975f9f229cce6f603db6552613a34ed370735e8028167b504193894b21ed3",
+      "bytes": 2282228
+    },
+    "recording-profile.json": {
+      "sha256": "48b088549b4a55b1848f472a9a7b0eaa058f488bcb7d46193b0fa2fe048bf499",
+      "bytes": 5287
+    },
+    "recording-resources.png": {
+      "sha256": "f50aee4d1f25e6eada6b4db9b5103b06b2c64bd7479a2e3ecc51c9baee415c36",
+      "bytes": 489169
+    },
+    "recording-resources.svg": {
+      "sha256": "d31942448d2ef8ae2a1cdfe46955d0a6140d61fddb711ea4ab4578a2eeceed0d",
+      "bytes": 140183
+    }
+  },
+  "provenance": {
+    "zipshot_release_exe_sha256": "0730b10f1f00295e32f603feb3c482fe2aa66da08b644bb5595592b0ef1ac783",
+    "data_summary_sha256": "aa252ab0511d25ff26423898d64d3f82e90f02307db40bb3f4c1f8d442ddb67f",
+    "generator_sha256": "bd3d71067d59d233de0eecb942f98577bd5dcf7762878cd6ed7d82fb4eac8bf0",
+    "raw_archive_manifest_relative_path": "session02/recording_archive_manifest.json",
+    "raw_archive_manifest_sha256": "411c2fca299a2fb0c0b384f09fc7f0da75054be381f5ae4fbb5436b823b1f5ec",
+    "sharex22_original_assembly_sha256": "853a1d090b75336bb968977992fcc016b36187cc05741a28e812555e442fd704"
+  }
+}

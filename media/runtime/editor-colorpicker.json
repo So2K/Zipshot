@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "case": "colorpicker",
+  "title": "Colour picker",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 3.8666666666666667,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-more/sharex22-colorpicker-20261118-030938",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "98fac1d287d16a95350da25307a893e0288b4fe26120d0c82079bec8f5886e4d",
+      "source_size": [
+        1722,
+        956
+      ],
+      "source_first_epoch_pts": 1795000189.417,
+      "source_last_epoch_pts": 1795000192.683,
+      "source_real_duration_s": 3.266,
+      "source_observed_fps": 31.843233312921004,
+      "first_relevant_phase_s": 0.5159494876861572,
+      "complete_input_sequence_s": 2.573266487686157,
+      "input_sequence_duration_s": 2.057317,
+      "camera_hold_after_sequence_source_s": 2.7732664876861572,
+      "phases": [
+        {
+          "name": "colorpicker",
+          "video_offset_s": 0.5159494876861572,
+          "duration_s": 2.057317
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-colorpicker-sharex22-source-first.png",
+          "sha256": "cda3288a5ef230aa26817e1009b576e93f93800aeb35fbb7ce2fefa1f9ea3665"
+        },
+        "last": {
+          "file": "editor-colorpicker-sharex22-source-last.png",
+          "sha256": "1b48ebc5747eee1164f7dc3e950e5330ecae254b1f5adc6cc903c7cfdad6176b"
+        }
+      },
+      "full_window_fit_scale": 0.4994192799070848,
+      "full_window_padding": [
+        0,
+        64
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-more/native-colorpicker-20261118-030428",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "0f8f4a8ddb511e23b5ee3b231b843f51167fcf05a1b8e8cd4703c8d905a6082b",
+      "source_size": [
+        1700,
+        900
+      ],
+      "source_first_epoch_pts": 1794999875.25,
+      "source_last_epoch_pts": 1794999878.517,
+      "source_real_duration_s": 3.267,
+      "source_observed_fps": 32.13957759412305,
+      "first_relevant_phase_s": 0.538109540939331,
+      "complete_input_sequence_s": 2.583123440939331,
+      "input_sequence_duration_s": 2.0450139,
+      "camera_hold_after_sequence_source_s": 2.783123440939331,
+      "phases": [
+        {
+          "name": "colorpicker",
+          "video_offset_s": 0.538109540939331,
+          "duration_s": 2.0450139
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-colorpicker-native-source-first.png",
+          "sha256": "0b506a3b0462243b9a285067397d04f13babf4fd3ddea18bb8067e7152dc0496"
+        },
+        "last": {
+          "file": "editor-colorpicker-native-source-last.png",
+          "sha256": "0facf1d9b64c45ea05579fe2b9ecdb949aae5883bae29840e274554c2dba00ad"
+        }
+      },
+      "full_window_fit_scale": 0.5058823529411764,
+      "full_window_padding": [
+        0,
+        75
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    }
+  ],
+  "output_sha256": "401a1f32ec042d1d97b1bf2d96505a7ff94ea866f794b63617390feb773de1fa",
+  "gif_sha256": "ae68fe371d6b8752ac87c55278e6f28ae64ce404cc6aa1f1a6ea7395cd6cdcd4"
+}

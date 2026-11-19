@@ -1,0 +1,6 @@
+# Retain data, media and harness bytes so provenance hashes survive checkouts.
+docs/runtime-comparison/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+media/runtime/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tools/runtime-compare/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Matplotlib emits intentional spaces inside multiline SVG path attributes.
+media/runtime/*.svg -whitespace

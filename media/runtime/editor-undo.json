@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "case": "undo",
+  "title": "Undo / redo",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 4.733333333333333,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-extras/sharex22-undo-20261118-025754",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "fceb4a21d06225cca46da36c0970797c95c671ecd148d2a332039801aa161e97",
+      "source_size": [
+        1302,
+        956
+      ],
+      "source_first_epoch_pts": 1794999482.833,
+      "source_last_epoch_pts": 1794999489.65,
+      "source_real_duration_s": 6.817,
+      "source_observed_fps": 31.97887633856535,
+      "first_relevant_phase_s": 3.194636583328247,
+      "complete_input_sequence_s": 6.095188183328247,
+      "input_sequence_duration_s": 2.9005516,
+      "camera_hold_after_sequence_source_s": 6.295188183328247,
+      "phases": [
+        {
+          "name": "undo_redo",
+          "video_offset_s": 3.194636583328247,
+          "duration_s": 2.9005516
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-undo-sharex22-source-first.png",
+          "sha256": "d674699750bfa762fb77d6d27c445edad0236c23c7e7d40d41e44519c57acb9b"
+        },
+        "last": {
+          "file": "editor-undo-sharex22-source-last.png",
+          "sha256": "efbf3d414105f7af4dae1d38bfc24a2dbd5ed0984d75c7bc53f623ce85c07993"
+        }
+      },
+      "full_window_fit_scale": 0.6328451882845189,
+      "full_window_padding": [
+        18,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Still of preexisting arrow before undo; no input event is removed."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-extras/native-undo-20261118-025739",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "ea0ed827772b50d833d1991ec90fb90e919be46f10cc11367ba8c2347063c16b",
+      "source_size": [
+        1280,
+        900
+      ],
+      "source_first_epoch_pts": 1794999463.433,
+      "source_last_epoch_pts": 1794999470.2,
+      "source_real_duration_s": 6.767,
+      "source_observed_fps": 32.06738584306191,
+      "first_relevant_phase_s": 3.1268930435180664,
+      "complete_input_sequence_s": 6.027717743518066,
+      "input_sequence_duration_s": 2.9008246999999994,
+      "camera_hold_after_sequence_source_s": 6.227717743518066,
+      "phases": [
+        {
+          "name": "undo_redo",
+          "video_offset_s": 3.1268930435180664,
+          "duration_s": 2.9008247
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-undo-native-source-first.png",
+          "sha256": "77cbcf71e7303929f786d5c4a42bde1260986ca44375cc2459e054380c9524aa"
+        },
+        "last": {
+          "file": "editor-undo-native-source-last.png",
+          "sha256": "67469bda02e571914dc690c427a338e235007131c19e8052d4c22459c6b66743"
+        }
+      },
+      "full_window_fit_scale": 0.671875,
+      "full_window_padding": [
+        0,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Still of preexisting arrow before undo; no input event is removed."
+    }
+  ],
+  "output_sha256": "72a6672ae745785ea7e3934e82252848b2d5df53f8420a0e00ddc0c42ab430b6",
+  "gif_sha256": "2d7592330f5aac22fafc4dc5369b16c9ea398708d5569e4b56498440684fce90"
+}

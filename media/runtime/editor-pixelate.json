@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "case": "pixelate",
+  "title": "Pixelation",
+  "clock_metric": "Input sequence elapsed time only; no UI response-speed winner is implied.",
+  "input_alignment_output_s": 0.8,
+  "duration_seconds": 3.8333333333333335,
+  "output_size": [
+    1920,
+    1080
+  ],
+  "output_cfr_fps": 30,
+  "gif_size": [
+    960,
+    540
+  ],
+  "gif_timeline_sample_fps": 15,
+  "aspect_ratio_policy": "Full source windows scale to fit the same 860\u00d7605 viewport with neutral padding, never stretched.",
+  "chronology": "Normalize each original epoch PTS by its first PTS. Actual event chronology remains 1x. Camera holds only after the entire relevant sequence plus up to 200 ms of recorded post-roll.",
+  "source_runs": [
+    {
+      "engine": "sharex22",
+      "source_folder": "editor-more/sharex22-pixelate-20261118-030344",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "be0d8d5407e02b1d9d380280db882e9f40a44b7d8fb691acbfc84c4d598ee7ee",
+      "source_size": [
+        1302,
+        956
+      ],
+      "source_first_epoch_pts": 1794999832.933,
+      "source_last_epoch_pts": 1794999836.45,
+      "source_real_duration_s": 3.517,
+      "source_observed_fps": 32.12965595678135,
+      "first_relevant_phase_s": 0.6915230751037598,
+      "complete_input_sequence_s": 2.6923168751037596,
+      "input_sequence_duration_s": 2.0007938,
+      "camera_hold_after_sequence_source_s": 2.89231687510376,
+      "phases": [
+        {
+          "name": "pixelate",
+          "video_offset_s": 0.6915230751037598,
+          "duration_s": 2.0007938
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-pixelate-sharex22-source-first.png",
+          "sha256": "28f941106a93f4d9e74fbc387ad76940950ab4ffb22fd3adcda58e67a5cbe916"
+        },
+        "last": {
+          "file": "editor-pixelate-sharex22-source-last.png",
+          "sha256": "257c60f4a532af7fb34c9927f9f8e05763eb703972739b9eeec921ff9f77a305"
+        }
+      },
+      "full_window_fit_scale": 0.6328451882845189,
+      "full_window_padding": [
+        18,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    },
+    {
+      "engine": "native",
+      "source_folder": "editor-more/native-pixelate-20261118-030332",
+      "source_video": "actual-ui.mkv",
+      "source_video_sha256": "d6e54e3a106a0f35705e00cb9b3c79deccbf453fdfa368eb3bfd28136f57392c",
+      "source_size": [
+        1280,
+        900
+      ],
+      "source_first_epoch_pts": 1794999816.667,
+      "source_last_epoch_pts": 1794999819.95,
+      "source_real_duration_s": 3.283,
+      "source_observed_fps": 32.28754188242461,
+      "first_relevant_phase_s": 0.5970747470855713,
+      "complete_input_sequence_s": 2.5978694470855714,
+      "input_sequence_duration_s": 2.0007947,
+      "camera_hold_after_sequence_source_s": 2.7978694470855716,
+      "phases": [
+        {
+          "name": "pixelate",
+          "video_offset_s": 0.5970747470855713,
+          "duration_s": 2.0007947
+        }
+      ],
+      "source_frame_proofs": {
+        "first": {
+          "file": "editor-pixelate-native-source-first.png",
+          "sha256": "dc39ec3495a1ec41a9ab25d05c86f49917b5af1da0791e27c8b4a744b61e7598"
+        },
+        "last": {
+          "file": "editor-pixelate-native-source-last.png",
+          "sha256": "cbffd1129500965a9273b70398fbcfa3457894d211e3c335fda7701b0287a1b9"
+        }
+      },
+      "full_window_fit_scale": 0.671875,
+      "full_window_padding": [
+        0,
+        0
+      ],
+      "overlay_policy": "Small neutral yellow ring at the latest logged input point, sampled without interpolation; not an app cursor.",
+      "pre_input_policy": "Original pre-input chronology, padding first frame only if recording starts later than the prelude."
+    }
+  ],
+  "output_sha256": "1b93cc009f2ae42cf312aaacf87498b9146159b1fd2b692c194423e641924917",
+  "gif_sha256": "4db9994ab622aadf48566616b3078c15f738fef5a97c14dcd19da3a9677f576e"
+}

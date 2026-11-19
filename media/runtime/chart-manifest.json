@@ -1,0 +1,16 @@
+{
+  "data": [
+    "docs/runtime-comparison/capture_baseline.json",
+    "docs/runtime-comparison/capture_trials.csv",
+    "docs/runtime-comparison/editor_export_18.0.1.json"
+  ],
+  "style": "Matplotlib, local Ubuntu fonts, standalone PNG and SVG with text converted to paths.",
+  "sha256": {
+    "capture-latency.png": "61015c1a8ea2778babbeff3317479c2a600b8f78cbc83a02a10e3ee39ded90d3",
+    "capture-latency.svg": "0911c8787b90e97ee0fc6246bb3354e7fd4019fc29fa91ae8713c16894ae03b9",
+    "capture-traces.png": "1e214e4616acde0a28cc1d1c3ee73b996ed9af36c116ca1ed10bea6072871c8a",
+    "capture-traces.svg": "05c1523a2e1057269554e71491df5f5115724c2fc39d1b79d4d002ad6681aa73",
+    "editor-export-legacy.png": "39d02e6361f1c6d425292981cdd0f820e8d8233ac430fcc2d45f416adcb4bc8f",
+    "editor-export-legacy.svg": "a6d76901d69b0e36dfbcd5d8afa495069c78c9c84fc4dccef46de02a81422996"
+  }
+}

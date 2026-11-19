@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "scope": "Synthetic libx264 thread-budget diagnostic. This is not an application recording benchmark or evidence of equal perceptual quality.",
+  "runs": [
+    {
+      "input": "testsrc2 1920x1080 30fps 90frames realtime",
+      "timed_out": false,
+      "peak_private_bytes": 1140961280,
+      "wall_seconds": 2.8072828999999997,
+      "encoder": "libx264 veryfast CRF23 yuv420p",
+      "peak_working_set_bytes": 876142592,
+      "error": "",
+      "scope": "Synthetic encoder only, not product capture",
+      "frames": 90,
+      "exit_code": 0,
+      "threads_option": 0,
+      "cpu_seconds": 3.375
+    },
+    {
+      "input": "testsrc2 1920x1080 30fps 90frames realtime",
+      "timed_out": false,
+      "peak_private_bytes": 336433152,
+      "wall_seconds": 2.6894232,
+      "encoder": "libx264 veryfast CRF23 yuv420p",
+      "peak_working_set_bytes": 299065344,
+      "error": "",
+      "scope": "Synthetic encoder only, not product capture",
+      "frames": 90,
+      "exit_code": 0,
+      "threads_option": 4,
+      "cpu_seconds": 2.609375
+    },
+    {
+      "input": "testsrc2 1920x1080 30fps 90frames realtime",
+      "timed_out": false,
+      "peak_private_bytes": 333254656,
+      "wall_seconds": 4.6213333,
+      "encoder": "libx264 veryfast CRF23 yuv420p",
+      "peak_working_set_bytes": 296099840,
+      "error": "[vist#0:0/wrapped_avframe @ 000001e358bc35c0] Resumed reading at pts 1.533 with rate 1.050 after a lag of 1.522s\r\n[vist#0:0/wrapped_avframe @ 000001e358bc35c0] Resumed reading at pts 1.600 with rate 1.050 after a lag of 1.935s\r\n",
+      "scope": "Synthetic encoder only, not product capture",
+      "frames": 90,
+      "exit_code": 0,
+      "threads_option": 4,
+      "cpu_seconds": 2.640625
+    },
+    {
+      "input": "testsrc2 1920x1080 30fps 90frames realtime",
+      "timed_out": false,
+      "peak_private_bytes": 1134665728,
+      "wall_seconds": 3.4528714,
+      "encoder": "libx264 veryfast CRF23 yuv420p",
+      "peak_working_set_bytes": 869920768,
+      "error": "[vist#0:0/wrapped_avframe @ 0000021eb4202540] Resumed reading at pts 1.033 with rate 1.050 after a lag of 0.786s\r\n",
+      "scope": "Synthetic encoder only, not product capture",
+      "frames": 90,
+      "exit_code": 0,
+      "threads_option": 0,
+      "cpu_seconds": 2.984375
+    }
+  ],
+  "ffmpeg_sha256": "ad8f211bc894755e0061c55ab280ae00e8d3d4f15a8cc4372b24cfa247b5942e"
+}

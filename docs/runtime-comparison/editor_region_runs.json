@@ -1,0 +1,4228 @@
+{
+  "schema_version": 1,
+  "driver": {
+    "file": "editor_region_interaction_r1.ps1",
+    "sha256": "d29df596f1e83ef2fce0d209f57735170f087e5eda4d5af7fd91da562eb395f4",
+    "note": "Original run driver. Current repository script only clarifies unused fixture provenance in the report header; the recording and input paths are unchanged."
+  },
+  "source": "Genuine disposable Windows Sandbox region overlays over its public/default guest desktop. No PNG fixture is loaded; an unused common-wrapper fixture field in raw reports is not source-content provenance.",
+  "speed": "Real time1x. Original epoch PTS must be normalized with setpts=PTS-STARTPTS, never interpreted as container duration.",
+  "cursor": "The GDI observer draws the actual guest cursor. Additional rings, if any, must be labelled Recorded input position.",
+  "limitation": "Whole-display observer load differs, observed17.7\u201322.7fps. One gesture per app/tool, application defaults. No input-to-visible or speed ranking from these clips. ShareX Space did not produce a PNG in the task save directory, so only its visible drawing is verified.",
+  "runs": [
+    {
+      "engine": "native",
+      "case": "arrow",
+      "source_folder": "editor-region/native-arrow-20261118-031802",
+      "source_video": "actual-ui.mkv",
+      "raw_report": "editor-region-result.json",
+      "application": {
+        "fresh_task_owned_profile": true,
+        "version": "1.0.1.0",
+        "unmodified_exe": true,
+        "exe": "C:/ZipshotLab/work/editor-region-zipshot/zipshot.exe",
+        "sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+        "display": [
+          2982,
+          1672
+        ],
+        "pid": 4904
+      },
+      "overlay": {
+        "hwnd": 5636332,
+        "title": "Zipshot",
+        "cls": "ZipshotRegion",
+        "left": 0,
+        "top": 0,
+        "right": 2982,
+        "bottom": 1672
+      },
+      "video": {
+        "first_pts": 1795000689.2,
+        "last_pts": 1795000700.533,
+        "file": "actual-ui.mkv",
+        "cursor_drawn_by_observer": true,
+        "observed_pts_fps": 22.677137673550078,
+        "time_policy": "Actual real-time 1x, normalize epoch origin only",
+        "capture_crop": [
+          0,
+          0,
+          2982,
+          1672
+        ],
+        "frame_count": 258,
+        "capture_requested_fps": 30,
+        "epoch_pts": true,
+        "bytes": 14529367,
+        "capture_codec": "libx264rgb lossless, threads2, passthrough PTS",
+        "sha256": "5A98D260B8156002090316D37710D2143D2F1B53C39A1481A033CE20A550758F"
+      },
+      "real_duration_s": 11.33299994468689,
+      "offsets": {
+        "region_hotkey_s": 0.7762796878814697,
+        "tool_key_s": 4.578778505325317,
+        "stroke_phase_s": 4.862512111663818,
+        "actual_button_down_s": 4.86707878112793,
+        "first_move_s": 4.85852313041687,
+        "last_move_s": 6.862728118896484
+      },
+      "phases": [
+        {
+          "name": "arrow",
+          "kind": "arrow",
+          "video_offset_s": 4.862512111663818,
+          "duration_s": 2.0009855
+        }
+      ],
+      "recorded_input_overlay": [
+        {
+          "seconds": 4.85852313041687,
+          "x": 900,
+          "y": 1000,
+          "index": 0,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.899373769760132,
+          "x": 908,
+          "y": 997,
+          "index": 1,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.900902986526489,
+          "x": 917,
+          "y": 993,
+          "index": 2,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.913289785385132,
+          "x": 925,
+          "y": 990,
+          "index": 3,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.930107116699219,
+          "x": 934,
+          "y": 987,
+          "index": 4,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.946791410446167,
+          "x": 942,
+          "y": 983,
+          "index": 5,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.96357798576355,
+          "x": 950,
+          "y": 980,
+          "index": 6,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.980417013168335,
+          "x": 959,
+          "y": 976,
+          "index": 7,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.997183322906494,
+          "x": 967,
+          "y": 973,
+          "index": 8,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.014065504074097,
+          "x": 976,
+          "y": 970,
+          "index": 9,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.030905246734619,
+          "x": 984,
+          "y": 966,
+          "index": 10,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.047639846801758,
+          "x": 992,
+          "y": 963,
+          "index": 11,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.0644636154174805,
+          "x": 1001,
+          "y": 960,
+          "index": 12,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.081218242645264,
+          "x": 1009,
+          "y": 956,
+          "index": 13,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.098032474517822,
+          "x": 1018,
+          "y": 953,
+          "index": 14,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.114838600158691,
+          "x": 1026,
+          "y": 950,
+          "index": 15,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.131723642349243,
+          "x": 1034,
+          "y": 946,
+          "index": 16,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.148452043533325,
+          "x": 1043,
+          "y": 943,
+          "index": 17,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.165240526199341,
+          "x": 1051,
+          "y": 939,
+          "index": 18,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.182070016860962,
+          "x": 1060,
+          "y": 936,
+          "index": 19,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.19888162612915,
+          "x": 1068,
+          "y": 933,
+          "index": 20,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.215742111206055,
+          "x": 1076,
+          "y": 929,
+          "index": 21,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.232504606246948,
+          "x": 1085,
+          "y": 926,
+          "index": 22,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.2493555545806885,
+          "x": 1093,
+          "y": 923,
+          "index": 23,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.266065835952759,
+          "x": 1102,
+          "y": 919,
+          "index": 24,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.283050298690796,
+          "x": 1110,
+          "y": 916,
+          "index": 25,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.299675226211548,
+          "x": 1118,
+          "y": 913,
+          "index": 26,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.316501617431641,
+          "x": 1127,
+          "y": 909,
+          "index": 27,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.3332905769348145,
+          "x": 1135,
+          "y": 906,
+          "index": 28,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.350231885910034,
+          "x": 1144,
+          "y": 903,
+          "index": 29,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.36701226234436,
+          "x": 1152,
+          "y": 899,
+          "index": 30,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.383723974227905,
+          "x": 1161,
+          "y": 896,
+          "index": 31,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.400586366653442,
+          "x": 1169,
+          "y": 892,
+          "index": 32,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.417396783828735,
+          "x": 1177,
+          "y": 889,
+          "index": 33,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.434130430221558,
+          "x": 1186,
+          "y": 886,
+          "index": 34,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.451021432876587,
+          "x": 1194,
+          "y": 882,
+          "index": 35,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.4677815437316895,
+          "x": 1203,
+          "y": 879,
+          "index": 36,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.4845380783081055,
+          "x": 1211,
+          "y": 876,
+          "index": 37,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.50135350227356,
+          "x": 1219,
+          "y": 872,
+          "index": 38,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.518154621124268,
+          "x": 1228,
+          "y": 869,
+          "index": 39,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.534982681274414,
+          "x": 1236,
+          "y": 866,
+          "index": 40,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.551774024963379,
+          "x": 1245,
+          "y": 862,
+          "index": 41,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.568684816360474,
+          "x": 1253,
+          "y": 859,
+          "index": 42,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.585395336151123,
+          "x": 1261,
+          "y": 855,
+          "index": 43,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.602190017700195,
+          "x": 1270,
+          "y": 852,
+          "index": 44,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.619029760360718,
+          "x": 1278,
+          "y": 849,
+          "index": 45,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.635842561721802,
+          "x": 1287,
+          "y": 845,
+          "index": 46,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.652633428573608,
+          "x": 1295,
+          "y": 842,
+          "index": 47,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.669452905654907,
+          "x": 1303,
+          "y": 839,
+          "index": 48,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.68623948097229,
+          "x": 1312,
+          "y": 835,
+          "index": 49,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.703037738800049,
+          "x": 1320,
+          "y": 832,
+          "index": 50,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.719829559326172,
+          "x": 1329,
+          "y": 829,
+          "index": 51,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.736649990081787,
+          "x": 1337,
+          "y": 825,
+          "index": 52,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.753494024276733,
+          "x": 1345,
+          "y": 822,
+          "index": 53,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.77025032043457,
+          "x": 1354,
+          "y": 818,
+          "index": 54,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.787181615829468,
+          "x": 1362,
+          "y": 815,
+          "index": 55,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.804009437561035,
+          "x": 1371,
+          "y": 812,
+          "index": 56,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.820714712142944,
+          "x": 1379,
+          "y": 808,
+          "index": 57,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.837477684020996,
+          "x": 1387,
+          "y": 805,
+          "index": 58,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.854353427886963,
+          "x": 1396,
+          "y": 802,
+          "index": 59,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.8711371421813965,
+          "x": 1404,
+          "y": 798,
+          "index": 60,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.8879759311676025,
+          "x": 1413,
+          "y": 795,
+          "index": 61,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.9047629833221436,
+          "x": 1421,
+          "y": 792,
+          "index": 62,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.921516180038452,
+          "x": 1429,
+          "y": 788,
+          "index": 63,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.938388347625732,
+          "x": 1438,
+          "y": 785,
+          "index": 64,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.9551756381988525,
+          "x": 1446,
+          "y": 782,
+          "index": 65,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.9720048904418945,
+          "x": 1455,
+          "y": 778,
+          "index": 66,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.988747596740723,
+          "x": 1463,
+          "y": 775,
+          "index": 67,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.00591254234314,
+          "x": 1471,
+          "y": 771,
+          "index": 68,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.022408962249756,
+          "x": 1480,
+          "y": 768,
+          "index": 69,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.0391929149627686,
+          "x": 1488,
+          "y": 765,
+          "index": 70,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.056002616882324,
+          "x": 1497,
+          "y": 761,
+          "index": 71,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.0728161334991455,
+          "x": 1505,
+          "y": 758,
+          "index": 72,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.0895984172821045,
+          "x": 1513,
+          "y": 755,
+          "index": 73,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.106403112411499,
+          "x": 1522,
+          "y": 751,
+          "index": 74,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.123261213302612,
+          "x": 1530,
+          "y": 748,
+          "index": 75,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.140021562576294,
+          "x": 1539,
+          "y": 745,
+          "index": 76,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.156890392303467,
+          "x": 1547,
+          "y": 741,
+          "index": 77,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.173616170883179,
+          "x": 1555,
+          "y": 738,
+          "index": 78,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.190543174743652,
+          "x": 1564,
+          "y": 734,
+          "index": 79,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.207258939743042,
+          "x": 1572,
+          "y": 731,
+          "index": 80,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.224128246307373,
+          "x": 1581,
+          "y": 728,
+          "index": 81,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.240842819213867,
+          "x": 1589,
+          "y": 724,
+          "index": 82,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.257655620574951,
+          "x": 1597,
+          "y": 721,
+          "index": 83,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.274438142776489,
+          "x": 1606,
+          "y": 718,
+          "index": 84,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.291307687759399,
+          "x": 1614,
+          "y": 714,
+          "index": 85,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.308033466339111,
+          "x": 1623,
+          "y": 711,
+          "index": 86,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.324910640716553,
+          "x": 1631,
+          "y": 708,
+          "index": 87,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.341638803482056,
+          "x": 1639,
+          "y": 704,
+          "index": 88,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.35852313041687,
+          "x": 1648,
+          "y": 701,
+          "index": 89,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.375270128250122,
+          "x": 1656,
+          "y": 697,
+          "index": 90,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.392064809799194,
+          "x": 1665,
+          "y": 694,
+          "index": 91,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.4090516567230225,
+          "x": 1673,
+          "y": 691,
+          "index": 92,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.4256837368011475,
+          "x": 1682,
+          "y": 687,
+          "index": 93,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.4425129890441895,
+          "x": 1690,
+          "y": 684,
+          "index": 94,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.459251880645752,
+          "x": 1698,
+          "y": 681,
+          "index": 95,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.476166248321533,
+          "x": 1707,
+          "y": 677,
+          "index": 96,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.492968797683716,
+          "x": 1715,
+          "y": 674,
+          "index": 97,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.509725332260132,
+          "x": 1724,
+          "y": 671,
+          "index": 98,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.526513576507568,
+          "x": 1732,
+          "y": 667,
+          "index": 99,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.543453216552734,
+          "x": 1740,
+          "y": 664,
+          "index": 100,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.560147762298584,
+          "x": 1749,
+          "y": 661,
+          "index": 101,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.576927661895752,
+          "x": 1757,
+          "y": 657,
+          "index": 102,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.593751430511475,
+          "x": 1766,
+          "y": 654,
+          "index": 103,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.610584497451782,
+          "x": 1774,
+          "y": 650,
+          "index": 104,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.627365350723267,
+          "x": 1782,
+          "y": 647,
+          "index": 105,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.644184350967407,
+          "x": 1791,
+          "y": 644,
+          "index": 106,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.661011219024658,
+          "x": 1799,
+          "y": 640,
+          "index": 107,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.6778295040130615,
+          "x": 1808,
+          "y": 637,
+          "index": 108,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.694574594497681,
+          "x": 1816,
+          "y": 634,
+          "index": 109,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.71137809753418,
+          "x": 1824,
+          "y": 630,
+          "index": 110,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.728258371353149,
+          "x": 1833,
+          "y": 627,
+          "index": 111,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.745028734207153,
+          "x": 1841,
+          "y": 624,
+          "index": 112,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.761852979660034,
+          "x": 1850,
+          "y": 620,
+          "index": 113,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.778610944747925,
+          "x": 1858,
+          "y": 617,
+          "index": 114,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.795454978942871,
+          "x": 1866,
+          "y": 613,
+          "index": 115,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.812209844589233,
+          "x": 1875,
+          "y": 610,
+          "index": 116,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.829089879989624,
+          "x": 1883,
+          "y": 607,
+          "index": 117,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.8458781242370605,
+          "x": 1892,
+          "y": 603,
+          "index": 118,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.862728118896484,
+          "x": 1900,
+          "y": 600,
+          "index": 119,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        }
+      ],
+      "before": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 0,
+        "green_pixels": 0,
+        "sha256": "db4345590b3406b68185e672801c0231f4edef086ad72609018a6f54c9ca4253"
+      },
+      "after": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 2,
+        "green_pixels": 3018,
+        "sha256": "9676a6e0f573525e67840d6a4968694a797e19d0b63b62a8a20d8dd715d98b39"
+      },
+      "saved_outputs": [
+        {
+          "file": "saved/2026-11/explorer_RaKpvEAaFm.png",
+          "dimensions": [
+            2982,
+            1672
+          ],
+          "red_pixels": 0,
+          "green_pixels": 3339,
+          "sha256": "a9b2dd456d796a3beaad34f5e50a0c0a4869b6261b1ff372bb85c329d2c083e7"
+        }
+      ],
+      "save_verified": true,
+      "scope": "Actual unmodified full application. Ctrl+PrintScreen region overlay then A or F and the same120 screen-coordinate points over2seconds. Default annotation style differs. Not a quality-matched latency or UI-frame-rate benchmark."
+    },
+    {
+      "engine": "native",
+      "case": "freehand",
+      "source_folder": "editor-region/native-freehand-20261118-031850",
+      "source_video": "actual-ui.mkv",
+      "raw_report": "editor-region-result.json",
+      "application": {
+        "fresh_task_owned_profile": true,
+        "version": "1.0.1.0",
+        "unmodified_exe": true,
+        "exe": "C:/ZipshotLab/work/editor-region-zipshot/zipshot.exe",
+        "sha256": "0730B10F1F00295E32F603FEB3C482FE2AA66DA08B644BB5595592B0EF1AC783",
+        "display": [
+          2982,
+          1672
+        ],
+        "pid": 3064
+      },
+      "overlay": {
+        "hwnd": 3998106,
+        "title": "Zipshot",
+        "cls": "ZipshotRegion",
+        "left": 0,
+        "top": 0,
+        "right": 2982,
+        "bottom": 1672
+      },
+      "video": {
+        "first_pts": 1795000736.933,
+        "last_pts": 1795000748.233,
+        "file": "actual-ui.mkv",
+        "cursor_drawn_by_observer": true,
+        "observed_pts_fps": 20.53097353796399,
+        "time_policy": "Actual real-time 1x, normalize epoch origin only",
+        "capture_crop": [
+          0,
+          0,
+          2982,
+          1672
+        ],
+        "frame_count": 233,
+        "capture_requested_fps": 30,
+        "epoch_pts": true,
+        "bytes": 14855286,
+        "capture_codec": "libx264rgb lossless, threads2, passthrough PTS",
+        "sha256": "0E0EB9220CC366B6A10465F3C8CF63934AAF7F1A047611B5D5318A1D01A959A0"
+      },
+      "real_duration_s": 11.299999952316284,
+      "offsets": {
+        "region_hotkey_s": 0.8315675258636475,
+        "tool_key_s": 4.627281427383423,
+        "stroke_phase_s": 4.904327154159546,
+        "actual_button_down_s": 4.90885066986084,
+        "first_move_s": 4.899583101272583,
+        "last_move_s": 6.9044811725616455
+      },
+      "phases": [
+        {
+          "name": "freehand",
+          "kind": "freehand",
+          "video_offset_s": 4.904327154159546,
+          "duration_s": 2.0006499
+        }
+      ],
+      "recorded_input_overlay": [
+        {
+          "seconds": 4.899583101272583,
+          "x": 900,
+          "y": 800,
+          "index": 0,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.946561574935913,
+          "x": 908,
+          "y": 827,
+          "index": 1,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.946917295455933,
+          "x": 917,
+          "y": 853,
+          "index": 2,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.955002784729004,
+          "x": 925,
+          "y": 878,
+          "index": 3,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.97182035446167,
+          "x": 934,
+          "y": 901,
+          "index": 4,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 4.988576412200928,
+          "x": 942,
+          "y": 921,
+          "index": 5,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.005431652069092,
+          "x": 950,
+          "y": 938,
+          "index": 6,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.0223236083984375,
+          "x": 959,
+          "y": 952,
+          "index": 7,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.039021253585815,
+          "x": 967,
+          "y": 962,
+          "index": 8,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.055838346481323,
+          "x": 976,
+          "y": 968,
+          "index": 9,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.0726096630096436,
+          "x": 984,
+          "y": 970,
+          "index": 10,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.089431285858154,
+          "x": 992,
+          "y": 968,
+          "index": 11,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.1062400341033936,
+          "x": 1001,
+          "y": 961,
+          "index": 12,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.12305474281311,
+          "x": 1009,
+          "y": 950,
+          "index": 13,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.139872312545776,
+          "x": 1018,
+          "y": 936,
+          "index": 14,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.156641006469727,
+          "x": 1026,
+          "y": 918,
+          "index": 15,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.173531532287598,
+          "x": 1034,
+          "y": 897,
+          "index": 16,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.190246343612671,
+          "x": 1043,
+          "y": 874,
+          "index": 17,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.207030773162842,
+          "x": 1051,
+          "y": 849,
+          "index": 18,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.223888158798218,
+          "x": 1060,
+          "y": 822,
+          "index": 19,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.2407331466674805,
+          "x": 1068,
+          "y": 796,
+          "index": 20,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.257457971572876,
+          "x": 1076,
+          "y": 769,
+          "index": 21,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.274248361587524,
+          "x": 1085,
+          "y": 743,
+          "index": 22,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.291076421737671,
+          "x": 1093,
+          "y": 718,
+          "index": 23,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.3080220222473145,
+          "x": 1102,
+          "y": 696,
+          "index": 24,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.324652433395386,
+          "x": 1110,
+          "y": 676,
+          "index": 25,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.341519355773926,
+          "x": 1118,
+          "y": 659,
+          "index": 26,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.3582916259765625,
+          "x": 1127,
+          "y": 646,
+          "index": 27,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.375141382217407,
+          "x": 1135,
+          "y": 636,
+          "index": 28,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.391831159591675,
+          "x": 1144,
+          "y": 631,
+          "index": 29,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.408713340759277,
+          "x": 1152,
+          "y": 630,
+          "index": 30,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.425502061843872,
+          "x": 1161,
+          "y": 633,
+          "index": 31,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.442391633987427,
+          "x": 1169,
+          "y": 641,
+          "index": 32,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.459090232849121,
+          "x": 1177,
+          "y": 652,
+          "index": 33,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.475921869277954,
+          "x": 1186,
+          "y": 667,
+          "index": 34,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.492732048034668,
+          "x": 1194,
+          "y": 685,
+          "index": 35,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.509524345397949,
+          "x": 1203,
+          "y": 707,
+          "index": 36,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.526274919509888,
+          "x": 1211,
+          "y": 730,
+          "index": 37,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.543098449707031,
+          "x": 1219,
+          "y": 756,
+          "index": 38,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.559964656829834,
+          "x": 1228,
+          "y": 782,
+          "index": 39,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.576716423034668,
+          "x": 1236,
+          "y": 809,
+          "index": 40,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.593540668487549,
+          "x": 1245,
+          "y": 836,
+          "index": 41,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.610437631607056,
+          "x": 1253,
+          "y": 861,
+          "index": 42,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.627220392227173,
+          "x": 1261,
+          "y": 886,
+          "index": 43,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.643944501876831,
+          "x": 1270,
+          "y": 908,
+          "index": 44,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.660777568817139,
+          "x": 1278,
+          "y": 927,
+          "index": 45,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.677594184875488,
+          "x": 1287,
+          "y": 943,
+          "index": 46,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.694402456283569,
+          "x": 1295,
+          "y": 956,
+          "index": 47,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.711203336715698,
+          "x": 1303,
+          "y": 965,
+          "index": 48,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.7279956340789795,
+          "x": 1312,
+          "y": 969,
+          "index": 49,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.744971513748169,
+          "x": 1320,
+          "y": 970,
+          "index": 50,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.761651515960693,
+          "x": 1329,
+          "y": 966,
+          "index": 51,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.778473377227783,
+          "x": 1337,
+          "y": 958,
+          "index": 52,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.795222520828247,
+          "x": 1345,
+          "y": 946,
+          "index": 53,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.812066555023193,
+          "x": 1354,
+          "y": 930,
+          "index": 54,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.828863859176636,
+          "x": 1362,
+          "y": 911,
+          "index": 55,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.845646619796753,
+          "x": 1371,
+          "y": 889,
+          "index": 56,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.862541913986206,
+          "x": 1379,
+          "y": 866,
+          "index": 57,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.87928318977356,
+          "x": 1387,
+          "y": 840,
+          "index": 58,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.896058797836304,
+          "x": 1396,
+          "y": 813,
+          "index": 59,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.912890672683716,
+          "x": 1404,
+          "y": 787,
+          "index": 60,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.929751634597778,
+          "x": 1413,
+          "y": 760,
+          "index": 61,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.946521043777466,
+          "x": 1421,
+          "y": 734,
+          "index": 62,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.963274240493774,
+          "x": 1429,
+          "y": 711,
+          "index": 63,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.980071544647217,
+          "x": 1438,
+          "y": 689,
+          "index": 64,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.997011661529541,
+          "x": 1446,
+          "y": 670,
+          "index": 65,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.0136613845825195,
+          "x": 1455,
+          "y": 654,
+          "index": 66,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.030498743057251,
+          "x": 1463,
+          "y": 642,
+          "index": 67,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.047319173812866,
+          "x": 1471,
+          "y": 634,
+          "index": 68,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.064151048660278,
+          "x": 1480,
+          "y": 630,
+          "index": 69,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.080932855606079,
+          "x": 1488,
+          "y": 631,
+          "index": 70,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.097739934921265,
+          "x": 1497,
+          "y": 635,
+          "index": 71,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.114569664001465,
+          "x": 1505,
+          "y": 644,
+          "index": 72,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.13138484954834,
+          "x": 1513,
+          "y": 657,
+          "index": 73,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.148202657699585,
+          "x": 1522,
+          "y": 673,
+          "index": 74,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.164991855621338,
+          "x": 1530,
+          "y": 692,
+          "index": 75,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.181856632232666,
+          "x": 1539,
+          "y": 714,
+          "index": 76,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.1985859870910645,
+          "x": 1547,
+          "y": 739,
+          "index": 77,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.215442657470703,
+          "x": 1555,
+          "y": 764,
+          "index": 78,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.23224401473999,
+          "x": 1564,
+          "y": 791,
+          "index": 79,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.2490644454956055,
+          "x": 1572,
+          "y": 818,
+          "index": 80,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.265845060348511,
+          "x": 1581,
+          "y": 844,
+          "index": 81,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.2826573848724365,
+          "x": 1589,
+          "y": 870,
+          "index": 82,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.299640655517578,
+          "x": 1597,
+          "y": 893,
+          "index": 83,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.31630277633667,
+          "x": 1606,
+          "y": 915,
+          "index": 84,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.333075046539307,
+          "x": 1614,
+          "y": 933,
+          "index": 85,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.349924325942993,
+          "x": 1623,
+          "y": 948,
+          "index": 86,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.366776466369629,
+          "x": 1631,
+          "y": 959,
+          "index": 87,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.383499622344971,
+          "x": 1639,
+          "y": 967,
+          "index": 88,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.400407075881958,
+          "x": 1648,
+          "y": 970,
+          "index": 89,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.417103290557861,
+          "x": 1656,
+          "y": 969,
+          "index": 90,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.433944463729858,
+          "x": 1665,
+          "y": 964,
+          "index": 91,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.450751543045044,
+          "x": 1673,
+          "y": 954,
+          "index": 92,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.467542886734009,
+          "x": 1682,
+          "y": 941,
+          "index": 93,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.484297037124634,
+          "x": 1690,
+          "y": 924,
+          "index": 94,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.501213312149048,
+          "x": 1698,
+          "y": 904,
+          "index": 95,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.517967700958252,
+          "x": 1707,
+          "y": 882,
+          "index": 96,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.534785032272339,
+          "x": 1715,
+          "y": 857,
+          "index": 97,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.551591396331787,
+          "x": 1724,
+          "y": 831,
+          "index": 98,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.568395376205444,
+          "x": 1732,
+          "y": 804,
+          "index": 99,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.585183620452881,
+          "x": 1740,
+          "y": 778,
+          "index": 100,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.601986646652222,
+          "x": 1749,
+          "y": 751,
+          "index": 101,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.618805170059204,
+          "x": 1757,
+          "y": 726,
+          "index": 102,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.635590076446533,
+          "x": 1766,
+          "y": 703,
+          "index": 103,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.652373552322388,
+          "x": 1774,
+          "y": 682,
+          "index": 104,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.669199228286743,
+          "x": 1782,
+          "y": 664,
+          "index": 105,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.686028957366943,
+          "x": 1791,
+          "y": 650,
+          "index": 106,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.702770948410034,
+          "x": 1799,
+          "y": 639,
+          "index": 107,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.7195940017700195,
+          "x": 1808,
+          "y": 632,
+          "index": 108,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.73644757270813,
+          "x": 1816,
+          "y": 630,
+          "index": 109,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.753232002258301,
+          "x": 1824,
+          "y": 632,
+          "index": 110,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.7700159549713135,
+          "x": 1833,
+          "y": 638,
+          "index": 111,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.786886930465698,
+          "x": 1841,
+          "y": 648,
+          "index": 112,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.803693532943726,
+          "x": 1850,
+          "y": 662,
+          "index": 113,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.82043719291687,
+          "x": 1858,
+          "y": 679,
+          "index": 114,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.837212085723877,
+          "x": 1866,
+          "y": 699,
+          "index": 115,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.854065418243408,
+          "x": 1875,
+          "y": 722,
+          "index": 116,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.870895147323608,
+          "x": 1883,
+          "y": 747,
+          "index": 117,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.887673854827881,
+          "x": 1892,
+          "y": 773,
+          "index": 118,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.9044811725616455,
+          "x": 1900,
+          "y": 800,
+          "index": 119,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        }
+      ],
+      "before": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 2,
+        "green_pixels": 0,
+        "sha256": "35f0ffd58293cc76246152879872522c366c4b062f5f084fcf639df8c171055c"
+      },
+      "after": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 0,
+        "green_pixels": 6529,
+        "sha256": "73efc4724395c5318ace958a8c7ae955f98d27df43a995893b5612cbaf90cf94"
+      },
+      "saved_outputs": [
+        {
+          "file": "saved/2026-11/explorer_gsyePAhnEe.png",
+          "dimensions": [
+            2982,
+            1672
+          ],
+          "red_pixels": 0,
+          "green_pixels": 6559,
+          "sha256": "8b23d0212c00e9125f77d890b6abc9fa506b4279867e5c8abc3fa8ac78632c00"
+        }
+      ],
+      "save_verified": true,
+      "scope": "Actual unmodified full application. Ctrl+PrintScreen region overlay then A or F and the same120 screen-coordinate points over2seconds. Default annotation style differs. Not a quality-matched latency or UI-frame-rate benchmark."
+    },
+    {
+      "engine": "sharex22",
+      "case": "arrow",
+      "source_folder": "editor-region/sharex22-arrow-20261118-031917",
+      "source_video": "actual-ui.mkv",
+      "raw_report": "editor-region-result.json",
+      "application": {
+        "fresh_task_owned_profile": true,
+        "version": "22.4.0",
+        "unmodified_exe": true,
+        "exe": "C:/ZipshotLab/work/editor-stock22-app/ShareX.exe",
+        "sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+        "display": [
+          2982,
+          1672
+        ],
+        "pid": 2888
+      },
+      "overlay": {
+        "hwnd": 4456490,
+        "title": "Region capture",
+        "cls": "Avalonia-f020d819-c650-4f9b-8793-2fc5c26da5fa",
+        "left": 0,
+        "top": 0,
+        "right": 2982,
+        "bottom": 1672
+      },
+      "video": {
+        "first_pts": 1795000764.333,
+        "last_pts": 1795000776.2,
+        "file": "actual-ui.mkv",
+        "cursor_drawn_by_observer": true,
+        "observed_pts_fps": 17.69613197753051,
+        "time_policy": "Actual real-time 1x, normalize epoch origin only",
+        "capture_crop": [
+          0,
+          0,
+          2982,
+          1672
+        ],
+        "frame_count": 211,
+        "capture_requested_fps": 30,
+        "epoch_pts": true,
+        "bytes": 5388435,
+        "capture_codec": "libx264rgb lossless, threads2, passthrough PTS",
+        "sha256": "F718895ADC666E8DC99CFB2D44DDEF3EAA0DF8D1D0633B8EE140BB963EF7DC27"
+      },
+      "real_duration_s": 11.867000102996826,
+      "offsets": {
+        "region_hotkey_s": 0.7562289237976074,
+        "tool_key_s": 4.820842742919922,
+        "stroke_phase_s": 5.095453500747681,
+        "actual_button_down_s": 5.099958896636963,
+        "first_move_s": 5.09106183052063,
+        "last_move_s": 7.095710515975952
+      },
+      "phases": [
+        {
+          "name": "arrow",
+          "kind": "arrow",
+          "video_offset_s": 5.095453500747681,
+          "duration_s": 2.0011547
+        }
+      ],
+      "recorded_input_overlay": [
+        {
+          "seconds": 5.09106183052063,
+          "x": 900,
+          "y": 1000,
+          "index": 0,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.15681791305542,
+          "x": 908,
+          "y": 997,
+          "index": 1,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.15720009803772,
+          "x": 917,
+          "y": 993,
+          "index": 2,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.157454252243042,
+          "x": 925,
+          "y": 990,
+          "index": 3,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.162809371948242,
+          "x": 934,
+          "y": 987,
+          "index": 4,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.17957878112793,
+          "x": 942,
+          "y": 983,
+          "index": 5,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.196398019790649,
+          "x": 950,
+          "y": 980,
+          "index": 6,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.213359594345093,
+          "x": 959,
+          "y": 976,
+          "index": 7,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.230121612548828,
+          "x": 967,
+          "y": 973,
+          "index": 8,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.246902942657471,
+          "x": 976,
+          "y": 970,
+          "index": 9,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.263704538345337,
+          "x": 984,
+          "y": 966,
+          "index": 10,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.280489921569824,
+          "x": 992,
+          "y": 963,
+          "index": 11,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.297339916229248,
+          "x": 1001,
+          "y": 960,
+          "index": 12,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.314093112945557,
+          "x": 1009,
+          "y": 956,
+          "index": 13,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.330958604812622,
+          "x": 1018,
+          "y": 953,
+          "index": 14,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.347790718078613,
+          "x": 1026,
+          "y": 950,
+          "index": 15,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.364496946334839,
+          "x": 1034,
+          "y": 946,
+          "index": 16,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.381335258483887,
+          "x": 1043,
+          "y": 943,
+          "index": 17,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.398201942443848,
+          "x": 1051,
+          "y": 939,
+          "index": 18,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.414998769760132,
+          "x": 1060,
+          "y": 936,
+          "index": 19,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.43172812461853,
+          "x": 1068,
+          "y": 933,
+          "index": 20,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.448609352111816,
+          "x": 1076,
+          "y": 929,
+          "index": 21,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.465374946594238,
+          "x": 1085,
+          "y": 926,
+          "index": 22,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.482163906097412,
+          "x": 1093,
+          "y": 923,
+          "index": 23,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.498938083648682,
+          "x": 1102,
+          "y": 919,
+          "index": 24,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.5159525871276855,
+          "x": 1110,
+          "y": 916,
+          "index": 25,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.532594919204712,
+          "x": 1118,
+          "y": 913,
+          "index": 26,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.5494163036346436,
+          "x": 1127,
+          "y": 909,
+          "index": 27,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.566216230392456,
+          "x": 1135,
+          "y": 906,
+          "index": 28,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.583068132400513,
+          "x": 1144,
+          "y": 903,
+          "index": 29,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.599886655807495,
+          "x": 1152,
+          "y": 899,
+          "index": 30,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.616649150848389,
+          "x": 1161,
+          "y": 896,
+          "index": 31,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.6334919929504395,
+          "x": 1169,
+          "y": 892,
+          "index": 32,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.650299310684204,
+          "x": 1177,
+          "y": 889,
+          "index": 33,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.6670613288879395,
+          "x": 1186,
+          "y": 886,
+          "index": 34,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.683874845504761,
+          "x": 1194,
+          "y": 882,
+          "index": 35,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.700676202774048,
+          "x": 1203,
+          "y": 879,
+          "index": 36,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.71750545501709,
+          "x": 1211,
+          "y": 876,
+          "index": 37,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.7343056201934814,
+          "x": 1219,
+          "y": 872,
+          "index": 38,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.75109076499939,
+          "x": 1228,
+          "y": 869,
+          "index": 39,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.7679150104522705,
+          "x": 1236,
+          "y": 866,
+          "index": 40,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.784775257110596,
+          "x": 1245,
+          "y": 862,
+          "index": 41,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.801462650299072,
+          "x": 1253,
+          "y": 859,
+          "index": 42,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.818323612213135,
+          "x": 1261,
+          "y": 855,
+          "index": 43,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.835261821746826,
+          "x": 1270,
+          "y": 852,
+          "index": 44,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.851954460144043,
+          "x": 1278,
+          "y": 849,
+          "index": 45,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.868699312210083,
+          "x": 1287,
+          "y": 845,
+          "index": 46,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.885558128356934,
+          "x": 1295,
+          "y": 842,
+          "index": 47,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.902345418930054,
+          "x": 1303,
+          "y": 839,
+          "index": 48,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.919182538986206,
+          "x": 1312,
+          "y": 835,
+          "index": 49,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.935916423797607,
+          "x": 1320,
+          "y": 832,
+          "index": 50,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.95287823677063,
+          "x": 1329,
+          "y": 829,
+          "index": 51,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.969626188278198,
+          "x": 1337,
+          "y": 825,
+          "index": 52,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.986362457275391,
+          "x": 1345,
+          "y": 822,
+          "index": 53,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.003180265426636,
+          "x": 1354,
+          "y": 818,
+          "index": 54,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.019997835159302,
+          "x": 1362,
+          "y": 815,
+          "index": 55,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.0368335247039795,
+          "x": 1371,
+          "y": 812,
+          "index": 56,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.053625106811523,
+          "x": 1379,
+          "y": 808,
+          "index": 57,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.070420026779175,
+          "x": 1387,
+          "y": 805,
+          "index": 58,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.087305784225464,
+          "x": 1396,
+          "y": 802,
+          "index": 59,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.10403037071228,
+          "x": 1404,
+          "y": 798,
+          "index": 60,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.120849847793579,
+          "x": 1413,
+          "y": 795,
+          "index": 61,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.137685775756836,
+          "x": 1421,
+          "y": 792,
+          "index": 62,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.15446400642395,
+          "x": 1429,
+          "y": 788,
+          "index": 63,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.171284914016724,
+          "x": 1438,
+          "y": 785,
+          "index": 64,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.188089370727539,
+          "x": 1446,
+          "y": 782,
+          "index": 65,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.2048938274383545,
+          "x": 1455,
+          "y": 778,
+          "index": 66,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.22192907333374,
+          "x": 1463,
+          "y": 775,
+          "index": 67,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.23848557472229,
+          "x": 1471,
+          "y": 771,
+          "index": 68,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.255269527435303,
+          "x": 1480,
+          "y": 768,
+          "index": 69,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.272104740142822,
+          "x": 1488,
+          "y": 765,
+          "index": 70,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.288894176483154,
+          "x": 1497,
+          "y": 761,
+          "index": 71,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.305669784545898,
+          "x": 1505,
+          "y": 758,
+          "index": 72,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.322514057159424,
+          "x": 1513,
+          "y": 755,
+          "index": 73,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.339322328567505,
+          "x": 1522,
+          "y": 751,
+          "index": 74,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.356104135513306,
+          "x": 1530,
+          "y": 748,
+          "index": 75,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.372870206832886,
+          "x": 1539,
+          "y": 745,
+          "index": 76,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.389783620834351,
+          "x": 1547,
+          "y": 741,
+          "index": 77,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.406556129455566,
+          "x": 1555,
+          "y": 738,
+          "index": 78,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.423324823379517,
+          "x": 1564,
+          "y": 734,
+          "index": 79,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.440143346786499,
+          "x": 1572,
+          "y": 731,
+          "index": 80,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.456970930099487,
+          "x": 1581,
+          "y": 728,
+          "index": 81,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.4737548828125,
+          "x": 1589,
+          "y": 724,
+          "index": 82,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.49051570892334,
+          "x": 1597,
+          "y": 721,
+          "index": 83,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.507329702377319,
+          "x": 1606,
+          "y": 718,
+          "index": 84,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.524201393127441,
+          "x": 1614,
+          "y": 714,
+          "index": 85,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.541008949279785,
+          "x": 1623,
+          "y": 711,
+          "index": 86,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.557774066925049,
+          "x": 1631,
+          "y": 708,
+          "index": 87,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.574645519256592,
+          "x": 1639,
+          "y": 704,
+          "index": 88,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.591447114944458,
+          "x": 1648,
+          "y": 701,
+          "index": 89,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.608207702636719,
+          "x": 1656,
+          "y": 697,
+          "index": 90,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.624993801116943,
+          "x": 1665,
+          "y": 694,
+          "index": 91,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.641845703125,
+          "x": 1673,
+          "y": 691,
+          "index": 92,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.65867280960083,
+          "x": 1682,
+          "y": 687,
+          "index": 93,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.6754090785980225,
+          "x": 1690,
+          "y": 684,
+          "index": 94,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.692249774932861,
+          "x": 1698,
+          "y": 681,
+          "index": 95,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.709053993225098,
+          "x": 1707,
+          "y": 677,
+          "index": 96,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.72588038444519,
+          "x": 1715,
+          "y": 674,
+          "index": 97,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.7426183223724365,
+          "x": 1724,
+          "y": 671,
+          "index": 98,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.759505033493042,
+          "x": 1732,
+          "y": 667,
+          "index": 99,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.7763426303863525,
+          "x": 1740,
+          "y": 664,
+          "index": 100,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.793140411376953,
+          "x": 1749,
+          "y": 661,
+          "index": 101,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.8099071979522705,
+          "x": 1757,
+          "y": 657,
+          "index": 102,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.8267107009887695,
+          "x": 1766,
+          "y": 654,
+          "index": 103,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.843485593795776,
+          "x": 1774,
+          "y": 650,
+          "index": 104,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.860311031341553,
+          "x": 1782,
+          "y": 647,
+          "index": 105,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.877131938934326,
+          "x": 1791,
+          "y": 644,
+          "index": 106,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.89397931098938,
+          "x": 1799,
+          "y": 640,
+          "index": 107,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.910771369934082,
+          "x": 1808,
+          "y": 637,
+          "index": 108,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.927537202835083,
+          "x": 1816,
+          "y": 634,
+          "index": 109,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.94429874420166,
+          "x": 1824,
+          "y": 630,
+          "index": 110,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.961256265640259,
+          "x": 1833,
+          "y": 627,
+          "index": 111,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.977943658828735,
+          "x": 1841,
+          "y": 624,
+          "index": 112,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.994738340377808,
+          "x": 1850,
+          "y": 620,
+          "index": 113,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 7.011575937271118,
+          "x": 1858,
+          "y": 617,
+          "index": 114,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 7.028368234634399,
+          "x": 1866,
+          "y": 613,
+          "index": 115,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 7.045196771621704,
+          "x": 1875,
+          "y": 610,
+          "index": 116,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 7.0619730949401855,
+          "x": 1883,
+          "y": 607,
+          "index": 117,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 7.078843832015991,
+          "x": 1892,
+          "y": 603,
+          "index": 118,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 7.095710515975952,
+          "x": 1900,
+          "y": 600,
+          "index": 119,
+          "phase": "arrow",
+          "label": "Recorded input position"
+        }
+      ],
+      "before": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 0,
+        "green_pixels": 0,
+        "sha256": "ec971f7c8b42202f988e24d3a776421cfb4c9e8f03b9d112f75929a18c9b8fd1"
+      },
+      "after": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 2147,
+        "green_pixels": 0,
+        "sha256": "b19c1084859ce2444c5efdb806cff7758a75341893f91fe56cdb1bfee6c7de40"
+      },
+      "saved_outputs": [],
+      "save_verified": false,
+      "scope": "Actual unmodified full application. Ctrl+PrintScreen region overlay then A or F and the same120 screen-coordinate points over2seconds. Default annotation style differs. Not a quality-matched latency or UI-frame-rate benchmark."
+    },
+    {
+      "engine": "sharex22",
+      "case": "freehand",
+      "source_folder": "editor-region/sharex22-freehand-20261118-031944",
+      "source_video": "actual-ui.mkv",
+      "raw_report": "editor-region-result.json",
+      "application": {
+        "fresh_task_owned_profile": true,
+        "version": "22.4.0",
+        "unmodified_exe": true,
+        "exe": "C:/ZipshotLab/work/editor-stock22-app/ShareX.exe",
+        "sha256": "FFD20C30384B2DA771EDC56BFCA74CB0B9FA4888385D1166FE93DF9FE9D871BD",
+        "display": [
+          2982,
+          1672
+        ],
+        "pid": 1408
+      },
+      "overlay": {
+        "hwnd": 5833068,
+        "title": "Region capture",
+        "cls": "Avalonia-00d13a27-3737-4d73-b473-0ea06aa70273",
+        "left": 0,
+        "top": 0,
+        "right": 2982,
+        "bottom": 1672
+      },
+      "video": {
+        "first_pts": 1795000791.833,
+        "last_pts": 1795000803.167,
+        "file": "actual-ui.mkv",
+        "cursor_drawn_by_observer": true,
+        "observed_pts_fps": 18.881242095574336,
+        "time_policy": "Actual real-time 1x, normalize epoch origin only",
+        "capture_crop": [
+          0,
+          0,
+          2982,
+          1672
+        ],
+        "frame_count": 215,
+        "capture_requested_fps": 30,
+        "epoch_pts": true,
+        "bytes": 5339299,
+        "capture_codec": "libx264rgb lossless, threads2, passthrough PTS",
+        "sha256": "9FFDA7045046A96007AAEB016DED266FACD179A0BEF9DDF9573BE1054C377CD2"
+      },
+      "real_duration_s": 11.33400011062622,
+      "offsets": {
+        "region_hotkey_s": 0.8385264873504639,
+        "tool_key_s": 4.634964466094971,
+        "stroke_phase_s": 4.911869764328003,
+        "actual_button_down_s": 4.916247129440308,
+        "first_move_s": 4.9081339836120605,
+        "last_move_s": 6.912030220031738
+      },
+      "phases": [
+        {
+          "name": "freehand",
+          "kind": "freehand",
+          "video_offset_s": 4.911869764328003,
+          "duration_s": 2.0007895
+        }
+      ],
+      "recorded_input_overlay": [
+        {
+          "seconds": 4.9081339836120605,
+          "x": 900,
+          "y": 800,
+          "index": 0,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.0132317543029785,
+          "x": 908,
+          "y": 827,
+          "index": 1,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.0136377811431885,
+          "x": 917,
+          "y": 853,
+          "index": 2,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.015300989151001,
+          "x": 925,
+          "y": 878,
+          "index": 3,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.015854835510254,
+          "x": 934,
+          "y": 901,
+          "index": 4,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.016108989715576,
+          "x": 942,
+          "y": 921,
+          "index": 5,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.016355037689209,
+          "x": 950,
+          "y": 938,
+          "index": 6,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.029753923416138,
+          "x": 959,
+          "y": 952,
+          "index": 7,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.046579360961914,
+          "x": 967,
+          "y": 962,
+          "index": 8,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.063425064086914,
+          "x": 976,
+          "y": 968,
+          "index": 9,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.080021858215332,
+          "x": 984,
+          "y": 970,
+          "index": 10,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.096928358078003,
+          "x": 992,
+          "y": 968,
+          "index": 11,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.113779067993164,
+          "x": 1001,
+          "y": 961,
+          "index": 12,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.130599737167358,
+          "x": 1009,
+          "y": 950,
+          "index": 13,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.1472859382629395,
+          "x": 1018,
+          "y": 936,
+          "index": 14,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.164184093475342,
+          "x": 1026,
+          "y": 918,
+          "index": 15,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.18097710609436,
+          "x": 1034,
+          "y": 897,
+          "index": 16,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.197738409042358,
+          "x": 1043,
+          "y": 874,
+          "index": 17,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.21457314491272,
+          "x": 1051,
+          "y": 849,
+          "index": 18,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.231435298919678,
+          "x": 1060,
+          "y": 822,
+          "index": 19,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.248207092285156,
+          "x": 1068,
+          "y": 796,
+          "index": 20,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.264992713928223,
+          "x": 1076,
+          "y": 769,
+          "index": 21,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.281871795654297,
+          "x": 1085,
+          "y": 743,
+          "index": 22,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.298583269119263,
+          "x": 1093,
+          "y": 718,
+          "index": 23,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.315519332885742,
+          "x": 1102,
+          "y": 696,
+          "index": 24,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.332246780395508,
+          "x": 1110,
+          "y": 676,
+          "index": 25,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.349029064178467,
+          "x": 1118,
+          "y": 659,
+          "index": 26,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.365800857543945,
+          "x": 1127,
+          "y": 646,
+          "index": 27,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.382657527923584,
+          "x": 1135,
+          "y": 636,
+          "index": 28,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.39956259727478,
+          "x": 1144,
+          "y": 631,
+          "index": 29,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.4162750244140625,
+          "x": 1152,
+          "y": 630,
+          "index": 30,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.4330315589904785,
+          "x": 1161,
+          "y": 633,
+          "index": 31,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.449894666671753,
+          "x": 1169,
+          "y": 641,
+          "index": 32,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.466795444488525,
+          "x": 1177,
+          "y": 652,
+          "index": 33,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.483438014984131,
+          "x": 1186,
+          "y": 667,
+          "index": 34,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.500241041183472,
+          "x": 1194,
+          "y": 685,
+          "index": 35,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.51704216003418,
+          "x": 1203,
+          "y": 707,
+          "index": 36,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.533985137939453,
+          "x": 1211,
+          "y": 730,
+          "index": 37,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.5506815910339355,
+          "x": 1219,
+          "y": 756,
+          "index": 38,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.567522764205933,
+          "x": 1228,
+          "y": 782,
+          "index": 39,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.584329843521118,
+          "x": 1236,
+          "y": 809,
+          "index": 40,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.601129055023193,
+          "x": 1245,
+          "y": 836,
+          "index": 41,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.617979049682617,
+          "x": 1253,
+          "y": 861,
+          "index": 42,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.634725093841553,
+          "x": 1261,
+          "y": 886,
+          "index": 43,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.651686429977417,
+          "x": 1270,
+          "y": 908,
+          "index": 44,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.668396949768066,
+          "x": 1278,
+          "y": 927,
+          "index": 45,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.685139417648315,
+          "x": 1287,
+          "y": 943,
+          "index": 46,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.702047348022461,
+          "x": 1295,
+          "y": 956,
+          "index": 47,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.718859672546387,
+          "x": 1303,
+          "y": 965,
+          "index": 48,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.7356507778167725,
+          "x": 1312,
+          "y": 969,
+          "index": 49,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.752441644668579,
+          "x": 1320,
+          "y": 970,
+          "index": 50,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.7692296504974365,
+          "x": 1329,
+          "y": 966,
+          "index": 51,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.786120653152466,
+          "x": 1337,
+          "y": 958,
+          "index": 52,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.802858114242554,
+          "x": 1345,
+          "y": 946,
+          "index": 53,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.819776296615601,
+          "x": 1354,
+          "y": 930,
+          "index": 54,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.836437940597534,
+          "x": 1362,
+          "y": 911,
+          "index": 55,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.853256464004517,
+          "x": 1371,
+          "y": 889,
+          "index": 56,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.870023965835571,
+          "x": 1379,
+          "y": 866,
+          "index": 57,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.8869218826293945,
+          "x": 1387,
+          "y": 840,
+          "index": 58,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.903682231903076,
+          "x": 1396,
+          "y": 813,
+          "index": 59,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.920469045639038,
+          "x": 1404,
+          "y": 787,
+          "index": 60,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.9372618198394775,
+          "x": 1413,
+          "y": 760,
+          "index": 61,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.9541356563568115,
+          "x": 1421,
+          "y": 734,
+          "index": 62,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.9709312915802,
+          "x": 1429,
+          "y": 711,
+          "index": 63,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 5.987659692764282,
+          "x": 1438,
+          "y": 689,
+          "index": 64,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.004523277282715,
+          "x": 1446,
+          "y": 670,
+          "index": 65,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.02131199836731,
+          "x": 1455,
+          "y": 654,
+          "index": 66,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.038098573684692,
+          "x": 1463,
+          "y": 642,
+          "index": 67,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.054860353469849,
+          "x": 1471,
+          "y": 634,
+          "index": 68,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.071722030639648,
+          "x": 1480,
+          "y": 630,
+          "index": 69,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.088564395904541,
+          "x": 1488,
+          "y": 631,
+          "index": 70,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.105321645736694,
+          "x": 1497,
+          "y": 635,
+          "index": 71,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.122113943099976,
+          "x": 1505,
+          "y": 644,
+          "index": 72,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.138927221298218,
+          "x": 1513,
+          "y": 657,
+          "index": 73,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.1558356285095215,
+          "x": 1522,
+          "y": 673,
+          "index": 74,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.172522783279419,
+          "x": 1530,
+          "y": 692,
+          "index": 75,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.189317941665649,
+          "x": 1539,
+          "y": 714,
+          "index": 76,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.206197261810303,
+          "x": 1547,
+          "y": 739,
+          "index": 77,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.222992420196533,
+          "x": 1555,
+          "y": 764,
+          "index": 78,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.239711046218872,
+          "x": 1564,
+          "y": 791,
+          "index": 79,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.25652289390564,
+          "x": 1572,
+          "y": 818,
+          "index": 80,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.273561716079712,
+          "x": 1581,
+          "y": 844,
+          "index": 81,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.2901952266693115,
+          "x": 1589,
+          "y": 870,
+          "index": 82,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.306994676589966,
+          "x": 1597,
+          "y": 893,
+          "index": 83,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.32398247718811,
+          "x": 1606,
+          "y": 915,
+          "index": 84,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.340623140335083,
+          "x": 1614,
+          "y": 933,
+          "index": 85,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.357430934906006,
+          "x": 1623,
+          "y": 948,
+          "index": 86,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.374212980270386,
+          "x": 1631,
+          "y": 959,
+          "index": 87,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.391052961349487,
+          "x": 1639,
+          "y": 967,
+          "index": 88,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.407759666442871,
+          "x": 1648,
+          "y": 970,
+          "index": 89,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.4245898723602295,
+          "x": 1656,
+          "y": 969,
+          "index": 90,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.441509962081909,
+          "x": 1665,
+          "y": 964,
+          "index": 91,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.458266496658325,
+          "x": 1673,
+          "y": 954,
+          "index": 92,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.475073337554932,
+          "x": 1682,
+          "y": 941,
+          "index": 93,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.492033958435059,
+          "x": 1690,
+          "y": 924,
+          "index": 94,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.508687257766724,
+          "x": 1698,
+          "y": 904,
+          "index": 95,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.525438070297241,
+          "x": 1707,
+          "y": 882,
+          "index": 96,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.542359113693237,
+          "x": 1715,
+          "y": 857,
+          "index": 97,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.559196472167969,
+          "x": 1724,
+          "y": 831,
+          "index": 98,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.5759148597717285,
+          "x": 1732,
+          "y": 804,
+          "index": 99,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.592699766159058,
+          "x": 1740,
+          "y": 778,
+          "index": 100,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.6095757484436035,
+          "x": 1749,
+          "y": 751,
+          "index": 101,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.626394748687744,
+          "x": 1757,
+          "y": 726,
+          "index": 102,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.643105745315552,
+          "x": 1766,
+          "y": 703,
+          "index": 103,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.659958124160767,
+          "x": 1774,
+          "y": 682,
+          "index": 104,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.676769971847534,
+          "x": 1782,
+          "y": 664,
+          "index": 105,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.693555593490601,
+          "x": 1791,
+          "y": 650,
+          "index": 106,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.710324764251709,
+          "x": 1799,
+          "y": 639,
+          "index": 107,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.727155685424805,
+          "x": 1808,
+          "y": 632,
+          "index": 108,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.744060277938843,
+          "x": 1816,
+          "y": 630,
+          "index": 109,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.760798931121826,
+          "x": 1824,
+          "y": 632,
+          "index": 110,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.77759313583374,
+          "x": 1833,
+          "y": 638,
+          "index": 111,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.794416189193726,
+          "x": 1841,
+          "y": 648,
+          "index": 112,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.8112852573394775,
+          "x": 1850,
+          "y": 662,
+          "index": 113,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.827973365783691,
+          "x": 1858,
+          "y": 679,
+          "index": 114,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.844806671142578,
+          "x": 1866,
+          "y": 699,
+          "index": 115,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.86163854598999,
+          "x": 1875,
+          "y": 722,
+          "index": 116,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.878469705581665,
+          "x": 1883,
+          "y": 747,
+          "index": 117,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.895245552062988,
+          "x": 1892,
+          "y": 773,
+          "index": 118,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        },
+        {
+          "seconds": 6.912030220031738,
+          "x": 1900,
+          "y": 800,
+          "index": 119,
+          "phase": "freehand",
+          "label": "Recorded input position"
+        }
+      ],
+      "before": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 0,
+        "green_pixels": 0,
+        "sha256": "795cbde5799a0fbb8ed9690c8064f038c045d42570dbd762ba07defff8c5092f"
+      },
+      "after": {
+        "dimensions": [
+          2982,
+          1672
+        ],
+        "red_pixels": 8604,
+        "green_pixels": 0,
+        "sha256": "76eb5227a4e94dd5c00e237fa048cbd322ea2fe422a1c4b5e9c856c3400924db"
+      },
+      "saved_outputs": [],
+      "save_verified": false,
+      "scope": "Actual unmodified full application. Ctrl+PrintScreen region overlay then A or F and the same120 screen-coordinate points over2seconds. Default annotation style differs. Not a quality-matched latency or UI-frame-rate benchmark."
+    }
+  ]
+}

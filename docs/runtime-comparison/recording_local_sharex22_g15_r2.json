@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "scope": "Official unmodified ShareX 22.4.0 full GUI, actual default native recorder, controlled through supported CLI tasks in a clean Windows Sandbox.",
+  "io_note": "Hot media and settings are guest-local; completed files are copied to the host task mapping after process sampling.",
+  "executable_location": "local",
+  "logical_processors": 32,
+  "fixture_tick_origin": [
+    32,
+    32
+  ],
+  "cases": [
+    {
+      "name": "sharex22-gif15-native-hardware",
+      "timed_out": false,
+      "failure": null,
+      "cleanup_note": null,
+      "wall_seconds": 68.9807105,
+      "sampling_seconds": {
+        "median": 0.20638729999999939,
+        "max": 0.5686175999999961,
+        "count": 327
+      },
+      "valid_media_count": 1,
+      "has_verified_moving_media": true,
+      "long_clip_data_ready": true,
+      "comparison_note": "Media validity and duration do not establish a codec quality match or a general performance ranking.",
+      "parent_cpu_seconds": 45.90625,
+      "ffmpeg_descendants_cpu_seconds": 0,
+      "tree_cpu_seconds": 45.90625,
+      "tree_peak_concurrent_private_bytes": 212844544,
+      "tree_peak_concurrent_working_set_bytes": 295051264,
+      "parent_peak_sampled_private_bytes": 212844544,
+      "parent_peak_sampled_working_set_bytes": 295051264,
+      "children_peak_concurrent_private_bytes": 0,
+      "children_peak_concurrent_working_set_bytes": 0,
+      "first_successful_capture_child_observed_seconds": null,
+      "steady_capture": null,
+      "native_request_to_file_window": {
+        "observed_seconds": 66.9768215,
+        "cpu_seconds": 44.375,
+        "one_core_percent": 66.25426379781251,
+        "guest_machine_percent": 2.070445743681641,
+        "scope": "Observed product native-record request through completed-file observation. Includes setup bar, preparation and finalization; this is not a pure steady encoder interval."
+      },
+      "native_result": {
+        "encoder": "ShareX adaptive GIF encoder",
+        "audio_discontinuities": 0,
+        "hardware_accelerated": false,
+        "video_frames": 450,
+        "dropped_video_frames": 0
+      },
+      "native_result_source": "guest_recording_result",
+      "configured_profile": "native-hardware",
+      "configured_bitrate_kbps": 10000,
+      "successful_ffmpeg_capture_backends": [],
+      "software_preset": null,
+      "process_memory_peaks": [
+        {
+          "pid": 3504,
+          "role": "parent",
+          "cpu_seconds": 45.90625,
+          "peak_sampled_private_bytes": 212844544,
+          "peak_sampled_working_set_bytes": 295051264
+        }
+      ],
+      "phase_breakdown": {
+        "capture_children_cpu_seconds": 0,
+        "conversion_children_cpu_seconds": 0,
+        "other_or_failed_children_cpu_seconds": 0,
+        "capture_child_last_alive_observed_seconds": null,
+        "conversion_children_observed_span_seconds": null,
+        "post_capture_to_process_exit_seconds": null,
+        "note": "Child CPU totals use retained handles. Phase boundaries and conversion spans use approximately 200ms observations; muxer finalization inside the capture child is not separately exposed."
+      },
+      "gpu": {
+        "status": "counter_available_no_owned_process_samples",
+        "per_engine_sum_for_owned_pids": {},
+        "note": "Different engines must not be summed into a single physical-GPU utilization percentage."
+      },
+      "processes": [
+        {
+          "pid": 3504,
+          "parent": 0,
+          "name": "parent",
+          "cpu_seconds": 45.90625,
+          "cpu_user_seconds": 41.6875,
+          "cpu_kernel_seconds": 4.21875,
+          "private_bytes": 181374976,
+          "working_set_bytes": 272142336,
+          "peak_working_set_bytes": 296787968,
+          "alive": false,
+          "exit_code": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "relative_path": "sharex22-gif15-native-hardware\\hjh9lvHQAG.gif",
+          "ffprobe_exit": 0,
+          "bytes": 5100548,
+          "ffprobe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "gif",
+                "width": 1920,
+                "height": 1080,
+                "pix_fmt": "bgra",
+                "r_frame_rate": "15/1",
+                "avg_frame_rate": "10/1",
+                "duration": "30.000000",
+                "nb_read_frames": "296"
+              }
+            ],
+            "format": {
+              "duration": "30.000000",
+              "size": "5100548",
+              "bit_rate": "1360146"
+            }
+          },
+          "sha256": "aac3bea146aa1386024026e594ee5e94463ec7e14ae719f3251a18a93d9432c3",
+          "fixture_tick": {
+            "status": "decoded",
+            "full_decode_clean": true,
+            "frames": 296,
+            "first_tick": 159,
+            "last_tick": 1056,
+            "ambiguous_frames": 0,
+            "repeated_tick_transitions": 1,
+            "tick_jumps_over_one": 294,
+            "implausible_transitions": 0,
+            "unique_ticks": 295,
+            "deltas": {
+              "0": 1,
+              "2": 64,
+              "3": 184,
+              "4": 24,
+              "5": 12,
+              "6": 9,
+              "7": 1
+            },
+            "interpretation": "Fixture is 30Hz. Repeated ticks are expected at 60fps, and jumps of two are expected at 15fps. These are fixture presentation observations, not an encoder internal dropped-frame counter."
+          },
+          "file_validation": {
+            "codec": "gif",
+            "width": 1920,
+            "height": 1080,
+            "decoded_frames": 296,
+            "expected_dimensions_and_decodable_frames": true
+          }
+        }
+      ]
+    }
+  ]
+}
