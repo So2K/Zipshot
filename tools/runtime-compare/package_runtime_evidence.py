@@ -2,6 +2,7 @@
 import hashlib
 import json
 import re
+import subprocess
 import sys
 import zipfile
 from datetime import datetime, timezone
@@ -14,8 +15,8 @@ RECORDING = Path("J:/TerraMaster/SSD1/Files/Zipshot/runtime-compare-20261118/rec
 OUT = ROOT / "build/runtime-release"
 ZIP = OUT / "Zipshot-runtime-evidence-20261118.zip"
 REPORT = OUT / "evidence-build.json"
-ALLOWED = {".md", ".txt", ".log", ".json", ".jsonl", ".csv", ".tsv", ".ini", ".cfg", ".xml", ".svg", ".png", ".bmp", ".mp4", ".mkv", ".gif", ".wav", ".py", ".ps1", ".psm1", ".cpp", ".c", ".h", ".hpp", ".cs", ".bat", ".yml", ".yaml"}
-TEXT = ALLOWED - {".png", ".bmp", ".mp4", ".mkv", ".gif", ".wav"}
+ALLOWED = {".md", ".txt", ".log", ".json", ".jsonl", ".csv", ".tsv", ".ini", ".cfg", ".xml", ".svg", ".png", ".bmp", ".mp4", ".mkv", ".gif", ".py", ".ps1", ".psm1", ".cpp", ".c", ".h", ".hpp", ".cs", ".bat", ".yml", ".yaml"}
+TEXT = ALLOWED - {".png", ".bmp", ".mp4", ".mkv", ".gif"}
 BAD_DIRS = {"app", "runtime", "vendor", "sharex-runtime", "__pycache__", ".git", "node_modules"}
 BAD_NAMES = {"host-session.json", "guest-ready.json", "capture_state.md", "capture-coordination.md", "film-manifest.json", "runtime-ru.srt", "zipshot-runtime-comparison.mp4"}
 SECRET = {
@@ -44,6 +45,7 @@ def read(path):
 class Build:
     def __init__(self):
         self.files = {}; self.excluded = []; self.verified = []; self.findings = []
+        self.silent_containers_checked = 0
         self.counts = {"capture_baseline_blocks": 0, "capture_v02_recordings": 0, "editor_standalone_runs": 0, "editor_region_runs": 0, "recording_manifest_files_checked": 0}
 
     def add(self, source, member, origin, raw=False, expected=None):
@@ -171,12 +173,24 @@ class Build:
         self.scan()
         if self.findings:
             raise RuntimeError("Private/secret text scan failed; see locations in evidence-build.json")
+        checked = set()
+        for entry in self.files.values():
+            if entry["source"].suffix.lower() not in (".mp4", ".mkv") or entry["sha256"] in checked:
+                continue
+            result = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type", "-of", "json", str(entry["source"])], capture_output=True, timeout=30)
+            if result.returncode:
+                raise RuntimeError("Cannot verify silent video container: " + entry["member"])
+            streams = json.loads(result.stdout).get("streams", [])
+            if any(stream.get("codec_type") == "audio" for stream in streams):
+                raise RuntimeError("Forbidden audio stream in public media: " + entry["member"])
+            checked.add(entry["sha256"])
+            self.silent_containers_checked += 1
         index={"schema_version":1,"scope":"Original accepted isolated-lab evidence and frozen source/report/microclip snapshots. No vendor binaries or host session data.","counts":self.counts,"files":[{"path":e["member"],"source":e["origin"],"bytes":e["bytes"],"sha256":e["sha256"]} for e in self.files.values()],"excluded":self.excluded}
         readme="""# Zipshot runtime evidence, 2026-11-18
 
 Repository and report https://github.com/So2K/Zipshot and https://github.com/So2K/Zipshot/blob/main/docs/runtime-comparison/README.md
 
-repository/ contains frozen reports, source tools and derived runtime microclips/charts. The full film, its manifest and runtime subtitles are separate release assets and are not in this archive.
+repository/ contains frozen reports, source tools and derived runtime microclips/charts. The silent montage and its manifest are separate release assets and are not in this archive. Audio files and video audio streams are forbidden in public media.
 original/session02/output/ preserves accepted original lab paths and bytes for all 12 capture baseline blocks, the four cap-v02 recordings, 16 standalone editor runs, four region-overlay runs and recording datasets. Original resource/process snapshots, JSON, CSV, logs, PNG/BMP proofs and source MKV/MP4/GIF files are included.
 original/session02/jobs/ and recording-job-metadata/ contain task-only run arguments and outcomes. config-snapshots/ and config-snapshot/ preserve task INI data outside excluded app directories. Effective per-run settings are also recorded in raw metadata and source wrappers.
 original/recording-archive-manifest.json is the existing verified recording archive index. EVIDENCE-SOURCES.json maps every included ZIP path to its original logical source path, byte count and SHA-256. Source D-drive and recording J-drive copies remain intact.
@@ -197,7 +211,7 @@ App/runtime/vendor directories and executables, DLLs, PDBs, VM/RDP/host-session 
                 if h.hexdigest()!=entry["sha256"]:raise RuntimeError("Full ZIP hash verification failed: "+name)
             if archive.testzip() is not None:raise RuntimeError("ZIP CRC verification failed")
         temporary.replace(ZIP)
-        return {"status":"complete","zip_file":ZIP.name,"bytes":ZIP.stat().st_size,"sha256":sha(ZIP),"file_count":len(self.files)+2,"source_file_count":len(self.files),"uncompressed_source_bytes":sum(e["bytes"] for e in self.files.values()),"counts":self.counts,"original_manifest_hash_checks":len(self.verified),"full_zip_decompression_sha256_verified":True,"zip_crc_verified":True,"text_scan":"passed","private_findings":[],"excluded":self.excluded}
+        return {"status":"complete","zip_file":ZIP.name,"bytes":ZIP.stat().st_size,"sha256":sha(ZIP),"file_count":len(self.files)+2,"source_file_count":len(self.files),"uncompressed_source_bytes":sum(e["bytes"] for e in self.files.values()),"counts":self.counts,"original_manifest_hash_checks":len(self.verified),"full_zip_decompression_sha256_verified":True,"zip_crc_verified":True,"text_scan":"passed","audio_policy":"no audio files or audio streams","silent_video_containers_checked":self.silent_containers_checked,"private_findings":[],"excluded":self.excluded}
 
 
 def main():

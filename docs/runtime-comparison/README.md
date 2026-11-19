@@ -1,24 +1,14 @@
 # Zipshot and ShareX in use
 
-This comparison follows actual capture, drawing and recording work in an isolated Windows Sandbox. It compares the unchanged Zipshot 1.0.1 release with official ShareX 22.4.0. Measurements were collected on November 18, 2026. The older installed ShareX 18.0.1 appears only in clearly separated component tests.
+This comparison follows actual capture, drawing and recording work in an isolated Windows Sandbox. It compares the unchanged Zipshot 1.0.1 release with official ShareX 22.4.0. ShareX's redesigned interface arrived in [22.0.0 on October 20, 2026](https://getsharex.com/changelog#v22.0.0). Measurements were collected on November 18, 2026. The older installed ShareX 18.0.1 appears only in clearly separated component tests.
 
-[![Watch the full runtime comparison](../../media/runtime/runtime-poster.png)](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4)
+[![Watch the silent runtime montage](../../media/runtime/runtime-poster.png)](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4)
 
-[Full comparison MP4](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4) · [Capture results](capture_results.md) · [Editor results](editor_UI_RESULTS.md) · [Recording results](recording_results.md)
+[Silent montage MP4](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4) · [Capture results](capture_results.md) · [Editor results](editor_UI_RESULTS.md) · [Recording results](recording_results.md)
+
+The montage shows the actual runtime clips without voice, music or a subtitle track.
 
 Zipshot reached the capture endpoints sooner in this guest baseline. The editor clips show real actions with different tool behavior and appearance. Recording profiles are not quality-matched, and the results do not establish a general low-load or GPU advantage. Each conclusion below stays within its measured scenario.
-
-## Draw directly in region capture
-
-![The same freehand path drawn in the actual Zipshot and ShareX Ctrl+PrintScreen overlays](../../media/runtime/editor-region-freehand.gif)
-
-The complete unmodified applications receive a real guest `Ctrl+PrintScreen` through Windows `SendInput`. After an owned foreground full-screen overlay appears, `A` or `F` selects the tool. Each app receives the same 120 screen-coordinate points over two seconds. Both arrows and freehand paths were visibly checked in four original recordings.
-
-These are synthetic OS mouse/key events inside the guest, not physical hardware input. The GDI observer includes the actual guest cursor. The apps use their defaults, including Zipshot's green and ShareX's red, so color, width, shadow and smoothing are not quality-matched.
-
-The full-display source recordings contain about 17.7–22.7 frames per second. They show the actual workflow at 1× and do not establish input latency or UI frame rate. The pause before drawing includes controller setup and a separate screenshot readback. It is not app waiting time. Edited clips may trim setup or hold a labelled final result without changing the speed of the action.
-
-[Region source manifest and exact hotkey/tool/button offsets](editor_region_runs.json) · [Detailed checks and save limits](editor_UI_RESULTS.md#drawing-immediately-after-ctrlprintscreen)
 
 ## Capture endpoints
 
@@ -34,17 +24,31 @@ The statistical baseline has 30 measured trials per app and scenario, collected 
 | First observed valid clipboard image | 300.4 ms | 372.9 ms | 447.6 ms | 549.8 ms |
 | First observed closed, readable PNG | 341.3 ms | 403.3 ms | 529.5 ms | 622.7 ms |
 
+In this Windows Sandbox baseline, Zipshot had about 36% shorter median PNG wait and 33% shorter median clipboard-image wait, with 30 measured calls per app and scenario.
+
+![Median and p95 capture results with the visible timing brackets](../../media/runtime/capture-latency.png)
+
 The visible bracket runs from the start of the last unchanged desktop readback to the end of the first changed readback. Median bracket widths were 53.5 ms and 56.5 ms. Clipboard and file values include polling and image validation overhead. All full-capture outputs had the actual 2982×1672 desktop dimensions.
 
 No FFmpeg recorder ran during these baseline blocks. The persistent GDI observer checked a defined 1280×720 ROI and required product-window evidence. A first changed ROI does not establish that every control is ready or that a physical monitor has displayed the frame.
 
 Zipshot excludes its notification from screen capture through `WDA_EXCLUDEFROMCAPTURE`. Its toast was therefore unobservable in the screen-readback endpoint. The demo labels its genuine saved-PNG preview separately. No fake notification, zero-latency value or comparative toast-speed claim is substituted.
 
-![Median and p95 capture results with the visible timing brackets](../../media/runtime/capture-latency.png)
-
 ![Individual capture trials and observer timing bounds](../../media/runtime/capture-traces.png)
 
 [Full capture report](capture_results.md) · [Chart SVG](../../media/runtime/capture-latency.svg) · [Trial-trace SVG](../../media/runtime/capture-traces.svg) · [Grouped JSON and source hashes](capture_baseline.json) · [All trials CSV](capture_trials.csv) · [All observer readbacks CSV](capture_frames.csv)
+
+## Draw directly in region capture
+
+![The same freehand path drawn in the actual Zipshot and ShareX Ctrl+PrintScreen overlays](../../media/runtime/editor-region-freehand.gif)
+
+The complete unmodified applications receive a real guest `Ctrl+PrintScreen` through Windows `SendInput`. After an owned foreground full-screen overlay appears, `A` or `F` selects the tool. Each app receives the same 120 screen-coordinate points over two seconds. Both arrows and freehand paths were visibly checked in four original recordings.
+
+These are synthetic OS mouse/key events inside the guest, not physical hardware input. The GDI observer includes the actual guest cursor. The apps use their defaults, including Zipshot's green and ShareX's red, so color, width, shadow and smoothing are not quality-matched.
+
+The full-display source recordings contain about 17.7–22.7 frames per second. They show the actual workflow at 1× and do not establish input latency or UI frame rate. The pause before drawing includes controller setup and a separate screenshot readback. It is not app waiting time. Edited clips may trim setup or hold a labelled final result without changing the speed of the action.
+
+[Region source manifest and exact hotkey/tool/button offsets](editor_region_runs.json) · [Detailed checks and save limits](editor_UI_RESULTS.md#drawing-immediately-after-ctrlprintscreen)
 
 ## Editor actions and visible results
 
@@ -125,9 +129,9 @@ The per-scenario JSON manifests retain controller, source-output and original vi
 
 ## Reproduce or audit the work
 
-[Download original evidence ZIP](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/Zipshot-runtime-evidence-20261118.zip) · [Verify release SHA-256 hashes](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/SHA256SUMS.txt) · [Russian film subtitles](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/runtime-ru.srt)
+[Download original evidence ZIP](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/Zipshot-runtime-evidence-20261118.zip) · [Verify release SHA-256 hashes](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/SHA256SUMS.txt)
 
-The evidence archive contains the original accepted capture blocks, recorded capture examples, 20 editor runs, recording datasets and process samples, together with a per-file hash manifest. App/vendor binaries, virtual-machine session files and private host data are excluded. The full film is a separate download.
+The evidence archive contains the original accepted capture blocks, recorded capture examples, 20 editor runs, recording datasets and process samples, together with a per-file hash manifest. App/vendor binaries, virtual-machine session files and private host data are excluded. The silent montage is a separate download.
 
 The scripts are in [tools/runtime-compare](../../tools/runtime-compare/). This is an experiment harness with explicit local staging paths, not a single portable benchmark command. Read the [shared protocol](PROTOCOL.md) and scenario protocols before changing paths or running it.
 

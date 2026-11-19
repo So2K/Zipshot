@@ -1,302 +1,170 @@
 {
-  "duration_seconds": 154.9,
+  "schema_version": 2,
+  "duration_seconds": 75.3,
+  "frame_count": 2259,
   "width": 1920,
   "height": 1080,
   "output_fps": 30,
-  "language": "ru",
+  "audio_streams": 0,
+  "subtitle_streams": 0,
   "chapters": [
     {
-      "name": "intro",
-      "start_seconds": 0,
-      "duration_seconds": 14.433333333333334,
-      "source": "runtime-poster.png",
-      "source_duration_seconds": null,
-      "extra_end_hold_seconds": 0,
-      "source_sha256": "9c5b413cc951a49537c4b2a0850af02908c749e446aa8433960fbbd50bb26c6a",
-      "narration": "intro"
-    },
-    {
-      "name": "capture-interface",
-      "start_seconds": 14.433333333333334,
-      "duration_seconds": 4.0,
-      "source": "capture-interface.png",
-      "source_duration_seconds": null,
-      "extra_end_hold_seconds": 0,
-      "source_sha256": "4b3009e0457e286df1ff1c2a6dc1aebd547f6850b1abfe30c3590ade42e5121e",
-      "narration": null
-    },
-    {
-      "name": "region-key",
-      "start_seconds": 18.433333333333334,
-      "duration_seconds": 11.566666666666666,
+      "name": "Region hotkey",
       "source": "hotkey-region.mp4",
-      "source_duration_seconds": 5.5,
-      "extra_end_hold_seconds": 6.066666666666666,
       "source_sha256": "721e43afa67a049cf1c169ddb1e640b044aa2d6fe9b10914b15369db4ebe79d4",
-      "narration": "region"
+      "source_kind": "video",
+      "start_frame": 0,
+      "frame_count": 165,
+      "start_seconds": 0.0,
+      "duration_seconds": 5.5,
+      "extra_end_hold_seconds": 0
     },
     {
-      "name": "png-key",
-      "start_seconds": 30.0,
-      "duration_seconds": 11.733333333333333,
+      "name": "PrintScreen to PNG",
       "source": "hotkey-png.mp4",
-      "source_duration_seconds": 5.5,
-      "extra_end_hold_seconds": 6.2333333333333325,
       "source_sha256": "37ea9ce4fa0f5778bdc9c1d27715d3622a9c0019b489f90c838ad25b53a8a270",
-      "narration": "png"
+      "source_kind": "video",
+      "start_frame": 165,
+      "frame_count": 165,
+      "start_seconds": 5.5,
+      "duration_seconds": 5.5,
+      "extra_end_hold_seconds": 0
     },
     {
-      "name": "region-drawing",
-      "start_seconds": 41.733333333333334,
-      "duration_seconds": 11.033333333333333,
-      "source": "editor-region-freehand.mp4",
-      "source_duration_seconds": 7.7,
-      "extra_end_hold_seconds": 3.333333333333333,
-      "source_sha256": "8d1e7b84b1dbafe9c11ecf0bbb3c39d1d781c03615fdb3f205b76001de1bb3ed",
-      "narration": "pencil"
-    },
-    {
-      "name": "arrow",
-      "start_seconds": 52.766666666666666,
-      "duration_seconds": 7.333333333333333,
-      "source": "editor-arrow.mp4",
-      "source_duration_seconds": 3.833333,
-      "extra_end_hold_seconds": 3.500000333333333,
-      "source_sha256": "3c2faa8a0df1916acbd26db002f34c7d643c99e8cdc10ecda8736df35dc81444",
-      "narration": "arrow"
-    },
-    {
-      "name": "blur",
-      "start_seconds": 60.1,
-      "duration_seconds": 11.9,
-      "source": "editor-blur.mp4",
-      "source_duration_seconds": 6.933333,
-      "extra_end_hold_seconds": 4.966667,
-      "source_sha256": "0599f6d6bbd980cfddf797e02d2237e96684890e9e9342c2d26bd2969e900a43",
-      "narration": "tools"
-    },
-    {
-      "name": "zoom",
-      "start_seconds": 72.0,
-      "duration_seconds": 5.0,
-      "source": "editor-zoom.mp4",
-      "source_duration_seconds": 4.733333,
-      "extra_end_hold_seconds": 0.266667,
-      "source_sha256": "0ca81acb24b050a2f03de831c720da28ce1ccdbf9b3b97d8f21ba1d853915d6c",
-      "narration": null
-    },
-    {
-      "name": "undo",
-      "start_seconds": 77.0,
-      "duration_seconds": 5.0,
-      "source": "editor-undo.mp4",
-      "source_duration_seconds": 4.733333,
-      "extra_end_hold_seconds": 0.266667,
-      "source_sha256": "72a6672ae745785ea7e3934e82252848b2d5df53f8420a0e00ddc0c42ab430b6",
-      "narration": null
-    },
-    {
-      "name": "text",
-      "start_seconds": 82.0,
-      "duration_seconds": 4.0,
-      "source": "editor-text.mp4",
-      "source_duration_seconds": 2.866667,
-      "extra_end_hold_seconds": 1.133333,
-      "source_sha256": "65892556bc6db67670435dbc35640fb19c120a4329c0fe3b63414d485016e131",
-      "narration": null
-    },
-    {
-      "name": "pixelate",
-      "start_seconds": 86.0,
-      "duration_seconds": 5.0,
-      "source": "editor-pixelate.mp4",
-      "source_duration_seconds": 3.833333,
-      "extra_end_hold_seconds": 1.166667,
-      "source_sha256": "1b93cc009f2ae42cf312aaacf87498b9146159b1fd2b692c194423e641924917",
-      "narration": null
-    },
-    {
-      "name": "colorpicker",
-      "start_seconds": 91.0,
-      "duration_seconds": 5.0,
-      "source": "editor-colorpicker.mp4",
-      "source_duration_seconds": 3.866667,
-      "extra_end_hold_seconds": 1.133333,
-      "source_sha256": "401a1f32ec042d1d97b1bf2d96505a7ff94ea866f794b63617390feb773de1fa",
-      "narration": null
-    },
-    {
-      "name": "capture-results",
-      "start_seconds": 96.0,
-      "duration_seconds": 17.566666666666666,
+      "name": "Capture results",
       "source": "capture-latency.png",
-      "source_duration_seconds": null,
-      "extra_end_hold_seconds": 0,
       "source_sha256": "61015c1a8ea2778babbeff3317479c2a600b8f78cbc83a02a10e3ee39ded90d3",
-      "narration": "capture_data"
+      "source_kind": "static_chart",
+      "start_frame": 330,
+      "frame_count": 120,
+      "start_seconds": 11.0,
+      "duration_seconds": 4.0,
+      "extra_end_hold_seconds": 0
     },
     {
-      "name": "capture-traces",
-      "start_seconds": 113.56666666666666,
-      "duration_seconds": 6.0,
-      "source": "capture-traces.png",
-      "source_duration_seconds": null,
-      "extra_end_hold_seconds": 0,
-      "source_sha256": "1e214e4616acde0a28cc1d1c3ee73b996ed9af36c116ca1ed10bea6072871c8a",
-      "narration": null
+      "name": "Region freehand",
+      "source": "editor-region-freehand.mp4",
+      "source_sha256": "8d1e7b84b1dbafe9c11ecf0bbb3c39d1d781c03615fdb3f205b76001de1bb3ed",
+      "source_kind": "video",
+      "start_frame": 450,
+      "frame_count": 231,
+      "start_seconds": 15.0,
+      "duration_seconds": 7.7,
+      "extra_end_hold_seconds": 0
     },
     {
-      "name": "recording",
-      "start_seconds": 119.56666666666666,
-      "duration_seconds": 10.5,
+      "name": "Region arrow",
+      "source": "editor-region-arrow.mp4",
+      "source_sha256": "bec8a84a8937321b182c46ee72132b78c3fc3050b30423adeb8dd90b041de183",
+      "source_kind": "video",
+      "start_frame": 681,
+      "frame_count": 239,
+      "start_seconds": 22.7,
+      "duration_seconds": 7.966666666666667,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Editor arrow",
+      "source": "editor-arrow.mp4",
+      "source_sha256": "3c2faa8a0df1916acbd26db002f34c7d643c99e8cdc10ecda8736df35dc81444",
+      "source_kind": "video",
+      "start_frame": 920,
+      "frame_count": 115,
+      "start_seconds": 30.666666666666668,
+      "duration_seconds": 3.8333333333333335,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Editor freehand",
+      "source": "editor-freehand.mp4",
+      "source_sha256": "eeec1f7a4605c7e41424db08f653e4f635541a07701c1fabd2fdd1f6d9929f84",
+      "source_kind": "video",
+      "start_frame": 1035,
+      "frame_count": 115,
+      "start_seconds": 34.5,
+      "duration_seconds": 3.8333333333333335,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Blur",
+      "source": "editor-blur.mp4",
+      "source_sha256": "0599f6d6bbd980cfddf797e02d2237e96684890e9e9342c2d26bd2969e900a43",
+      "source_kind": "video",
+      "start_frame": 1150,
+      "frame_count": 208,
+      "start_seconds": 38.333333333333336,
+      "duration_seconds": 6.933333333333334,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Zoom",
+      "source": "editor-zoom.mp4",
+      "source_sha256": "0ca81acb24b050a2f03de831c720da28ce1ccdbf9b3b97d8f21ba1d853915d6c",
+      "source_kind": "video",
+      "start_frame": 1358,
+      "frame_count": 142,
+      "start_seconds": 45.266666666666666,
+      "duration_seconds": 4.733333333333333,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Undo and redo",
+      "source": "editor-undo.mp4",
+      "source_sha256": "72a6672ae745785ea7e3934e82252848b2d5df53f8420a0e00ddc0c42ab430b6",
+      "source_kind": "video",
+      "start_frame": 1500,
+      "frame_count": 142,
+      "start_seconds": 50.0,
+      "duration_seconds": 4.733333333333333,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Text",
+      "source": "editor-text.mp4",
+      "source_sha256": "65892556bc6db67670435dbc35640fb19c120a4329c0fe3b63414d485016e131",
+      "source_kind": "video",
+      "start_frame": 1642,
+      "frame_count": 86,
+      "start_seconds": 54.733333333333334,
+      "duration_seconds": 2.8666666666666667,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Pixelate",
+      "source": "editor-pixelate.mp4",
+      "source_sha256": "1b93cc009f2ae42cf312aaacf87498b9146159b1fd2b692c194423e641924917",
+      "source_kind": "video",
+      "start_frame": 1728,
+      "frame_count": 115,
+      "start_seconds": 57.6,
+      "duration_seconds": 3.8333333333333335,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Color picker",
+      "source": "editor-colorpicker.mp4",
+      "source_sha256": "401a1f32ec042d1d97b1bf2d96505a7ff94ea866f794b63617390feb773de1fa",
+      "source_kind": "video",
+      "start_frame": 1843,
+      "frame_count": 116,
+      "start_seconds": 61.43333333333333,
+      "duration_seconds": 3.8666666666666667,
+      "extra_end_hold_seconds": 0
+    },
+    {
+      "name": "Recording output",
       "source": "recording-profile.mp4",
-      "source_duration_seconds": 10.0,
-      "extra_end_hold_seconds": 0.5,
       "source_sha256": "02c11426a99b1fa6fd334f7bcd8a8cd765cd53f6677b1b8cc6874c61a17e1ef1",
-      "narration": "recording"
-    },
-    {
-      "name": "recording-resources",
-      "start_seconds": 130.06666666666666,
-      "duration_seconds": 17.8,
-      "source": "recording-resources.png",
-      "source_duration_seconds": null,
-      "extra_end_hold_seconds": 0,
-      "source_sha256": "f50aee4d1f25e6eada6b4db9b5103b06b2c64bd7479a2e3ecc51c9baee415c36",
-      "narration": "resources"
-    },
-    {
-      "name": "outro",
-      "start_seconds": 147.86666666666667,
-      "duration_seconds": 7.033333333333333,
-      "source": "runtime-poster.png",
-      "source_duration_seconds": null,
-      "extra_end_hold_seconds": 0,
-      "source_sha256": "9c5b413cc951a49537c4b2a0850af02908c749e446aa8433960fbbd50bb26c6a",
-      "narration": "outro"
+      "source_kind": "video",
+      "start_frame": 1959,
+      "frame_count": 300,
+      "start_seconds": 65.3,
+      "duration_seconds": 10.0,
+      "extra_end_hold_seconds": 0
     }
   ],
-  "time_policy": "Action footage is 1x. End frames may be held to provide narration time. There is no invented pre-response delay. Source measurements and sampling uncertainty remain in each micro-clip manifest.",
-  "caption_timing": "Script sentence durations proportioned to actual narration clips, not forced-aligned transcription.",
-  "narration_manifest": {
-    "language": "ru",
-    "voice": "Google Translate TTS through gTTS",
-    "clips": [
-      {
-        "name": "intro",
-        "text": "\u0421\u0440\u0430\u0432\u043d\u0438\u043c Zipshot \u0438 \u0430\u043a\u0442\u0443\u0430\u043b\u044c\u043d\u044b\u0439 ShareX. \u0427\u0438\u0441\u0442\u0430\u044f Windows Sandbox, \u043e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u044b\u0435 \u043a\u043b\u0430\u0432\u0438\u0448\u0438 \u0438 \u043e\u0434\u043d\u0438 \u0438\u0441\u0445\u043e\u0434\u043d\u044b\u0435 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f. \u041d\u0430\u0436\u0430\u0442\u0438\u044f \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u0442\u0435\u0441\u0442\u043e\u0432\u044b\u0439 \u0441\u043a\u0440\u0438\u043f\u0442.",
-        "duration_seconds": 13.416,
-        "file": "intro.mp3"
-      },
-      {
-        "name": "region",
-        "text": "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043a\u043e\u043d\u0442\u0440\u043e\u043b \u043f\u0440\u0438\u043d\u0442\u0441\u043a\u0440\u0438\u043d. \u041d\u0430\u0436\u0430\u0442\u0438\u0435 \u0438 \u0442\u0430\u0439\u043c\u0435\u0440 \u043f\u0440\u0438\u0432\u044f\u0437\u0430\u043d\u044b \u043a \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u043c \u043c\u0435\u0442\u043a\u0430\u043c \u0432\u0440\u0435\u043c\u0435\u043d\u0438. \u0417\u0434\u0435\u0441\u044c \u043f\u043e\u043a\u0430\u0437\u0430\u043d \u043e\u0434\u0438\u043d \u0437\u0430\u043f\u0438\u0441\u0430\u043d\u043d\u044b\u0439 \u043f\u0440\u0438\u043c\u0435\u0440.",
-        "duration_seconds": 10.56,
-        "file": "region.mp3"
-      },
-      {
-        "name": "png",
-        "text": "\u0422\u0435\u043f\u0435\u0440\u044c \u043f\u0440\u0438\u043d\u0442\u0441\u043a\u0440\u0438\u043d. \u0412\u043e \u0432\u0442\u043e\u0440\u043e\u043c \u0437\u0430\u043c\u0435\u0440\u0435 \u0436\u0434\u0451\u043c \u0433\u043e\u0442\u043e\u0432\u043e\u0433\u043e PNG. \u0424\u0430\u0439\u043b \u0434\u043e\u043b\u0436\u0435\u043d \u0437\u0430\u043a\u0440\u044b\u0442\u044c\u0441\u044f \u0438 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u043f\u0440\u043e\u0439\u0442\u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f.",
-        "duration_seconds": 10.728,
-        "file": "png.mp3"
-      },
-      {
-        "name": "arrow",
-        "text": "\u041e\u0434\u043d\u0430 \u0441\u0442\u0440\u0435\u043b\u043a\u0430, \u043e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u0430\u044f \u0442\u0440\u0430\u0435\u043a\u0442\u043e\u0440\u0438\u044f \u043a\u0443\u0440\u0441\u043e\u0440\u0430 \u0438 \u0434\u0432\u0435 \u0441\u0435\u043a\u0443\u043d\u0434\u044b \u043d\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435.",
-        "duration_seconds": 6.312,
-        "file": "arrow.mp3"
-      },
-      {
-        "name": "pencil",
-        "text": "\u0422\u0435\u043f\u0435\u0440\u044c \u043a\u0430\u0440\u0430\u043d\u0434\u0430\u0448. \u0421\u043a\u0440\u0438\u043f\u0442 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u043e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u044b\u0435 \u0441\u0442\u043e \u0434\u0432\u0430\u0434\u0446\u0430\u0442\u044c \u043f\u043e\u0437\u0438\u0446\u0438\u0439 \u043a\u0443\u0440\u0441\u043e\u0440\u0430. \u0421\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u0435\u043c \u043d\u0430\u0441\u0442\u043e\u044f\u0449\u0438\u0435 \u043a\u0430\u0434\u0440\u044b \u0440\u0435\u0434\u0430\u043a\u0442\u043e\u0440\u043e\u0432.",
-        "duration_seconds": 10.008,
-        "file": "pencil.mp3"
-      },
-      {
-        "name": "tools",
-        "text": "\u041e\u0442\u0434\u0435\u043b\u044c\u043d\u043e \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u043c \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435, \u043e\u0442\u043c\u0435\u043d\u0443 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0439 \u0438 \u0440\u0430\u0431\u043e\u0442\u0443 \u0441 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435\u043c. \u041a\u043e\u0440\u043e\u0442\u043a\u0438\u0435 \u0440\u043e\u043b\u0438\u043a\u0438 \u043c\u043e\u0436\u043d\u043e \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u0432 \u043f\u043e\u043b\u043d\u043e\u043c \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u0438\u0438.",
-        "duration_seconds": 10.896,
-        "file": "tools.mp3"
-      },
-      {
-        "name": "capture_data",
-        "text": "\u0414\u043b\u044f \u0433\u0440\u0430\u0444\u0438\u043a\u043e\u0432 \u043d\u0430\u0436\u0430\u0442\u0438\u044f \u043f\u043e\u0432\u0442\u043e\u0440\u0435\u043d\u044b \u043f\u043e \u0442\u0440\u0438\u0434\u0446\u0430\u0442\u044c \u0440\u0430\u0437. \u041c\u0435\u0434\u0438\u0430\u043d\u0430 \u0433\u043e\u0442\u043e\u0432\u043e\u0433\u043e PNG \u0443 Zipshot \u0441\u043e\u0441\u0442\u0430\u0432\u0438\u043b\u0430 \u0442\u0440\u0438\u0441\u0442\u0430 \u0441\u043e\u0440\u043e\u043a \u043e\u0434\u043d\u0443 \u043c\u0438\u043b\u043b\u0438\u0441\u0435\u043a\u0443\u043d\u0434\u0443. \u0423 ShareX \u043f\u044f\u0442\u044c\u0441\u043e\u0442 \u0442\u0440\u0438\u0434\u0446\u0430\u0442\u044c. \u042d\u0442\u043e \u043d\u0430\u0431\u043b\u044e\u0434\u0430\u0435\u043c\u043e\u0435 \u0432\u0440\u0435\u043c\u044f \u0432 \u044d\u0442\u043e\u0439 \u0441\u0440\u0435\u0434\u0435.",
-        "duration_seconds": 16.536,
-        "file": "capture_data.mp3"
-      },
-      {
-        "name": "recording",
-        "text": "\u0417\u0430\u043f\u0438\u0441\u044c \u0442\u043e\u0436\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u0430. \u041a\u043b\u0438\u043f \u043f\u043e\u043b\u043d\u043e\u0441\u0442\u044c\u044e \u0434\u0435\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u0430\u043d, \u0430 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 \u0438 \u0447\u0438\u0441\u043b\u043e \u043a\u0430\u0434\u0440\u043e\u0432 \u0441\u0432\u0435\u0440\u0435\u043d\u044b \u0441\u043e \u0441\u0447\u0451\u0442\u0447\u0438\u043a\u043e\u043c \u043d\u0430 \u0441\u0446\u0435\u043d\u0435.",
-        "duration_seconds": 9.48,
-        "file": "recording.mp3"
-      },
-      {
-        "name": "resources",
-        "text": "\u0420\u0430\u0441\u0445\u043e\u0434 \u043f\u0430\u043c\u044f\u0442\u0438 \u0438 \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440\u0430 \u0437\u0430\u0432\u0438\u0441\u0438\u0442 \u043e\u0442 \u043a\u043e\u0434\u0438\u0440\u043e\u0432\u0449\u0438\u043a\u0430 \u0438 \u043f\u0440\u0435\u0441\u0435\u0442\u0430. \u0423 Zipshot \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u0443\u044e \u0447\u0430\u0441\u0442\u044c \u043f\u0430\u043c\u044f\u0442\u0438 \u0432 \u044d\u0442\u043e\u043c \u0442\u0435\u0441\u0442\u0435 \u0437\u0430\u043d\u0438\u043c\u0430\u043b FFmpeg. \u041f\u043e\u044d\u0442\u043e\u043c\u0443 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0438 \u0438\u0441\u0445\u043e\u0434\u043d\u044b\u0435 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u044b \u043a \u0441\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u044e.",
-        "duration_seconds": 16.8,
-        "file": "resources.mp3"
-      },
-      {
-        "name": "outro",
-        "text": "\u041a\u043e\u0434, \u0440\u043e\u043b\u0438\u043a\u0438, \u0433\u0440\u0430\u0444\u0438\u043a\u0438 \u0438 \u0438\u0441\u0445\u043e\u0434\u043d\u044b\u0435 \u0437\u0430\u043c\u0435\u0440\u044b \u043b\u0435\u0436\u0430\u0442 \u043d\u0430 GitHub.",
-        "duration_seconds": 6.024,
-        "file": "outro.mp3"
-      }
-    ]
-  },
-  "audio_sources": [
-    {
-      "file": "intro.mp3",
-      "offset_seconds": 0.35,
-      "sha256": "658b97b36fcf2aa49abfb0d5e84d65a1b764c9809543f30fb8bae5039c5eb4df"
-    },
-    {
-      "file": "region.mp3",
-      "offset_seconds": 18.783333333333335,
-      "sha256": "65e908cc7936a10b69ea5c9fd7f3baa5c362d21f9e5fafed5912700133031691"
-    },
-    {
-      "file": "png.mp3",
-      "offset_seconds": 30.35,
-      "sha256": "9c04b3dac7e2a6ea531d3697a12f3b3536cb8641869fa7232939129ae70c5390"
-    },
-    {
-      "file": "pencil.mp3",
-      "offset_seconds": 42.083333333333336,
-      "sha256": "ef53433d0d3dbd9ceee2485e0df07d7ea991433aaf31bcb4c9a26cb8cacc4253"
-    },
-    {
-      "file": "arrow.mp3",
-      "offset_seconds": 53.11666666666667,
-      "sha256": "10e8cddad322f3f0eaa4580123d0747a498251173290c51290d4789a3ff3176d"
-    },
-    {
-      "file": "tools.mp3",
-      "offset_seconds": 60.45,
-      "sha256": "dd8a5ae48c5af877101ab61113d44a416cd27c3065ae9122b5b9ea1218837c73"
-    },
-    {
-      "file": "capture_data.mp3",
-      "offset_seconds": 96.35,
-      "sha256": "06b60589d3d3b7cee3aef5caf63bff2e13a4277108861e2092cf474f55ce984e"
-    },
-    {
-      "file": "recording.mp3",
-      "offset_seconds": 119.91666666666666,
-      "sha256": "ea997f0d129c72025fde6c17472d521fe59bd9cac92c1620962b2711a5a2d377"
-    },
-    {
-      "file": "resources.mp3",
-      "offset_seconds": 130.41666666666666,
-      "sha256": "2d5ef6f18a421d3922781627a2c76fb1d33773b53de497ccda4e50151732de51"
-    },
-    {
-      "file": "outro.mp3",
-      "offset_seconds": 148.21666666666667,
-      "sha256": "2a298a6a9af5b2757b9f430794504f8eb1c2e831d4c58299bcdf6627f4036bb9"
-    }
-  ],
-  "original_music_sha256": "60e9e618112cceaee6f88ff2149492d2d5daaa3e9803be940abfb459f9473318",
-  "generator_sha256": "0b0e148a95fecd487870d92136f0c69f46e15419c6f4f098a281e1c6e1c88b77",
-  "sha256": "f3efc4787f1e890fab6afbce6bff6eccfae8be1b415c1d86ee9eb2c335f62f0c"
+  "time_policy": "All 13 complete microclips are joined at original 1x chronology. One measured capture chart appears for exactly four seconds. No extra intro, outro or video holds are added. Source labels and recorded endpoint clocks remain unchanged.",
+  "audio_policy": "No voice, music or other audio. No subtitle track.",
+  "generator_sha256": "c88cc4371216078ecfb0cb7673a96a7a8813677ba7b4d0d502eff602f08b9675",
+  "sha256": "d1d4a523a89a1077c1060d974cd12fbcd0739a099e4b5ced3a5f0536d93ae40f"
 }

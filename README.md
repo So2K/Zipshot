@@ -8,12 +8,32 @@
   <a href="https://github.com/So2K/Zipshot/releases/latest"><img src="media/showcase/download-button.png" alt="Download Zipshot for Windows x64" width="240"></a>
 </p>
 <p align="center">
-  <a href="https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4">Watch&nbsp;the&nbsp;comparison</a>
+  <a href="https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4">Watch&nbsp;the&nbsp;silent&nbsp;montage</a>
   &nbsp;·&nbsp; <a href="docs/runtime-comparison/README.md">See&nbsp;the&nbsp;test&nbsp;results</a>
   &nbsp;·&nbsp; <a href="#get-started">Get&nbsp;started</a>
 </p>
 
 Capture what you need, add context, and copy or save the result. Zipshot brings familiar ShareX-style tools into a native Windows editor.
+
+## From hotkey to saved PNG
+
+![Actual Ctrl+PrintScreen region overlays in Zipshot and ShareX, with timestamped guest input](media/runtime/hotkey-region.gif)
+
+![Actual PrintScreen capture completion in Zipshot and ShareX, including a separately labelled saved-image preview](media/runtime/hotkey-png.gif)
+
+The measured baseline compares Zipshot 1.0.1 with ShareX 22.4.0. ShareX's redesigned interface arrived in [22.0.0 on October 20, 2026](https://getsharex.com/changelog#v22.0.0). Each app and capture scenario has 30 measured calls across three alternating-order blocks, plus nine excluded warmups. No video recorder ran during these statistical blocks.
+
+| Endpoint | Zipshot | ShareX 22.4.0 |
+|---|---:|---:|
+| Region-overlay first visible change, median bracket | 167.5–216.7 ms | 258.8–316.7 ms |
+| Valid clipboard image, median | 300.4 ms | 447.6 ms |
+| Closed, readable PNG, median | 341.3 ms | 529.5 ms |
+
+In this Windows Sandbox baseline, Zipshot had about 36% shorter median PNG wait and 33% shorter median clipboard-image wait, with 30 measured calls per app and scenario.
+
+![Median capture response for Zipshot and ShareX 22.4.0 in Windows Sandbox, with visible timing brackets and p95 values](media/runtime/capture-latency.png)
+
+These are Windows Sandbox observations, including polling and validation overhead. The visible result is a sampled time bracket. It does not measure physical keypress-to-monitor latency. [Conditions, p95 values and all trials](docs/runtime-comparison/capture_results.md) · [Charts and raw data](docs/runtime-comparison/README.md).
 
 ## Draw right on the capture
 
@@ -22,22 +42,6 @@ Press Ctrl+PrtScn, choose a drawing tool, and make your point before finishing t
 ![Zipshot and ShareX 22.4.0 drawing the same freehand path in their actual Ctrl+PrintScreen region overlays](media/runtime/editor-region-freehand.gif)
 
 Both complete applications receive the same two-second path in an isolated Windows Sandbox. These are recorded application pixels and synthetic guest mouse/key events, played at 1×. The apps use their default annotation styles. [Region footage and exact input logs](docs/runtime-comparison/editor_UI_RESULTS.md#drawing-immediately-after-ctrlprintscreen).
-
-## From hotkey to saved PNG
-
-![Actual Ctrl+PrintScreen region overlays in Zipshot and ShareX, with timestamped guest input](media/runtime/hotkey-region.gif)
-
-![Actual PrintScreen capture completion in Zipshot and ShareX, including a separately labelled saved-image preview](media/runtime/hotkey-png.gif)
-
-The measured baseline compares Zipshot 1.0.1 with ShareX 22.4.0. Each app and capture scenario has 30 measured calls across three alternating-order blocks, plus nine excluded warmups. No video recorder ran during these statistical blocks.
-
-| Endpoint | Zipshot | ShareX 22.4.0 |
-|---|---:|---:|
-| Region-overlay first visible change, median bracket | 167.5–216.7 ms | 258.8–316.7 ms |
-| Valid clipboard image, median | 300.4 ms | 447.6 ms |
-| Closed, readable PNG, median | 341.3 ms | 529.5 ms |
-
-These are Windows Sandbox observations, including polling and validation overhead. The visible result is a sampled time bracket. It does not measure physical keypress-to-monitor latency. [Conditions, p95 values and all trials](docs/runtime-comparison/capture_results.md) · [Charts and raw data](docs/runtime-comparison/README.md).
 
 ## Real tools in motion
 
@@ -79,7 +83,7 @@ Both undo recordings contain 30 verified visible state changes. The same wheel i
 
 The recording tests retain output checks and CPU/RAM curves, including cases where Zipshot uses more memory. The encoders and quality controls differ. GPU load was not measured in the guest, and ShareX's hardware encoder was unavailable there. [Recording profiles and results](docs/runtime-comparison/recording_results.md).
 
-[Watch the full runtime comparison](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4) · [Read the complete report and reproduction guide](docs/runtime-comparison/README.md)
+[Watch the silent runtime montage](https://github.com/So2K/Zipshot/releases/download/benchmark-20261118/zipshot-runtime-comparison.mp4) · [Read the complete report and reproduction guide](docs/runtime-comparison/README.md)
 
 ## Make the point
 
@@ -109,8 +113,6 @@ These programmed editor renders illustrate the steps. They are separate from the
 The hero's 19.6 ms label comes from this earlier warm capture API test on the physical host, against the installed ShareX 18.0.1. Its 60 calls per app gave medians of 19.6 ms and 57.3 ms, about 2.9× in that API-only test. Hotkey dispatch, editing, encoding and saving were excluded. It is not a result for current ShareX 22.4.0 or the full interface. [Methodology](docs/benchmark/README.md) · [Raw API data](docs/benchmark/capture-results.json).
 
 The 1.9 MB label describes the release executable only, excluding optional FFmpeg and sticker packs.
-
-[Earlier 68-second Russian illustrated walkthrough](https://github.com/So2K/Zipshot/releases/download/v1.0.1/zipshot-vs-sharex.mp4) · [Russian subtitles](media/narration.srt)
 
 </details>
 
