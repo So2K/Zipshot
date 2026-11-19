@@ -398,6 +398,7 @@ int ParseCmd(const std::wstring& s) {
     if (s == L"--last-region") return C_LastRegion;
     if (s == L"--import-sharex") return C_ImportShareX;
     if (s == L"--quit") return C_Quit;
+    if (s == L"--show-main") return C_ShowMain;
     return 0;
 }
 
@@ -723,7 +724,11 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE, LPWSTR, int) {
             if (LoadImageFile(file, *img)) OpenEditor(img, file);
         });
     } else if (int c = ParseCmd(arg1)) {
-        RunOnMain([c] { Run(c); });
+        std::wstring ready = c == C_ShowMain && argc > 3 && std::wstring(argv[2]) == L"--ready-file" ? argv[3] : L"";
+        RunOnMain([c, ready] {
+            Run(c);
+            if (!ready.empty() && !MainWindowWriteReady(ready)) Log(L"main window readiness report failed");
+        });
     }
     LocalFree(argv);
     // Warm up the GPU capture path so the first hotkey is as fast as the rest.

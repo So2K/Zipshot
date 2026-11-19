@@ -1,5 +1,9 @@
 #include "common.h"
 #include "combine.h"
+#include "gallery_model.h"
+#include "clipboard_shelf.h"
+#include "sharex_import.h"
+#include <commctrl.h>
 #include <dwmapi.h>
 #include <shlobj.h>
 #include <shobjidl.h>
@@ -9,6 +13,7 @@
 #include <algorithm>
 #include <cmath>
 #include <condition_variable>
+#include <cstdio>
 #include <iterator>
 #include <map>
 #include <mutex>
@@ -79,15 +84,14 @@ const ToggleEntry kAfter[] = {
 constexpr UINT kCapBase = 1, kAfterBase = 20, kLangRu = 40, kLangEn = 41, kImport = 42, kOpenIni = 43, kAutostart = 44;
 enum : UINT { M_Open = 100, M_Editor, M_CopyImage, M_CopyFile, M_CopyPath, M_ShowFolder, M_Delete, M_Combine };
 constexpr UINT_PTR kTimerRun = 1, kTimerFlash = 2;
-constexpr size_t kMaxFiles = 500, kMaxThumbs = 240;
+constexpr size_t kMaxThumbs = 240;
+constexpr UINT kSearch = 400, kPaste = 401, kNewest = 402, kOldest = 403, kFilterBase = 410;
 
 struct IconBmp { HBITMAP normal = nullptr, gray = nullptr; };
 
-enum Kind { K_Image, K_Gif, K_Mp4 };
-struct Entry {
-    std::wstring path, name;
-    ULONGLONG time = 0;
-    Kind kind = K_Image;
+using Kind = gallery::Kind;
+constexpr Kind K_Image = Kind::Image, K_Gif = Kind::Gif, K_Mp4 = Kind::Video;
+struct Entry : gallery::Item {
     HBITMAP thumb = nullptr;
     int tw = 0, th = 0;
     bool done = false;  // thumbnail arrived (thumb may still be null when the shell had none)
@@ -106,7 +110,16 @@ struct State {
     int pendingCmd = 0;
     bool pendingRestore = false;
     // Capture history.
+    std::vector<gallery::Item> catalog;
     std::vector<Entry> files;
+    std::wstring query, notice;
+    gallery::Filter filter = gallery::Filter::All;
+    bool oldestFirst = false, pasting = false;
+    HWND search = nullptr;
+    WNDPROC searchProc = nullptr;
+    HBRUSH searchBrush = nullptr;
+    int toolbarHover = -1;
+    unsigned paintCount = 0;
     bool showTable = false;  // "Hotkey settings..." toggles the table over the history
     int scroll = 0, hoverTile = -1, sel = -1;
     int downTile = -1;
@@ -291,16 +304,18 @@ bool IsCaptureExt(const std::wstring& name, Kind& kind) {
     size_t dot = name.find_last_of(L'.');
     if (dot == std::wstring::npos) return false;
     const wchar_t* e = name.c_str() + dot + 1;
-    if (!_wcsicmp(e, L"png") || !_wcsicmp(e, L"jpg") || !_wcsicmp(e, L"jpeg")) kind = K_Image;
+    if (!_wcsicmp(e, L"png") || !_wcsicmp(e, L"jpg") || !_wcsicmp(e, L"jpeg") ||
+        !_wcsicmp(e, L"bmp") || !_wcsicmp(e, L"webp") || !_wcsicmp(e, L"tif") || !_wcsicmp(e, L"tiff")) kind = K_Image;
     else if (!_wcsicmp(e, L"gif")) kind = K_Gif;
-    else if (!_wcsicmp(e, L"mp4")) kind = K_Mp4;
+    else if (!_wcsicmp(e, L"mp4") || !_wcsicmp(e, L"webm") || !_wcsicmp(e, L"mkv") ||
+             !_wcsicmp(e, L"mov") || !_wcsicmp(e, L"avi")) kind = K_Mp4;
     else return false;
     return true;
 }
 
 ULONGLONG FtToU64(FILETIME ft) { return ((ULONGLONG)ft.dwHighDateTime << 32) | ft.dwLowDateTime; }
 
-void ScanDir(const std::wstring& dir, int depth, std::vector<Entry>& out) {
+void ScanDir(const std::wstring& dir, int depth, std::vector<gallery::Item>& out) {
     WIN32_FIND_DATAW fd;
     HANDLE f = FindFirstFileExW((dir + L"\\*").c_str(), FindExInfoBasic, &fd, FindExSearchNameMatch, nullptr,
                                 FIND_FIRST_EX_LARGE_FETCH);
@@ -311,11 +326,12 @@ void ScanDir(const std::wstring& dir, int depth, std::vector<Entry>& out) {
             if (depth > 0 && !(fd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)) ScanDir(dir + L"\\" + fd.cFileName, depth - 1, out);
             continue;
         }
-        Entry e;
+        gallery::Item e;
         if (!IsCaptureExt(fd.cFileName, e.kind)) continue;
         e.name = fd.cFileName;
         e.path = dir + L"\\" + fd.cFileName;
         e.time = FtToU64(fd.ftLastWriteTime);
+        e.shelf = shelf::IsShelfPath(e.path);
         out.push_back(std::move(e));
     } while (FindNextFileW(f, &fd));
     FindClose(f);
@@ -332,14 +348,19 @@ void FreeAllThumbs() {
 }
 
 void ClampScroll();
+void LayoutToolbar();
 
-void Rescan() {
+void RebuildView(bool resetScroll = false) {
+    const auto pathAt = [](int at) -> std::wstring {
+        return at >= 0 && at < (int)g_mw->files.size() ? g_mw->files[at].path : L"";
+    };
+    const std::wstring selected = pathAt(g_mw->sel), anchor = pathAt(g_mw->anchor);
     std::vector<Entry> v;
-    std::wstring root = SaveDirRoot();
-    while (!root.empty() && (root.back() == L'\\' || root.back() == L'/')) root.pop_back();
-    if (!root.empty()) ScanDir(root, 1, v);
-    std::sort(v.begin(), v.end(), [](const Entry& a, const Entry& b) { return a.time > b.time; });
-    if (v.size() > kMaxFiles) v.resize(kMaxFiles);
+    for (size_t at : gallery::Select(g_mw->catalog, g_mw->query, g_mw->filter, g_mw->oldestFirst)) {
+        Entry e;
+        static_cast<gallery::Item&>(e) = g_mw->catalog[at];
+        v.push_back(std::move(e));
+    }
     // Keep thumbnails of files that are still listed.
     std::map<std::wstring, Entry*> old;
     for (Entry& e : g_mw->files) old[e.path] = &e;
@@ -352,18 +373,32 @@ void Rescan() {
             e.done = it->second->done;
         }
     }
-    std::wstring selPath = g_mw->sel >= 0 && g_mw->sel < (int)g_mw->files.size() ? g_mw->files[g_mw->sel].path : L"";
     FreeAllThumbs();
     g_mw->files = std::move(v);
-    g_mw->sel = -1;
-    for (int i = 0; i < (int)g_mw->files.size(); ++i)
-        if (g_mw->files[i].path == selPath) g_mw->sel = i;
+    g_mw->sel = g_mw->anchor = -1;
+    for (int i = 0; i < (int)g_mw->files.size(); ++i) {
+        if (g_mw->files[i].path == selected) g_mw->sel = i;
+        if (g_mw->files[i].path == anchor) g_mw->anchor = i;
+    }
     std::erase_if(g_mw->picked, [](const std::wstring& p) {
         return std::none_of(g_mw->files.begin(), g_mw->files.end(), [&](const Entry& e) { return e.path == p; });
     });
-    g_mw->hoverTile = -1;
-    g_mw->dropTile = -1;
+    g_mw->hoverTile = g_mw->dropTile = g_mw->downTile = -1;
+    g_mw->dragArmed = g_mw->collapseOnUp = g_mw->scrollDrag = false;
+    if (GetCapture() == g_mw->hwnd) ReleaseCapture();
+    if (resetScroll) g_mw->scroll = 0;
     ClampScroll();
+    LayoutToolbar();
+    InvalidateRect(g_mw->hwnd, nullptr, FALSE);
+}
+
+void Rescan() {
+    std::vector<gallery::Item> all;
+    std::wstring root = SaveDirRoot();
+    while (!root.empty() && (root.back() == L'\\' || root.back() == L'/')) root.pop_back();
+    if (!root.empty()) ScanDir(root, 1, all);
+    g_mw->catalog = std::move(all);
+    RebuildView();
 }
 
 bool IsPicked(const std::wstring& path) {
@@ -523,12 +558,42 @@ bool RefreshRows() {
 
 // ---------- thumbnail grid geometry ----------
 
-bool GridMode() { return !g_mw->files.empty() && !g_mw->showTable; }
+bool GridMode() { return !g_mw->showTable; }
+
+struct ToolbarLayout {
+    RECT search{}, paste{}, sort{}, filters[5]{}, status{};
+    int height = 0;
+};
+
+ToolbarLayout GetToolbarLayout() {
+    RECT rc{};
+    GetClientRect(g_mw->hwnd, &rc);
+    ToolbarLayout t;
+    const int left = g_mw->panelW + S(12), right = rc.right - S(12), gap = S(8);
+    const bool wide = right - left >= S(620);
+    const int pasteW = S(130), sortW = S(170), h = S(30);
+    t.paste = {right - pasteW - (wide ? sortW + gap : 0), S(10),
+               right - (wide ? sortW + gap : 0), S(10) + h};
+    t.search = {left, S(10), std::max<LONG>(left + S(80), t.paste.left - gap), S(10) + h};
+    t.sort = wide ? RECT{right - sortW, S(10), right, S(10) + h}
+                  : RECT{left, S(86), left + sortW, S(116)};
+    int x = left;
+    const int widths[] = {44, 60, 48, 64, 66};
+    for (int i = 0; i < 5; ++i) {
+        t.filters[i] = {x, S(50), x + S(widths[i]), S(78)};
+        x += S(widths[i] + 6);
+    }
+    t.status = wide ? RECT{x + gap, S(50), right, S(78)}
+                    : RECT{t.sort.right + gap, S(86), right, S(116)};
+    t.height = S(wide ? 88 : 124);
+    return t;
+}
 
 RECT ContentRect() {
     RECT rc;
     GetClientRect(g_mw->hwnd, &rc);
     rc.left = g_mw->panelW;
+    if (GridMode()) rc.top = GetToolbarLayout().height;
     return rc;
 }
 
@@ -551,7 +616,7 @@ Grid GetGrid() {
     int avail = (int)(a.right - a.left) - 2 * S(kMargin) + S(kTileGap);
     g.cols = std::max(1, avail / g.stepX);
     g.rows = ((int)g_mw->files.size() + g.cols - 1) / g.cols;
-    g.contentH = g.rows * g.stepY - S(kTileGap) + 2 * S(kMargin);
+    g.contentH = g.rows ? g.rows * g.stepY - S(kTileGap) + 2 * S(kMargin) : 0;
     // Centre the columns horizontally like a flow layout with even side margins.
     int used = g.cols * g.stepX - S(kTileGap);
     g.x0 = a.left + std::max(S(kMargin), ((int)(a.right - a.left) - used) / 2);
@@ -610,7 +675,174 @@ void EnsureVisible(int i) {
     ClampScroll();
 }
 
+void SelectPath(const std::wstring& path);
+void PasteToShelf();
+
+bool ClipboardHasMedia() {
+    return IsClipboardFormatAvailable(CF_HDROP) || IsClipboardFormatAvailable(CF_DIBV5) ||
+           IsClipboardFormatAvailable(CF_DIB) || IsClipboardFormatAvailable(RegisterClipboardFormatW(L"PNG"));
+}
+
+LRESULT CALLBACK SearchProc(HWND h, UINT m, WPARAM w, LPARAM l) {
+    if (!g_mw || !g_mw->searchProc) return DefWindowProcW(h, m, w, l);
+    if ((m == WM_KEYDOWN && w == 'V' && (GetKeyState(VK_CONTROL) & 0x8000) && ClipboardHasMedia()) ||
+        (m == WM_PASTE && ClipboardHasMedia())) {
+        PasteToShelf();
+        return 0;
+    }
+    if (m == WM_CHAR && w == 22 && ClipboardHasMedia()) return 0;
+    if (m == WM_KEYDOWN) {
+        if (w == 'A' && (GetKeyState(VK_CONTROL) & 0x8000)) {
+            SendMessageW(h, EM_SETSEL, 0, -1);
+            return 0;
+        }
+        if (w == VK_ESCAPE) {
+            SetWindowTextW(h, L"");
+            SetFocus(g_mw->hwnd);
+            return 0;
+        }
+        if (w == VK_RETURN || w == VK_DOWN || w == VK_TAB) {
+            SetFocus(g_mw->hwnd);
+            return 0;
+        }
+    }
+    LRESULT r = CallWindowProcW(g_mw->searchProc, h, m, w, l);
+    if (m == WM_SETFOCUS || m == WM_KILLFOCUS) InvalidateRect(g_mw->hwnd, nullptr, FALSE);
+    return r;
+}
+
+void LayoutToolbar() {
+    if (!g_mw || !g_mw->hwnd || !g_mw->search) return;
+    const ToolbarLayout t = GetToolbarLayout();
+    SetWindowPos(g_mw->search, nullptr, t.search.left + S(28), t.search.top + S(6),
+                 std::max(S(30), (int)(t.search.right - t.search.left) - S(36)), S(20),
+                 SWP_NOZORDER | SWP_NOACTIVATE);
+    ShowWindow(g_mw->search, GridMode() ? SW_SHOWNA : SW_HIDE);
+    SendMessageW(g_mw->search, WM_SETFONT, (WPARAM)g_mw->menuFont, TRUE);
+    SendMessageW(g_mw->search, EM_SETCUEBANNER, TRUE, (LPARAM)Tr(L"Поиск по имени...", L"Search by filename..."));
+}
+
+void CreateToolbar() {
+    g_mw->searchBrush = CreateSolidBrush(kLightBg);
+    g_mw->search = CreateWindowExW(0, L"EDIT", L"", WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL,
+                                  0, 0, 0, 0, g_mw->hwnd, (HMENU)(UINT_PTR)kSearch, g_inst, nullptr);
+    if (g_mw->search) {
+        g_mw->searchProc = (WNDPROC)SetWindowLongPtrW(g_mw->search, GWLP_WNDPROC, (LONG_PTR)SearchProc);
+        SendMessageW(g_mw->search, EM_SETLIMITTEXT, 512, 0);
+    }
+    LayoutToolbar();
+}
+
+void PasteToShelf() {
+    if (!g_mw || g_mw->pasting) return;
+    shelf::Payload data;
+    std::wstring error;
+    if (!shelf::ReadClipboard(g_mw->hwnd, data, error)) {
+        g_mw->notice = error.empty() ? Tr(L"В буфере нет изображения или медиафайла", L"No image or media file in the clipboard") : error;
+        InvalidateRect(g_mw->hwnd, nullptr, FALSE);
+        return;
+    }
+    g_mw->pasting = true;
+    g_mw->notice = Tr(L"Добавляем на полку...", L"Adding to shelf...");
+    g_mw->showTable = false;
+    LayoutToolbar();
+    InvalidateRect(g_mw->hwnd, nullptr, FALSE);
+    const unsigned session = g_mw->session;
+    std::thread([session, data = std::move(data), readError = std::move(error)]() mutable {
+        shelf::SaveResult result = shelf::Store(std::move(data));
+        if (!readError.empty()) {
+            if (!result.error.empty()) readError += L"\n" + result.error;
+            result.error = std::move(readError);
+        }
+        RunOnMain([session, result = std::move(result)] {
+            if (!g_mw) return;
+            if (g_mw->session != session) { Rescan(); return; }
+            g_mw->pasting = false;
+            if (!result.paths.empty()) {
+                g_mw->filter = gallery::Filter::Shelf;
+                SetWindowTextW(g_mw->search, L"");
+                g_mw->query.clear();
+                Rescan();
+                SelectPath(result.paths.back());
+                g_mw->notice = result.error.empty()
+                    ? std::to_wstring(result.paths.size()) + Tr(L" добавлено на полку", L" added to shelf")
+                    : result.error;
+            } else g_mw->notice = result.error.empty() ? Tr(L"Не удалось вставить изображение", L"Could not paste image") : result.error;
+            InvalidateRect(g_mw->hwnd, nullptr, FALSE);
+        });
+    }).detach();
+}
+
+int HitToolbar(POINT p) {
+    if (!GridMode()) return -1;
+    const ToolbarLayout t = GetToolbarLayout();
+    if (PtInRect(&t.paste, p)) return kPaste;
+    if (PtInRect(&t.sort, p)) return kNewest;
+    for (int i = 0; i < 5; ++i) if (PtInRect(&t.filters[i], p)) return kFilterBase + i;
+    return -1;
+}
+
+void ToolbarCommand(UINT id) {
+    if (id == kPaste) PasteToShelf();
+    else if (id >= kFilterBase && id < kFilterBase + 5) {
+        g_mw->filter = (gallery::Filter)(id - kFilterBase);
+        g_mw->notice.clear();
+        RebuildView(true);
+    } else if (id == kNewest || id == kOldest) {
+        g_mw->oldestFirst = id == kOldest;
+        SetSettingBool(L"GalleryOldestFirst", g_mw->oldestFirst);
+        RebuildView(true);
+    }
+}
+
+void OpenSortMenu() {
+    HMENU m = CreatePopupMenu();
+    AppendMenuW(m, MF_STRING, kNewest, Tr(L"Сначала новые", L"Newest first"));
+    AppendMenuW(m, MF_STRING, kOldest, Tr(L"Сначала старые", L"Oldest first"));
+    CheckMenuRadioItem(m, kNewest, kOldest, g_mw->oldestFirst ? kOldest : kNewest, MF_BYCOMMAND);
+    RECT r = GetToolbarLayout().sort;
+    MapWindowPoints(g_mw->hwnd, nullptr, (POINT*)&r, 2);
+    UINT id = (UINT)TrackPopupMenuEx(m, TPM_RETURNCMD | TPM_RIGHTBUTTON, r.left, r.bottom, g_mw->hwnd, nullptr);
+    DestroyMenu(m);
+    if (id && g_mw) ToolbarCommand(id);
+}
+
 // ---------- painting ----------
+
+void PaintToolbar(HDC dc) {
+    const ToolbarLayout t = GetToolbarLayout();
+    RECT rc{};
+    GetClientRect(g_mw->hwnd, &rc);
+    Fill(dc, {g_mw->panelW, 0, rc.right, t.height}, kBg);
+    Fill(dc, {g_mw->panelW, t.height - 1, rc.right, t.height}, kBorder);
+    SelectObject(dc, g_mw->menuFont);
+    auto button = [&](RECT r, const wchar_t* text, bool selected, bool hover, bool accent = false) {
+        COLORREF bg = accent ? kAccent : selected ? kTileSel : hover ? kTileHover : kLightBg;
+        SetDCBrushColor(dc, bg);
+        SetDCPenColor(dc, selected ? kAccent : kBorder);
+        HGDIOBJ ob = SelectObject(dc, GetStockObject(DC_BRUSH)), op = SelectObject(dc, GetStockObject(DC_PEN));
+        RoundRect(dc, r.left, r.top, r.right, r.bottom, S(6), S(6));
+        SelectObject(dc, ob); SelectObject(dc, op);
+        SetTextColor(dc, accent ? RGB(255,255,255) : selected ? RGB(120,190,255) : kText);
+        DrawTextW(dc, text, -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX | DT_END_ELLIPSIS);
+    };
+    button(t.search, L"", GetFocus() == g_mw->search, false);
+    HPEN pen = CreatePen(PS_SOLID, std::max(1,S(1)), kTextOff);
+    HGDIOBJ oldPen = SelectObject(dc, pen), oldBrush = SelectObject(dc, GetStockObject(HOLLOW_BRUSH));
+    int x = t.search.left + S(10), y = t.search.top + S(9);
+    Ellipse(dc, x, y, x+S(10), y+S(10)); MoveToEx(dc, x+S(8), y+S(8), nullptr); LineTo(dc, x+S(14), y+S(14));
+    SelectObject(dc, oldPen); SelectObject(dc, oldBrush); DeleteObject(pen);
+    button(t.paste, g_mw->pasting ? Tr(L"Добавляем...", L"Adding...") : Tr(L"+ Вставить  Ctrl+V", L"+ Paste  Ctrl+V"), false, g_mw->toolbarHover == kPaste, true);
+    button(t.sort, g_mw->oldestFirst ? Tr(L"↑ Сначала старые", L"↑ Oldest first") : Tr(L"↓ Сначала новые", L"↓ Newest first"), false, g_mw->toolbarHover == kNewest);
+    const wchar_t* names[] = {Tr(L"Все",L"All"),Tr(L"Фото",L"Photos"),L"GIF",Tr(L"Видео",L"Video"),Tr(L"Полка",L"Shelf")};
+    for (int i=0;i<5;++i) button(t.filters[i], names[i], (int)g_mw->filter == i, g_mw->toolbarHover == (int)kFilterBase+i);
+    if (t.status.right > t.status.left) {
+        std::wstring status = g_mw->notice.empty() ? std::to_wstring(g_mw->files.size()) + L" / " + std::to_wstring(g_mw->catalog.size()) : g_mw->notice;
+        SetTextColor(dc, kTextOff);
+        RECT r = t.status;
+        DrawTextW(dc, status.c_str(), -1, &r, DT_SINGLELINE | DT_VCENTER | DT_RIGHT | DT_NOPREFIX | DT_END_ELLIPSIS);
+    }
+}
 
 void PaintMenu(HDC dc, HDC mem) {
     Fill(dc, {0, 0, g_mw->panelW - 1, 1 << 20}, kBg);
@@ -752,6 +984,23 @@ void PaintGrid(HDC dc, HDC mem, RECT area) {
     int saved = SaveDC(dc);
     IntersectClipRect(dc, area.left, area.top, area.right, area.bottom);
     int n = (int)g_mw->files.size();
+    if (!n) {
+        SelectObject(dc, g_mw->tableFont);
+        SetTextColor(dc, kText);
+        RECT title{area.left + S(20), area.top + S(65), area.right - S(20), area.top + S(98)};
+        const bool shelf = g_mw->filter == gallery::Filter::Shelf;
+        const wchar_t* text = !g_mw->query.empty() ? Tr(L"Ничего не найдено", L"No matching files")
+                              : shelf ? Tr(L"На полке пока пусто", L"Your shelf is empty")
+                              : g_mw->catalog.empty() ? Tr(L"Здесь будут ваши скриншоты", L"Your captures will appear here")
+                              : Tr(L"Нет файлов этого типа", L"No files of this type");
+        DrawTextW(dc, text, -1, &title, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+        SelectObject(dc, g_mw->menuFont);
+        SetTextColor(dc, kTextOff);
+        RECT hint{area.left + S(24), title.bottom + S(6), area.right - S(24), title.bottom + S(60)};
+        DrawTextW(dc, !g_mw->query.empty() ? Tr(L"Измените имя или выберите другой фильтр", L"Try another filename or filter")
+                                             : Tr(L"Нажмите Ctrl+V, чтобы сохранить картинку на полку", L"Press Ctrl+V to keep an image on your shelf"),
+                  -1, &hint, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
+    }
     int firstRow = std::max(0, (g_mw->scroll - S(kMargin)) / g.stepY);
     int lastRow = std::min(g.rows - 1, (g_mw->scroll + (int)(area.bottom - area.top)) / g.stepY);
     std::vector<ThumbJob> want;
@@ -788,12 +1037,23 @@ void PaintGrid(HDC dc, HDC mem, RECT area) {
         }
         if (e.kind != K_Image) {
             SelectObject(dc, g_mw->badgeFont);
-            const wchar_t* b = e.kind == K_Gif ? L"GIF" : L"MP4";
+            std::wstring badge = e.kind == K_Gif ? L"GIF" : e.name.substr(e.name.find_last_of(L'.') + 1);
+            CharUpperBuffW(badge.data(), (DWORD)badge.size());
+            const wchar_t* b = badge.c_str();
             int bw = TextW(dc, b) + S(8), bh = S(15);
             RECT br{box.left + S(4), box.top + S(4), box.left + S(4) + bw, box.top + S(4) + bh};
             Fill(dc, br, e.kind == K_Gif ? RGB(0, 120, 215) : RGB(200, 60, 60));
             SetTextColor(dc, RGB(255, 255, 255));
             DrawTextW(dc, b, -1, &br, DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_NOPREFIX);
+        }
+        if (e.shelf) {
+            SelectObject(dc, g_mw->badgeFont);
+            const wchar_t* label = Tr(L"ПОЛКА", L"SHELF");
+            const int bw = TextW(dc, label) + S(8), bh = S(15);
+            RECT br{box.left + S(4), box.bottom - S(4) - bh, box.left + S(4) + bw, box.bottom - S(4)};
+            Fill(dc, br, RGB(36, 83, 112));
+            SetTextColor(dc, RGB(200, 230, 255));
+            DrawTextW(dc, label, -1, &br, DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_NOPREFIX);
         }
         SelectObject(dc, g_mw->tableFont);
         SetTextColor(dc, kText);
@@ -836,7 +1096,11 @@ void Paint(HWND h) {
         HGDIOBJ oldFont = SelectObject(dc, g_mw->menuFont);
         PaintMenu(dc, mem);
         RECT area{g_mw->panelW, 0, rc.right, rc.bottom};
-        if (GridMode()) PaintGrid(dc, mem, area);
+        if (GridMode()) {
+            PaintToolbar(dc);
+            area.top = GetToolbarLayout().height;
+            PaintGrid(dc, mem, area);
+        }
         else PaintTable(dc, area);
         SelectObject(dc, oldFont);
         BitBlt(wdc, 0, 0, rc.right, rc.bottom, dc, 0, 0, SRCCOPY);
@@ -846,6 +1110,7 @@ void Paint(HWND h) {
         DeleteDC(dc);
     }
     EndPaint(h, &ps);
+    ++g_mw->paintCount;
 }
 
 void Redraw() { InvalidateRect(g_mw->hwnd, nullptr, FALSE); }
@@ -949,12 +1214,16 @@ void ShowInFolder(const std::wstring& path) {
 }
 
 void RemoveEntry(int i) {
+    const std::wstring removed = g_mw->files[i].path;
+    std::erase_if(g_mw->catalog, [&](const gallery::Item& item) { return item.path == removed; });
     std::erase(g_mw->picked, g_mw->files[i].path);
     if (g_mw->dropTile == i) g_mw->dropTile = -1;
     FreeThumb(g_mw->files[i]);
     g_mw->files.erase(g_mw->files.begin() + i);
     if (g_mw->sel == i) g_mw->sel = std::min(i, (int)g_mw->files.size() - 1);
     else if (g_mw->sel > i) --g_mw->sel;
+    if (g_mw->anchor == i) g_mw->anchor = g_mw->sel;
+    else if (g_mw->anchor > i) --g_mw->anchor;
     g_mw->hoverTile = -1;
     ClampScroll();
 }
@@ -1172,7 +1441,8 @@ void Activate(int i) {
     case A_Folder: RunCommand(C_Folder); break;
     case A_Hotkeys:
         RefreshRows();
-        if (!g_mw->files.empty()) g_mw->showTable = !g_mw->showTable;  // toggle between history and hotkeys
+        g_mw->showTable = !g_mw->showTable;
+        LayoutToolbar();
         if (!GridMode()) {
             g_mw->flash = 6;
             SetTimer(g_mw->hwnd, kTimerFlash, 150, nullptr);
@@ -1200,6 +1470,7 @@ void ApplyDpi(UINT dpi) {
     CreateFonts();
     Measure();
     if (changed) FreeAllThumbs();  // re-requested at the new size
+    LayoutToolbar();
 }
 
 void SetHoverTile(int i) {
@@ -1239,8 +1510,12 @@ void ToggleTile(int i) {
 void RangeSelect(int i, bool add) {
     int a = g_mw->anchor >= 0 && g_mw->anchor < (int)g_mw->files.size() ? g_mw->anchor : i;
     if (!add) g_mw->picked.clear();
-    for (int k = std::max(a, i); k >= std::min(a, i); --k)
+    int first = g_mw->oldestFirst ? std::min(a, i) : std::max(a, i);
+    int last = g_mw->oldestFirst ? std::max(a, i) : std::min(a, i);
+    for (int k = first;; k += g_mw->oldestFirst ? 1 : -1) {
         if (!IsPicked(g_mw->files[k].path)) g_mw->picked.push_back(g_mw->files[k].path);
+        if (k == last) break;
+    }
     g_mw->sel = i;
     g_mw->anchor = a;
     EnsureVisible(i);
@@ -1249,7 +1524,8 @@ void RangeSelect(int i, bool add) {
 
 void SelectAll() {
     g_mw->picked.clear();
-    for (int k = (int)g_mw->files.size() - 1; k >= 0; --k) g_mw->picked.push_back(g_mw->files[k].path);
+    if (g_mw->oldestFirst) for (const Entry& e : g_mw->files) g_mw->picked.push_back(e.path);
+    else for (int k = (int)g_mw->files.size() - 1; k >= 0; --k) g_mw->picked.push_back(g_mw->files[k].path);
     Redraw();
 }
 
@@ -1275,6 +1551,7 @@ void ScrollToThumbY(int y) {
 bool KeyNav(WPARAM vk) {
     if (!GridMode()) return false;
     int n = (int)g_mw->files.size();
+    if (!n) return false;
     Grid g = GetGrid();
     RECT a = ContentRect();
     int pageRows = std::max(1, (int)(a.bottom - a.top) / g.stepY);
@@ -1456,9 +1733,39 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         Paint(h);
         return 0;
     case WM_ACTIVATE:
-        if (LOWORD(w) != WA_INACTIVE && RefreshRows()) InvalidateRect(h, nullptr, FALSE);
+        if (LOWORD(w) != WA_INACTIVE) {
+            RefreshRows();
+            if (g_mw->search) Rescan();
+            InvalidateRect(h, nullptr, FALSE);
+        }
         break;
+    case WM_CTLCOLOREDIT:
+        if ((HWND)l == g_mw->search) {
+            SetTextColor((HDC)w, kText);
+            SetBkColor((HDC)w, kLightBg);
+            return (LRESULT)g_mw->searchBrush;
+        }
+        break;
+    case WM_COMMAND: {
+        const UINT id = LOWORD(w);
+        if (id == kSearch && HIWORD(w) == EN_CHANGE) {
+            const int n = GetWindowTextLengthW(g_mw->search);
+            std::wstring query((size_t)n + 1, L'\0');
+            GetWindowTextW(g_mw->search, query.data(), n + 1);
+            query.resize(n);
+            g_mw->query = std::move(query);
+            g_mw->notice.clear();
+            RebuildView(true);
+            return 0;
+        }
+        if (id == kPaste || id == kNewest || id == kOldest || (id >= kFilterBase && id < kFilterBase + 5)) {
+            ToolbarCommand(id);
+            return 0;
+        }
+        break;
+    }
     case WM_SIZE:
+        LayoutToolbar();
         ClampScroll();
         InvalidateRect(h, nullptr, FALSE);
         return 0;
@@ -1466,7 +1773,7 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         if (!g_mw || !g_mw->panelW) break;
         SIZE s = WindowSizeFor(g_mw->dpi);
         auto* mm = (MINMAXINFO*)l;
-        mm->ptMinTrackSize = {s.cx * 2 / 3, s.cy};
+        mm->ptMinTrackSize = {std::max<LONG>(s.cx * 2 / 3, g_mw->panelW + S(385)), s.cy};
         return 0;
     }
     case WM_DPICHANGED: {
@@ -1505,10 +1812,19 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
             InvalidateRect(h, nullptr, FALSE);
         }
         SetHoverTile(HitTile(p));
+        const int hover = HitToolbar(p);
+        if (g_mw->toolbarHover != hover) {
+            g_mw->toolbarHover = hover;
+            InvalidateRect(h, nullptr, FALSE);
+        }
         return 0;
     }
     case WM_MOUSELEAVE:
         g_mw->tracking = false;
+        if (g_mw->toolbarHover != -1) {
+            g_mw->toolbarHover = -1;
+            InvalidateRect(h, nullptr, FALSE);
+        }
         if (g_mw->hover >= 0 || g_mw->pressed >= 0) {
             g_mw->hover = g_mw->pressed = -1;
             InvalidateRect(h, nullptr, FALSE);
@@ -1527,6 +1843,20 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_LBUTTONDOWN:
     case WM_LBUTTONDBLCLK: {
         POINT p{(short)LOWORD(l), (short)HIWORD(l)};
+        const int toolbar = HitToolbar(p);
+        if (toolbar >= 0) {
+            SetFocus(h);
+            if (toolbar == kNewest) OpenSortMenu();
+            else ToolbarCommand(toolbar);
+            return 0;
+        }
+        if (GridMode()) {
+            const ToolbarLayout layout = GetToolbarLayout();
+            if (PtInRect(&layout.search, p)) {
+                SetFocus(g_mw->search);
+                return 0;
+            }
+        }
         if (p.x >= g_mw->panelW) {
             if (GridMode()) {
                 Grid g = GetGrid();
@@ -1623,9 +1953,31 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
             t = HitTile(cp);
         }
         if (t >= 0) TileMenu(t, sp);
+        else {
+            HMENU menu = CreatePopupMenu();
+            AppendMenuW(menu, MF_STRING, kPaste, Tr(L"Вставить на полку\tCtrl+V", L"Paste to shelf\tCtrl+V"));
+            UINT id = (UINT)TrackPopupMenuEx(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, sp.x, sp.y, h, nullptr);
+            DestroyMenu(menu);
+            if (id && g_mw) ToolbarCommand(id);
+        }
         return 0;
     }
     case WM_KEYDOWN: {
+        const bool ctrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+        if (ctrl && w == 'F') {
+            g_mw->showTable = false;
+            LayoutToolbar();
+            SetFocus(g_mw->search);
+            SendMessageW(g_mw->search, EM_SETSEL, 0, -1);
+            Redraw();
+            return 0;
+        }
+        if (ctrl && w == 'V') {
+            PasteToShelf();
+            return 0;
+        }
+        if (w == VK_F5) { Rescan(); return 0; }
+        if (w == VK_ESCAPE && !g_mw->query.empty()) { SetWindowTextW(g_mw->search, L""); return 0; }
         if (!GridMode()) break;
         if (KeyNav(w)) return 0;
         if (w == 'A' && (GetKeyState(VK_CONTROL) & 0x8000)) {
@@ -1679,6 +2031,7 @@ LRESULT CALLBACK MainWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         if (g_mw->menuFont) DeleteObject(g_mw->menuFont);
         if (g_mw->tableFont) DeleteObject(g_mw->tableFont);
         if (g_mw->badgeFont) DeleteObject(g_mw->badgeFont);
+        if (g_mw->searchBrush) DeleteObject(g_mw->searchBrush);
         delete g_mw;
         g_mw = nullptr;
         LRESULT r = DefWindowProcW(h, m, w, l);
@@ -1715,7 +2068,7 @@ void ShowMainWindow() {
     }
     g_mw = new State;
     g_mw->session = ++g_sessionCounter;
-    HWND h = CreateWindowExW(0, L"ZipshotMainWindow", L"Zipshot", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 400, 300,
+    HWND h = CreateWindowExW(0, L"ZipshotMainWindow", L"Zipshot", WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, 400, 300,
                              nullptr, nullptr, g_inst, nullptr);
     if (!h) {
         delete g_mw;
@@ -1738,6 +2091,8 @@ void ShowMainWindow() {
     GetMonitorInfoW(MonitorFromPoint(cur, MONITOR_DEFAULTTONEAREST), &mi);
     SetWindowPos(h, nullptr, mi.rcWork.left, mi.rcWork.top, 0, 0, SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE);
     ApplyDpi(GetDpiForWindow(h));
+    g_mw->oldestFirst = GetSettingBool(L"GalleryOldestFirst", false);
+    CreateToolbar();
     SIZE s = WindowSizeFor(g_mw->dpi);
     RECT& wa = mi.rcWork;
     int x = wa.left + std::max(0L, (wa.right - wa.left - s.cx) / 2), y = wa.top + std::max(0L, (wa.bottom - wa.top - s.cy) / 2);
@@ -1763,23 +2118,12 @@ void MainWindowNotifyCapture(const std::wstring& path) {
     e.name = slash == std::wstring::npos ? path : path.substr(slash + 1);
     if (!IsCaptureExt(e.name, e.kind)) return;
     e.path = path;
+    e.shelf = shelf::IsShelfPath(path);
     WIN32_FILE_ATTRIBUTE_DATA fa{};
     if (GetFileAttributesExW(path.c_str(), GetFileExInfoStandard, &fa)) e.time = FtToU64(fa.ftLastWriteTime);
-    for (int k = 0; k < (int)g_mw->files.size(); ++k)
-        if (g_mw->files[k].path == path) {
-            RemoveEntry(k);
-            break;
-        }
-    g_mw->files.insert(g_mw->files.begin(), std::move(e));
-    if (g_mw->sel >= 0) ++g_mw->sel;
-    g_mw->hoverTile = -1;
-    while (g_mw->files.size() > kMaxFiles) {
-        FreeThumb(g_mw->files.back());
-        g_mw->files.pop_back();
-    }
-    if (g_mw->sel >= (int)g_mw->files.size()) g_mw->sel = -1;
-    ClampScroll();
-    Redraw();
+    std::erase_if(g_mw->catalog, [&](const gallery::Item& item) { return item.path == path; });
+    g_mw->catalog.push_back(static_cast<const gallery::Item&>(e));
+    RebuildView();
 }
 
 IDropTarget* MainWindowDropTargetForTest() { return g_mw ? g_mw->drop : nullptr; }
@@ -1788,7 +2132,21 @@ void MainWindowRefresh() {
     if (!g_mw) return;
     CreateFonts();
     Measure();
+    LayoutToolbar();
     RefreshRows();
     ClampScroll();
     Redraw();
+}
+
+bool MainWindowWriteReady(const std::wstring& path) {
+    if (!g_mw || !IsWindowVisible(g_mw->hwnd) || !g_mw->search || !IsWindowVisible(g_mw->search)) return false;
+    UpdateWindow(g_mw->hwnd);
+    RECT r{};
+    if (!g_mw->paintCount || !GetWindowRect(g_mw->hwnd, &r) || r.right <= r.left || r.bottom <= r.top) return false;
+    FILE* out = nullptr;
+    if (_wfopen_s(&out, path.c_str(), L"wb") || !out) return false;
+    const bool ok = fprintf(out, "{\"visible\":true,\"search_visible\":true,\"paint_count\":%u,\"width\":%ld,\"height\":%ld,\"dpi\":%u,\"items\":%zu,\"oldest_first\":%s}\n",
+                            g_mw->paintCount, r.right-r.left, r.bottom-r.top, g_mw->dpi, g_mw->files.size(),
+                            g_mw->oldestFirst ? "true" : "false") > 0;
+    return fclose(out) == 0 && ok;
 }
