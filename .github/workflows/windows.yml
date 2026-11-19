@@ -25,6 +25,9 @@ jobs:
       - name: Hidden gallery window and input routing
         shell: cmd
         run: tests\run_mainwindow_gallery_tests.bat
+      - name: Continuous brush strokes and explicit selection
+        shell: cmd
+        run: tests\run_editor_brush_tests.bat
       - uses: actions/upload-artifact@v4
         with:
           name: Zipshot-windows-x64

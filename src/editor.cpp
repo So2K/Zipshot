@@ -1391,7 +1391,7 @@ struct Editor {
             g.br->SetColor(kWhite);
             rt->DrawRectangle(ToScreen(Norm(cropA, cropB)), g.br.Get(), 1, DashStroke());
         }
-        if (selected >= 0 && selected < (int)shapes.size() && !drawing) {
+        if (selected >= 0 && selected < (int)shapes.size() && !drawing && !IsFreehand(tool)) {
             const Shape& sel = shapes[selected];
             std::vector<Node> nodes = Nodes(sel);
             if (nodes.empty() || sel.tool == T_Step) {  // shapes without box nodes keep the dashed frame
@@ -1474,7 +1474,7 @@ struct Editor {
     }
 
     bool NodeAt(int x, int y, Node& out) const {
-        if (selected < 0 || selected >= (int)shapes.size() || drawing) return false;
+        if (selected < 0 || selected >= (int)shapes.size() || drawing || IsFreehand(tool)) return false;
         std::vector<Node> v = Nodes(shapes[selected]);
         float r = NodeR() + 2;
         for (size_t i = v.size(); i-- > 0;) {  // the last drawn (bottom right, tail) wins
@@ -3483,7 +3483,7 @@ struct Editor {
     void SetTool(Tool t) {
         CommitText();
         tool = t;
-        if (selected >= 0 && shapes[selected].tool != t) selected = -1;
+        if (IsFreehand(t) || (selected >= 0 && shapes[selected].tool != t)) selected = -1;
         LayoutToolbar();
         Invalidate();
     }
@@ -3630,7 +3630,7 @@ struct Editor {
             return;
         }
         // Double-click (ShareX OnDoubleClicked): edit a text, pick another image file or sticker.
-        if (dbl) {
+        if (dbl && !IsFreehand(tool)) {
             int h = HitShape(p);
             if (h >= 0 && (shapes[h].tool == T_Image || shapes[h].tool == T_Sticker)) {
                 CommitText();
@@ -3640,7 +3640,7 @@ struct Editor {
             }
         }
         // Clicking an existing text of the same kind edits it (ShareX: double-click).
-        if (IsText(tool) || dbl) {
+        if (IsText(tool) || (dbl && !IsFreehand(tool))) {
             int h = HitShape(p);
             if (h >= 0 && IsText(shapes[h].tool) && (dbl || shapes[h].tool == tool)) {
                 CommitText();
@@ -3652,7 +3652,9 @@ struct Editor {
         }
         CommitText();
         SetCapture(hwnd);
-        if (tool == T_Select || OverSelected(p)) {
+        // A pen always starts a new stroke, even over an existing object's bounds.
+        // Switching to Select remains the explicit way to move or reshape it.
+        if (tool == T_Select || (!IsFreehand(tool) && OverSelected(p))) {
             int h = tool == T_Select ? HitShape(p) : selected;
             if (tool == T_Select && OverSelected(p)) h = selected;
             selected = h;
@@ -3904,7 +3906,8 @@ struct Editor {
             D2D1_RECT_F r = Norm(s.pts[0], s.pts.back());
             s.initSize = {r.right - r.left, r.bottom - r.top};
         }
-        if (region && o.switchToSelect) {  // ShareX SwitchToSelectionToolAfterDrawing
+        if (IsFreehand(s.tool)) selected = -1;  // stay ready for the next stroke, without selection handles
+        if (region && o.switchToSelect && !IsFreehand(s.tool)) {  // freehand remains a continuous drawing tool
             tool = T_Select;
             LayoutToolbar();
         }
@@ -4045,7 +4048,7 @@ struct Editor {
                 if (mode == RD_L || mode == RD_R) return LoadCursorW(nullptr, IDC_SIZEWE);
                 if (mode == RD_T || mode == RD_B) return LoadCursorW(nullptr, IDC_SIZENS);
             }
-            if (!IsRegion(tool) && (tool == T_Select ? HitShape(ip) >= 0 : OverSelected(ip))) return LoadCursorW(nullptr, IDC_SIZEALL);
+            if (!IsRegion(tool) && (tool == T_Select ? HitShape(ip) >= 0 : !IsFreehand(tool) && OverSelected(ip))) return LoadCursorW(nullptr, IDC_SIZEALL);
             if (IsText(tool)) return LoadCursorW(nullptr, IDC_IBEAM);
             static HCURSOR cross = LoadCursorW(g_inst, L"CROSSHAIR");  // ShareX's own Crosshair.cur
             return cross ? cross : LoadCursorW(nullptr, IDC_CROSS);
@@ -4053,7 +4056,7 @@ struct Editor {
         if (ButtonAt(p.x, p.y) >= 0 || p.y < tbH) return LoadCursorW(nullptr, IDC_ARROW);
         D2D1_POINT_2F ip = ToImage(p.x, p.y);
         if (tool == T_Select) return LoadCursorW(nullptr, HitShape(ip) >= 0 ? IDC_SIZEALL : IDC_ARROW);
-        if (OverSelected(ip)) return LoadCursorW(nullptr, IDC_SIZEALL);
+        if (!IsFreehand(tool) && OverSelected(ip)) return LoadCursorW(nullptr, IDC_SIZEALL);
         if (IsText(tool)) return LoadCursorW(nullptr, IDC_IBEAM);
         return LoadCursorW(nullptr, IDC_CROSS);
     }
