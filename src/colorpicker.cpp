@@ -191,7 +191,8 @@ struct Picker {
             GetClientRect(hwnd, &cr);
             D2D1_RENDER_TARGET_PROPERTIES p = D2D1::RenderTargetProperties();
             p.dpiX = p.dpiY = 96;
-            Factory()->CreateHwndRenderTarget(p, D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(cr.right, cr.bottom)), &rt);
+            Factory()->CreateHwndRenderTarget(
+                p, D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(cr.right, cr.bottom), D2D1_PRESENT_OPTIONS_IMMEDIATELY), &rt);
             if (!rt) return;
             rt->CreateSolidColorBrush(kText, &br);
         }
@@ -206,7 +207,7 @@ struct Picker {
         // on the corners where their soft edges overlapped.
         ComPtr<ID2D1RoundedRectangleGeometry> svg;
         Factory()->CreateRoundedRectangleGeometry({sv, 8 * ui, 8 * ui}, &svg);
-        rt->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), svg.Get()), nullptr);
+        rt->PushLayer(D2D1::LayerParameters(sv, svg.Get()), nullptr);
         Brush({hr, hg, hb, 1});
         rt->FillRectangle(sv, br.Get());
         D2D1_GRADIENT_STOP white[2] = {{0, C(255, 255, 255, 1)}, {1, C(255, 255, 255, 0)}};
@@ -231,7 +232,7 @@ struct Picker {
         float rad = (al.bottom - al.top) / 2;
         ComPtr<ID2D1RoundedRectangleGeometry> alg;
         Factory()->CreateRoundedRectangleGeometry({al, rad, rad}, &alg);
-        rt->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), alg.Get()), nullptr);
+        rt->PushLayer(D2D1::LayerParameters(al, alg.Get()), nullptr);
         Checker(al, std::round(6 * ui));
         D2D1_GRADIENT_STOP fade[2] = {{0, {cur[0], cur[1], cur[2], 0}}, {1, solid}};
         rt->FillRectangle(al, Gradient({al.left, 0}, {al.right, 0}, fade, 2).Get());
@@ -241,7 +242,7 @@ struct Picker {
         D2D1_RECT_F pv = PreviewRect();
         ComPtr<ID2D1RoundedRectangleGeometry> pvg;
         Factory()->CreateRoundedRectangleGeometry({pv, 6 * ui, 6 * ui}, &pvg);
-        rt->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), pvg.Get()), nullptr);
+        rt->PushLayer(D2D1::LayerParameters(pv, pvg.Get()), nullptr);
         Checker(pv, std::round(5 * ui));
         float mid = (pv.left + pv.right) / 2;
         Brush({orig[0], orig[1], orig[2], orig[3]});
@@ -285,7 +286,7 @@ struct Picker {
             D2D1_RECT_F r = Swatch(i);
             ComPtr<ID2D1RoundedRectangleGeometry> g;
             Factory()->CreateRoundedRectangleGeometry({r, 5 * ui, 5 * ui}, &g);
-            rt->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), g.Get()), nullptr);
+            rt->PushLayer(D2D1::LayerParameters(r, g.Get()), nullptr);
             float f[4];
             Unpack(c, f);
             if (f[3] < 1) Checker(r, std::round(4 * ui));

@@ -545,6 +545,10 @@ struct Editor {
     bool fixedClick = false;        // fixed size mode: button down, capture the hover rect on release
     DWORD fpsTick = 0;
     int fpsFrames = 0, fps = 0;
+    bool useWarp = false;
+    int rendererMode = 0;  // 0 auto (GPU -> WARP on GPU stall), 1 force GPU, 2 force CPU/WARP
+    int slowGpuFrames = 0;
+    ULONGLONG lastPaintMs = 0;
     ComPtr<IDWriteTextFormat> fpsFont;  // ShareX infoFontBig
     POINT cursor{-10000, -10000};   // client coords
     float gripDX = 0, gripDY = 0;   // toolbar dragged by its grip
@@ -1434,11 +1438,25 @@ struct Editor {
             }
         }
         if (!rt) {
+            if (rendererMode == 0 && !useWarp) {
+                wchar_t mode[16]{};
+                GetPrivateProfileStringW(L"main", L"Renderer", L"auto", mode, 16, Opts::Ini().c_str());
+                if (_wcsicmp(mode, L"cpu") == 0 || _wcsicmp(mode, L"warp") == 0) { rendererMode = 2; useWarp = true; }
+                else if (_wcsicmp(mode, L"gpu") == 0) rendererMode = 1;
+            }
             RECT cr;
             GetClientRect(hwnd, &cr);
-            D2D1_RENDER_TARGET_PROPERTIES p = D2D1::RenderTargetProperties();
+            D2D1_RENDER_TARGET_PROPERTIES p = D2D1::RenderTargetProperties(
+                useWarp ? D2D1_RENDER_TARGET_TYPE_SOFTWARE : D2D1_RENDER_TARGET_TYPE_DEFAULT);
             p.dpiX = p.dpiY = 96;
-            D2D()->CreateHwndRenderTarget(p, D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(cr.right, cr.bottom)), &rt);
+            D2D()->CreateHwndRenderTarget(
+                p, D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(cr.right, cr.bottom), D2D1_PRESENT_OPTIONS_IMMEDIATELY), &rt);
+            if (!rt && !useWarp) {
+                useWarp = true;
+                p.type = D2D1_RENDER_TARGET_TYPE_SOFTWARE;
+                D2D()->CreateHwndRenderTarget(
+                    p, D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(cr.right, cr.bottom), D2D1_PRESENT_OPTIONS_IMMEDIATELY), &rt);
+            }
             if (!rt) return;
             g = MakeGfx(rt.Get(), *img);
         }
@@ -1496,9 +1514,28 @@ struct Editor {
         }
         if (region) RenderRegionOverlay();
         DrawToolbar();
-        if (rt->EndDraw() == D2DERR_RECREATE_TARGET) {
+        LARGE_INTEGER qf{}, qt0{}, qt1{};
+        const bool probeGpu = !useWarp && rendererMode == 0;
+        if (probeGpu) { QueryPerformanceFrequency(&qf); QueryPerformanceCounter(&qt0); }
+        HRESULT endHr = rt->EndDraw();
+        lastPaintMs = GetTickCount64();
+        if (endHr == D2DERR_RECREATE_TARGET) {
             rt.Reset();
             g = {};
+        } else if (probeGpu && qf.QuadPart > 0) {
+            QueryPerformanceCounter(&qt1);
+            double endMs = (qt1.QuadPart - qt0.QuadPart) * 1000.0 / qf.QuadPart;
+            if (endMs > 28.0) {
+                if (++slowGpuFrames >= 2) {
+                    Log(L"editor: GPU EndDraw stalled (%.1f ms), switching to WARP software renderer", endMs);
+                    useWarp = true;
+                    slowGpuFrames = 0;
+                    rt.Reset();
+                    g = {};
+                }
+            } else {
+                slowGpuFrames = 0;
+            }
         }
         animSig = AnimSignature();
         UpdateAnimTimer();
@@ -2106,12 +2143,40 @@ struct Editor {
         rt->DrawBitmap(g.img.Get(), all, 1, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
         if (o.dimming && o.dimStrength > 0) {
             g.br->SetColor(Rgb(0, 0, 0, (int)std::round(255 * o.dimStrength / 100.f)));
-            rt->FillRectangle(all, g.br.Get());
-            if (!regions.empty() || RegionValid()) {  // regions stay undimmed
-                if (auto geo = RegionsGeometry(LiveRegions())) {
-                    rt->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), geo.Get(), D2D1_ANTIALIAS_MODE_ALIASED), nullptr);
-                    rt->DrawBitmap(g.img.Get(), all, 1, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
-                    rt->PopLayer();
+            auto live = LiveRegions();
+            if (live.size() == 1 && live[0].tool == T_RegionRect && o.regionRadius <= 0) {
+                // Fast path: 4 dim strips around the rectangle — zero offscreen PushLayer and zero 2nd full-screen blit.
+                D2D1_RECT_F r = RegionBounds(live[0]);
+                r.left = std::clamp(r.left, 0.f, all.right);
+                r.top = std::clamp(r.top, 0.f, all.bottom);
+                r.right = std::clamp(r.right, r.left, all.right);
+                r.bottom = std::clamp(r.bottom, r.top, all.bottom);
+                if (r.top > 0) rt->FillRectangle({0, 0, all.right, r.top}, g.br.Get());
+                if (r.bottom < all.bottom) rt->FillRectangle({0, r.bottom, all.right, all.bottom}, g.br.Get());
+                if (r.left > 0 && r.bottom > r.top) rt->FillRectangle({0, r.top, r.left, r.bottom}, g.br.Get());
+                if (r.right < all.right && r.bottom > r.top) rt->FillRectangle({r.right, r.top, all.right, r.bottom}, g.br.Get());
+            } else {
+                rt->FillRectangle(all, g.br.Get());
+                if (!live.empty()) {  // regions stay undimmed, clipped to tight bounding box
+                    if (auto geo = RegionsGeometry(live)) {
+                        D2D1_RECT_F b{all.right, all.bottom, 0, 0};
+                        for (const Shape& s : live) {
+                            D2D1_RECT_F rb = RegionBounds(s);
+                            b.left = std::min(b.left, rb.left);
+                            b.top = std::min(b.top, rb.top);
+                            b.right = std::max(b.right, rb.right);
+                            b.bottom = std::max(b.bottom, rb.bottom);
+                        }
+                        b.left = std::clamp(std::floor(b.left), 0.f, all.right);
+                        b.top = std::clamp(std::floor(b.top), 0.f, all.bottom);
+                        b.right = std::clamp(std::ceil(b.right), b.left, all.right);
+                        b.bottom = std::clamp(std::ceil(b.bottom), b.top, all.bottom);
+                        if (b.right > b.left && b.bottom > b.top) {
+                            rt->PushLayer(D2D1::LayerParameters(b, geo.Get(), D2D1_ANTIALIAS_MODE_ALIASED), nullptr);
+                            rt->DrawBitmap(g.img.Get(), b, 1, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, b);
+                            rt->PopLayer();
+                        }
+                    }
                 }
             }
         }
@@ -2340,7 +2405,7 @@ struct Editor {
                 rt->PushAxisAlignedClip(m, D2D1_ANTIALIAS_MODE_ALIASED);
             } else {
                 D2D()->CreateEllipseGeometry(D2D1::Ellipse({x + magW / 2, y + magW / 2}, magW / 2, magW / 2), &circle);
-                rt->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), circle.Get()), nullptr);
+                rt->PushLayer(D2D1::LayerParameters(m, circle.Get()), nullptr);
             }
             g.br->SetColor(kCanvas);
             rt->FillRectangle(m, g.br.Get());
@@ -4187,9 +4252,10 @@ LRESULT CALLBACK EditorProc(HWND h, UINT m, WPARAM w, LPARAM l) {
             }
             return 0;
         }
-        if (w == 2) {  // region capture: marching ants
-            if (e->region && (e->o.showFps || (e->o.animations && (e->hasHover || e->creatingRegion || e->o.crosshair))))
-                e->Invalidate();
+        if (w == 2) {  // region capture: marching ants (skip if a paint just ran, never starve mouse input)
+            if (e->region && (e->o.showFps || (e->o.animations && (e->hasHover || e->creatingRegion || e->o.crosshair)))) {
+                if (e->o.showFps || GetTickCount64() - e->lastPaintMs >= 40) e->Invalidate();
+            }
             return 0;
         }
         KillTimer(h, 1);
@@ -4773,7 +4839,7 @@ bool RegionCapture(ImagePtr screen, RECT vs, Image& out, RECT& rect) {
     ShowWindow(h, SW_SHOW);
     SetForegroundWindow(h);
     SetFocus(h);
-    SetTimer(h, 2, 16, nullptr);
+    SetTimer(h, 2, e->o.showFps ? 16 : 50, nullptr);
     // Hotkeys keep working in here: a nested capture (a screenshot of this screen) runs on top.
     MSG msg;
     bool quit = false;

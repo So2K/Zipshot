@@ -60,12 +60,31 @@ static void DrawCursor(HDC dc, POINT origin) {
 
 namespace {
 
+struct DdaOutput {
+    ComPtr<IDXGIOutput1> out;
+    ComPtr<ID3D11Texture2D> staging;
+    UINT stagingW = 0, stagingH = 0;
+};
+
 struct DdaAdapter {
     ComPtr<ID3D11Device> dev;
     ComPtr<ID3D11DeviceContext> ctx;
-    std::vector<ComPtr<IDXGIOutput1>> outputs;
+    std::vector<DdaOutput> outputs;
 };
 std::vector<DdaAdapter> g_dda;  // created on first capture, kept (a few hundred KB)
+
+// Fast opaque copy (2 pixels per iteration, auto-vectorizes to SSE2/AVX2).
+inline void CopyRowOpaque(uint32_t* dst, const uint32_t* src, int count) {
+    int x = 0;
+    const uint64_t mask = 0xFF000000FF000000ull;
+    for (; x + 1 < count; x += 2) {
+        uint64_t v;
+        memcpy(&v, src + x, sizeof(v));
+        v |= mask;
+        memcpy(dst + x, &v, sizeof(v));
+    }
+    if (x < count) dst[x] = src[x] | 0xFF000000u;
+}
 
 void InitDda() {
     if (!g_dda.empty()) return;
@@ -80,12 +99,15 @@ void InitDda() {
             DXGI_OUTPUT_DESC d;
             if (FAILED(o->GetDesc(&d))) continue;
             if (d.AttachedToDesktop && d.Rotation <= DXGI_MODE_ROTATION_IDENTITY && SUCCEEDED(o.As(&o1)))
-                da.outputs.push_back(o1);
+                da.outputs.push_back({o1, {}, 0, 0});
         }
         if (da.outputs.empty()) continue;
         if (FAILED(D3D11CreateDevice(a.Get(), D3D_DRIVER_TYPE_UNKNOWN, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT, nullptr, 0,
                                      D3D11_SDK_VERSION, &da.dev, nullptr, &da.ctx)))
             continue;
+        // Highest WDDM GPU thread priority so Zipshot's tiny capture preempts saturated 3D/UE/Blender queues.
+        ComPtr<IDXGIDevice> dxgiDev;
+        if (SUCCEEDED(da.dev.As(&dxgiDev))) dxgiDev->SetGPUThreadPriority(7);
         g_dda.push_back(std::move(da));
     }
 }
@@ -104,7 +126,7 @@ void GdiGrabInto(Image& img, RECT r, RECT part) {
     for (int y = 0; y < ph; ++y) {
         const uint32_t* s = (const uint32_t*)bits + (size_t)y * pw;
         uint32_t* t = &img.px[(size_t)(y + part.top - r.top) * img.w + (part.left - r.left)];
-        for (int x = 0; x < pw; ++x) t[x] = s[x] | 0xFF000000u;
+        CopyRowOpaque(t, s, pw);
     }
     SelectObject(mem, old);
     DeleteDC(mem);
@@ -126,7 +148,8 @@ bool LooksBlack(const Image& img, RECT r, RECT part) {
 enum class Grab { Ok, Gdi, DeviceLost };
 
 // Copies the part of one output that intersects r into img.
-Grab GrabOutput(DdaAdapter& da, IDXGIOutput1* out, RECT r, Image& img) {
+Grab GrabOutput(DdaAdapter& da, DdaOutput& slot, RECT r, Image& img) {
+    IDXGIOutput1* out = slot.out.Get();
     DXGI_OUTPUT_DESC d;
     if (FAILED(out->GetDesc(&d))) return Grab::DeviceLost;
     RECT part;
@@ -138,12 +161,11 @@ Grab GrabOutput(DdaAdapter& da, IDXGIOutput1* out, RECT r, Image& img) {
     if (FAILED(hr)) return Grab::DeviceLost;
     DXGI_OUTDUPL_FRAME_INFO fi{};
     ComPtr<IDXGIResource> res;
-    // The first frame after DuplicateOutput normally carries the desktop at once. Sometimes it arrives
-    // without an image yet (LastPresentTime == 0), which reads back as black, so give it two more tries.
-    for (int attempt = 0; attempt < 3; ++attempt) {
+    // Fail-fast timeouts: when DWM has a frame it arrives in <1ms; under 99% GPU load, avoid blocking 900ms.
+    for (int attempt = 0; attempt < 2; ++attempt) {
         hr = E_FAIL;
-        for (int i = 0; i < 3 && (hr = dup->AcquireNextFrame(attempt ? 40 : 100, &fi, &res)) == DXGI_ERROR_WAIT_TIMEOUT; ++i) {}
-        if (FAILED(hr) || fi.LastPresentTime.QuadPart != 0 || attempt == 2) break;
+        for (int i = 0; i < 2 && (hr = dup->AcquireNextFrame(attempt ? 20 : 16, &fi, &res)) == DXGI_ERROR_WAIT_TIMEOUT; ++i) {}
+        if (FAILED(hr) || fi.LastPresentTime.QuadPart != 0 || attempt == 1) break;
         res.Reset();
         dup->ReleaseFrame();
     }
@@ -156,31 +178,39 @@ Grab GrabOutput(DdaAdapter& da, IDXGIOutput1* out, RECT r, Image& img) {
     }
     D3D11_TEXTURE2D_DESC td;
     tex->GetDesc(&td);
-    int pw = part.right - part.left, ph = part.bottom - part.top;
-    D3D11_TEXTURE2D_DESC sd{};
-    sd.Width = pw;
-    sd.Height = ph;
-    sd.MipLevels = 1;
-    sd.ArraySize = 1;
-    sd.Format = td.Format;
-    sd.SampleDesc.Count = 1;
-    sd.Usage = D3D11_USAGE_STAGING;
-    sd.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-    ComPtr<ID3D11Texture2D> staging;
+    UINT pw = (UINT)(part.right - part.left), ph = (UINT)(part.bottom - part.top);
     bool ok = false;
-    if (td.Format == DXGI_FORMAT_B8G8R8A8_UNORM && SUCCEEDED(da.dev->CreateTexture2D(&sd, nullptr, &staging))) {
-        D3D11_BOX box{(UINT)(part.left - d.DesktopCoordinates.left), (UINT)(part.top - d.DesktopCoordinates.top), 0,
-                      (UINT)(part.right - d.DesktopCoordinates.left), (UINT)(part.bottom - d.DesktopCoordinates.top), 1};
-        da.ctx->CopySubresourceRegion(staging.Get(), 0, 0, 0, 0, tex.Get(), 0, &box);
-        D3D11_MAPPED_SUBRESOURCE m;
-        if (SUCCEEDED(da.ctx->Map(staging.Get(), 0, D3D11_MAP_READ, 0, &m))) {
-            for (int y = 0; y < ph; ++y) {
-                const uint32_t* s = (const uint32_t*)((const BYTE*)m.pData + (size_t)y * m.RowPitch);
-                uint32_t* t = &img.px[(size_t)(y + part.top - r.top) * img.w + (part.left - r.left)];
-                for (int x = 0; x < pw; ++x) t[x] = s[x] | 0xFF000000u;
+    if (td.Format == DXGI_FORMAT_B8G8R8A8_UNORM) {
+        if (!slot.staging || slot.stagingW < pw || slot.stagingH < ph) {
+            D3D11_TEXTURE2D_DESC sd{};
+            sd.Width = std::max(pw, td.Width);
+            sd.Height = std::max(ph, td.Height);
+            sd.MipLevels = 1;
+            sd.ArraySize = 1;
+            sd.Format = td.Format;
+            sd.SampleDesc.Count = 1;
+            sd.Usage = D3D11_USAGE_STAGING;
+            sd.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+            slot.staging.Reset();
+            if (SUCCEEDED(da.dev->CreateTexture2D(&sd, nullptr, &slot.staging))) {
+                slot.stagingW = sd.Width;
+                slot.stagingH = sd.Height;
             }
-            da.ctx->Unmap(staging.Get(), 0);
-            ok = true;
+        }
+        if (slot.staging) {
+            D3D11_BOX box{(UINT)(part.left - d.DesktopCoordinates.left), (UINT)(part.top - d.DesktopCoordinates.top), 0,
+                          (UINT)(part.right - d.DesktopCoordinates.left), (UINT)(part.bottom - d.DesktopCoordinates.top), 1};
+            da.ctx->CopySubresourceRegion(slot.staging.Get(), 0, 0, 0, 0, tex.Get(), 0, &box);
+            D3D11_MAPPED_SUBRESOURCE m;
+            if (SUCCEEDED(da.ctx->Map(slot.staging.Get(), 0, D3D11_MAP_READ, 0, &m))) {
+                for (UINT y = 0; y < ph; ++y) {
+                    const uint32_t* s = (const uint32_t*)((const BYTE*)m.pData + (size_t)y * m.RowPitch);
+                    uint32_t* t = &img.px[(size_t)(y + part.top - r.top) * img.w + (part.left - r.left)];
+                    CopyRowOpaque(t, s, (int)pw);
+                }
+                da.ctx->Unmap(slot.staging.Get(), 0);
+                ok = true;
+            }
         }
     }
     tex.Reset();
@@ -201,21 +231,21 @@ bool CaptureDda(RECT r, Image& img) {
     img.px.assign((size_t)img.w * img.h, 0xFF000000u);
     std::vector<RECT> covered;
     for (auto& da : g_dda)
-        for (auto& o : da.outputs) {
+        for (auto& slot : da.outputs) {
             DXGI_OUTPUT_DESC od;
-            if (FAILED(o->GetDesc(&od))) {
+            if (FAILED(slot.out->GetDesc(&od))) {
                 g_dda.clear();
                 return false;
             }
             covered.push_back(od.DesktopCoordinates);
-            Grab res = GrabOutput(da, o.Get(), r, img);
+            Grab res = GrabOutput(da, slot, r, img);
             if (res == Grab::DeviceLost) {
                 g_dda.clear();  // topology/device changed: rebuild next time, use GDI now
                 return false;
             }
             if (res == Grab::Gdi) {
                 DXGI_OUTPUT_DESC d;
-                o->GetDesc(&d);
+                slot.out->GetDesc(&d);
                 RECT part;
                 if (IntersectRect(&part, &r, &d.DesktopCoordinates)) GdiGrabInto(img, r, part);
             }
@@ -290,7 +320,7 @@ Image CaptureRect(RECT r, bool cursor) {
     img.px.resize((size_t)w * h);
     const uint32_t* src = (const uint32_t*)bits;
     uint32_t* dst = img.px.data();
-    for (size_t i = 0, n = img.px.size(); i < n; ++i) dst[i] = src[i] | 0xFF000000u;
+    CopyRowOpaque(dst, src, w * h);
     SelectObject(mem, old);
     DeleteDC(mem);
     ReleaseDC(nullptr, screen);
