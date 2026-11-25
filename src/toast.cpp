@@ -136,9 +136,12 @@ LRESULT CALLBACK ToastProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         return 0;
     }
     case WM_MBUTTONUP: {
-        std::wstring args = L"/select,\"" + t->path + L"\"";
+        std::wstring path = t->path;
         DestroyWindow(h);
-        ShellExecuteW(nullptr, nullptr, L"explorer.exe", args.c_str(), nullptr, SW_SHOWNORMAL);
+        if (!path.empty()) {
+            std::wstring args = L"/select,\"" + path + L"\"";
+            ShellExecuteW(nullptr, nullptr, L"explorer.exe", args.c_str(), nullptr, SW_SHOWNORMAL);
+        }
         return 0;
     }
     case WM_RBUTTONUP:
@@ -172,12 +175,7 @@ void ShowToast(ImagePtr img, const std::wstring& path, const std::wstring& title
     HMONITOR mon = MonitorFromPoint(cp, MONITOR_DEFAULTTOPRIMARY);
     MONITORINFO mi{sizeof(mi)};
     GetMonitorInfoW(mon, &mi);
-    float ui = 1;
-    using GetDpiForMonitorFn = HRESULT(WINAPI*)(HMONITOR, int, UINT*, UINT*);
-    if (auto fn = (GetDpiForMonitorFn)GetProcAddress(LoadLibraryW(L"shcore.dll"), "GetDpiForMonitor")) {
-        UINT dx, dy;
-        if (SUCCEEDED(fn(mon, 0, &dx, &dy))) ui = dx / 96.0f;
-    }
+    float ui = MonitorDpi(mon) / 96.0f;
 
     auto* t = new Toast;
     t->img = img;
@@ -192,8 +190,13 @@ void ShowToast(ImagePtr img, const std::wstring& path, const std::wstring& title
     t->w = std::max(tw, (int)(300 * ui));
     t->h = th + cap;
     HDC sdc = GetDC(nullptr);
-    void* bits;
+    void* bits = nullptr;
     t->bmp = CreateDib(t->w, t->h, &bits);
+    if (!t->bmp || !bits) {
+        ReleaseDC(nullptr, sdc);
+        delete t;
+        return;
+    }
     t->dc = CreateCompatibleDC(sdc);
     ReleaseDC(nullptr, sdc);
     t->old = SelectObject(t->dc, t->bmp);
@@ -202,24 +205,26 @@ void ShowToast(ImagePtr img, const std::wstring& path, const std::wstring& title
     FillRect(t->dc, &all, bg);
     DeleteObject(bg);
     if (tw) {
-        void* ib;
+        void* ib = nullptr;
         HBITMAP ibmp = CreateDib(img->w, img->h, &ib);
-        memcpy(ib, img->px.data(), img->px.size() * 4);
-        HDC idc = CreateCompatibleDC(t->dc);
-        HGDIOBJ io = SelectObject(idc, ibmp);
-        SetStretchBltMode(t->dc, HALFTONE);
-        SetBrushOrgEx(t->dc, 0, 0, nullptr);
-        StretchBlt(t->dc, (t->w - tw) / 2, 0, tw, th, idc, 0, 0, img->w, img->h, SRCCOPY);
-        SelectObject(idc, io);
-        DeleteDC(idc);
-        DeleteObject(ibmp);
+        if (ibmp && ib) {
+            memcpy(ib, img->px.data(), img->px.size() * 4);
+            HDC idc = CreateCompatibleDC(t->dc);
+            HGDIOBJ io = SelectObject(idc, ibmp);
+            SetStretchBltMode(t->dc, HALFTONE);
+            SetBrushOrgEx(t->dc, 0, 0, nullptr);
+            StretchBlt(t->dc, (t->w - tw) / 2, 0, tw, th, idc, 0, 0, img->w, img->h, SRCCOPY);
+            SelectObject(idc, io);
+            DeleteDC(idc);
+        }
+        if (ibmp) DeleteObject(ibmp);
     }
     HFONT f = CreateFontW((int)(-13 * ui), 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, L"Segoe UI");
     HGDIOBJ of = SelectObject(t->dc, f);
     SetBkMode(t->dc, TRANSPARENT);
     SetTextColor(t->dc, RGB(230, 230, 230));
     RECT tr{(int)(8 * ui), th, t->w - (int)(8 * ui), t->h};
-    std::wstring text = title + L"  •  " + PathFindFileNameW(path.c_str());
+    std::wstring text = path.empty() ? title : (title + L"  •  " + PathFindFileNameW(path.c_str()));
     DrawTextW(t->dc, text.c_str(), -1, &tr, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS | DT_NOPREFIX);
     SelectObject(t->dc, of);
     DeleteObject(f);

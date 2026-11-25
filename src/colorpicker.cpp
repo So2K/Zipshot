@@ -545,12 +545,7 @@ bool ShowColorPicker(HWND owner, POINT at, float rgba[4]) {
     HMONITOR mon = MonitorFromPoint(at, MONITOR_DEFAULTTONEAREST);
     MONITORINFO mi{sizeof(mi)};
     GetMonitorInfoW(mon, &mi);
-    UINT dpi = 96;
-    using GetDpiForMonitorFn = HRESULT(WINAPI*)(HMONITOR, int, UINT*, UINT*);
-    if (auto fn = (GetDpiForMonitorFn)GetProcAddress(LoadLibraryW(L"shcore.dll"), "GetDpiForMonitor")) {
-        UINT dx, dy;
-        if (SUCCEEDED(fn(mon, 0, &dx, &dy))) dpi = dx;
-    }
+    UINT dpi = MonitorDpi(mon);
     p.ui = dpi / 96.0f;
     DWFactory()->CreateTextFormat(L"Segoe UI", nullptr, DWRITE_FONT_WEIGHT_SEMI_BOLD, DWRITE_FONT_STYLE_NORMAL,
                                   DWRITE_FONT_STRETCH_NORMAL, 13 * p.ui, L"", &p.font);
@@ -558,7 +553,7 @@ bool ShowColorPicker(HWND owner, POINT at, float rgba[4]) {
     DWFactory()->CreateTextFormat(L"Segoe UI", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
                                   DWRITE_FONT_STRETCH_NORMAL, 11.5f * p.ui, L"", &p.smallFont);
     int w = (int)p.W(), h = (int)p.H();
-    int x = std::clamp<int>(at.x, mi.rcWork.left, mi.rcWork.right - w);
+    int x = std::clamp<int>(at.x, mi.rcWork.left, std::max<int>(mi.rcWork.left, mi.rcWork.right - w));
     int y = at.y + (int)(4 * p.ui);
     if (y + h > mi.rcWork.bottom) y = mi.rcWork.bottom - h;
     p.hwnd = CreateWindowExW(WS_EX_TOOLWINDOW | WS_EX_TOPMOST, L"ZipshotColorPicker", L"", WS_POPUP, x, y, w, h, owner, nullptr,

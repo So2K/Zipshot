@@ -292,8 +292,10 @@ Ctl& AddList(Form& f, int id, double x, double y, double w, double h) {
     RECT in{r.frame.left + 1, r.frame.top + 1, r.frame.right - 1, r.frame.bottom - 1};
     r.hwnd = Child(f, L"LISTBOX", L"",
                    WS_TABSTOP | WS_VSCROLL | LBS_OWNERDRAWFIXED | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | LBS_WANTKEYBOARDINPUT, in, id);
+    static HMODULE ux = LoadLibraryExW(L"uxtheme.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
     using SetThemeFn = HRESULT(WINAPI*)(HWND, LPCWSTR, LPCWSTR);
-    if (auto fn = (SetThemeFn)GetProcAddress(LoadLibraryW(L"uxtheme.dll"), "SetWindowTheme")) fn(r.hwnd, L"DarkMode_Explorer", nullptr);
+    static auto fn = ux ? (SetThemeFn)(void*)GetProcAddress(ux, "SetWindowTheme") : nullptr;
+    if (fn) fn(r.hwnd, L"DarkMode_Explorer", nullptr);
     Subclass(r.hwnd);
     return r;
 }
@@ -496,14 +498,16 @@ LRESULT CALLBACK FormProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         HDC dc = BeginPaint(h, &ps);
         RECT cr;
         GetClientRect(h, &cr);
-        HDC mem = CreateCompatibleDC(dc);
-        HBITMAP bmp = CreateCompatibleBitmap(dc, cr.right, cr.bottom);
-        HGDIOBJ ob = SelectObject(mem, bmp);
-        PaintForm(*f, mem);
-        BitBlt(dc, 0, 0, cr.right, cr.bottom, mem, 0, 0, SRCCOPY);
-        SelectObject(mem, ob);
-        DeleteObject(bmp);
-        DeleteDC(mem);
+        if (cr.right > 0 && cr.bottom > 0) {
+            HDC mem = CreateCompatibleDC(dc);
+            HBITMAP bmp = CreateCompatibleBitmap(dc, cr.right, cr.bottom);
+            HGDIOBJ ob = SelectObject(mem, bmp);
+            PaintForm(*f, mem);
+            BitBlt(dc, 0, 0, cr.right, cr.bottom, mem, 0, 0, SRCCOPY);
+            SelectObject(mem, ob);
+            DeleteObject(bmp);
+            DeleteDC(mem);
+        }
         EndPaint(h, &ps);
         return 0;
     }

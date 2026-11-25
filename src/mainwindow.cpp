@@ -4,6 +4,7 @@
 #include "clipboard_shelf.h"
 #include "cursor_video.h"
 #include "sharex_import.h"
+#include "updater.h"
 #include <commctrl.h>
 #include <dwmapi.h>
 #include <shlobj.h>
@@ -85,11 +86,12 @@ const ToggleEntry kAfter[] = {
     {L"Показать уведомление", L"Show notification", L"AfterToast", true},
     {L"Открыть в редакторе", L"Open in image editor", L"AfterEditor", false},
 };
-constexpr UINT kCapBase = 1, kAfterBase = 20, kLangRu = 40, kLangEn = 41, kImport = 42, kOpenIni = 43, kAutostart = 44;
+constexpr UINT kCapBase = 1, kAfterBase = 20, kLangRu = 40, kLangEn = 41, kImport = 42, kOpenIni = 43, kAutostart = 44,
+               kSound = 45, kAutoUpdate = 46, kCheckUpdate = 47, kInstallUpdate = 48;
 enum : UINT { M_Open = 100, M_Editor, M_CopyImage, M_CopyFile, M_CopyPath, M_ShowFolder, M_Delete, M_Combine, M_CursorFollow };
 constexpr UINT_PTR kTimerRun = 1, kTimerFlash = 2;
 constexpr size_t kMaxThumbs = 240;
-constexpr UINT kSearch = 400, kPaste = 401, kNewest = 402, kOldest = 403, kFilterBase = 410;
+constexpr UINT kSearch = 400, kPaste = 401, kNewest = 402, kOldest = 403, kUpdatePill = 404, kFilterBase = 410;
 
 struct IconBmp { HBITMAP normal = nullptr, gray = nullptr; };
 
@@ -801,11 +803,16 @@ int HitToolbar(POINT p) {
     if (PtInRect(&t.paste, p)) return kPaste;
     if (PtInRect(&t.sort, p)) return kNewest;
     for (int i = 0; i < 5; ++i) if (PtInRect(&t.filters[i], p)) return kFilterBase + i;
+    if ((updater::HasUpdate() || updater::Downloading()) && t.status.right > t.status.left && PtInRect(&t.status, p))
+        return kUpdatePill;
     return -1;
 }
 
 void ToolbarCommand(UINT id) {
     if (id == kPaste) PasteToShelf();
+    else if (id == kUpdatePill) {
+        if (updater::HasUpdate() && !updater::Downloading()) RunCommand(C_InstallUpdate);
+    }
     else if (id >= kFilterBase && id < kFilterBase + 5) {
         g_mw->filter = (gallery::Filter)(id - kFilterBase);
         g_mw->notice.clear();
@@ -859,12 +866,27 @@ void PaintToolbar(HDC dc) {
     const wchar_t* names[] = {Tr(L"Все",L"All"),Tr(L"Фото",L"Photos"),L"GIF",Tr(L"Видео",L"Video"),Tr(L"Полка",L"Shelf")};
     for (int i=0;i<5;++i) button(t.filters[i], names[i], (int)g_mw->filter == i, g_mw->toolbarHover == (int)kFilterBase+i);
     if (t.status.right > t.status.left) {
-        std::wstring status = g_mw->notice;
-        if (status.empty() && g_cursorRenderBusy.load()) status = Tr(L"Создаём видео со слежением...", L"Creating cursor-follow video...");
-        if (status.empty()) status = std::to_wstring(g_mw->files.size()) + L" / " + std::to_wstring(g_mw->catalog.size());
-        SetTextColor(dc, kTextOff);
-        RECT r = t.status;
-        DrawTextW(dc, status.c_str(), -1, &r, DT_SINGLELINE | DT_VCENTER | DT_RIGHT | DT_NOPREFIX | DT_END_ELLIPSIS);
+        if (updater::HasUpdate() || updater::Downloading()) {
+            std::wstring upLabel = updater::Downloading()
+                ? (std::wstring(Tr(L"Обновление ", L"Updating ")) + std::to_wstring((int)(updater::Progress() * 100)) + L"%")
+                : (std::wstring(Tr(L"↓ Обновить ", L"↓ Update ")) + updater::AvailableVersion());
+            int pillW = std::min<int>(t.status.right - t.status.left, std::max(S(120), TextW(dc, upLabel) + S(24)));
+            RECT pill{t.status.right - pillW, t.status.top, t.status.right, t.status.bottom};
+            button(pill, upLabel.c_str(), false, g_mw->toolbarHover == (int)kUpdatePill, true);
+            if (updater::Downloading()) {
+                int barW = (int)((pill.right - pill.left - S(12)) * std::clamp(updater::Progress(), 0.0, 1.0));
+                RECT track{pill.left + S(6), pill.bottom - S(4), pill.right - S(6), pill.bottom - S(2)};
+                Fill(dc, track, RGB(0, 90, 180));
+                if (barW > 0) Fill(dc, {track.left, track.top, track.left + barW, track.bottom}, RGB(255, 255, 255));
+            }
+        } else {
+            std::wstring status = g_mw->notice;
+            if (status.empty() && g_cursorRenderBusy.load()) status = Tr(L"Создаём видео со слежением...", L"Creating cursor-follow video...");
+            if (status.empty()) status = std::to_wstring(g_mw->files.size()) + L" / " + std::to_wstring(g_mw->catalog.size());
+            SetTextColor(dc, kTextOff);
+            RECT r = t.status;
+            DrawTextW(dc, status.c_str(), -1, &r, DT_SINGLELINE | DT_VCENTER | DT_RIGHT | DT_NOPREFIX | DT_END_ELLIPSIS);
+        }
     }
 }
 
@@ -1177,14 +1199,14 @@ void OnThumb(unsigned session, const std::wstring& path, int w, int h, HBITMAP b
 // ---------- dark popup menus (undocumented uxtheme ordinals, Win10 1903+) ----------
 
 void AllowDarkMenus(HWND h) {
-    HMODULE ux = LoadLibraryExW(L"uxtheme.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+    static HMODULE ux = LoadLibraryExW(L"uxtheme.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
     if (!ux) return;
     using SetMode = int(WINAPI*)(int);
     using AllowWnd = BOOL(WINAPI*)(HWND, BOOL);
     using Flush = void(WINAPI*)();
-    auto setMode = (SetMode)(void*)GetProcAddress(ux, MAKEINTRESOURCEA(135));
-    auto allow = (AllowWnd)(void*)GetProcAddress(ux, MAKEINTRESOURCEA(133));
-    auto flush = (Flush)(void*)GetProcAddress(ux, MAKEINTRESOURCEA(136));
+    static auto setMode = (SetMode)(void*)GetProcAddress(ux, MAKEINTRESOURCEA(135));
+    static auto allow = (AllowWnd)(void*)GetProcAddress(ux, MAKEINTRESOURCEA(133));
+    static auto flush = (Flush)(void*)GetProcAddress(ux, MAKEINTRESOURCEA(136));
     if (setMode) setMode(1);  // AllowDark: only windows opted in below, following the system theme
     if (allow) allow(h, TRUE);
     if (flush) flush();
@@ -1219,9 +1241,13 @@ void CopyPathText(const std::wstring& path) {
     EmptyClipboard();
     size_t bytes = (path.size() + 1) * sizeof(wchar_t);
     if (HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, bytes)) {
-        memcpy(GlobalLock(mem), path.c_str(), bytes);
-        GlobalUnlock(mem);
-        if (!SetClipboardData(CF_UNICODETEXT, mem)) GlobalFree(mem);
+        if (void* p = GlobalLock(mem)) {
+            memcpy(p, path.c_str(), bytes);
+            GlobalUnlock(mem);
+            if (!SetClipboardData(CF_UNICODETEXT, mem)) GlobalFree(mem);
+        } else {
+            GlobalFree(mem);
+        }
     }
     CloseClipboard();
 }
@@ -1519,12 +1545,24 @@ void ShowSubmenu(int i) {
         AppendMenuW(lang, MF_STRING, kLangEn, L"English");
         CheckMenuRadioItem(lang, kLangRu, kLangEn, IsEnglish() ? kLangEn : kLangRu, MF_BYCOMMAND);
         AppendMenuW(m, MF_POPUP, (UINT_PTR)lang, Tr(L"Язык", L"Language"));  // destroyed with m
+        AppendMenuW(m, MF_STRING | (SoundEnabled() ? MF_CHECKED : 0), kSound, Tr(L"Звуки", L"Sounds"));
         AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
         AppendMenuW(m, MF_STRING, kImport, Tr(L"Импорт настроек из ShareX", L"Import ShareX settings"));
         AppendMenuW(m, MF_STRING, kOpenIni, Tr(L"Открыть zipshot.ini", L"Open zipshot.ini"));
         AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
         AppendMenuW(m, MF_STRING | (AutostartEnabled() ? MF_CHECKED : 0), kAutostart,
                     Tr(L"Запускать при входе в Windows", L"Run at Windows startup"));
+        AppendMenuW(m, MF_STRING | (GetSettingBool(L"AutoUpdate", true) ? MF_CHECKED : 0), kAutoUpdate,
+                    Tr(L"Автопроверка обновлений", L"Check for updates automatically"));
+        if (updater::HasUpdate() && !updater::Downloading()) {
+            std::wstring inst = std::wstring(Tr(L"Установить обновление ", L"Install update ")) + updater::AvailableVersion();
+            AppendMenuW(m, MF_STRING, kInstallUpdate, inst.c_str());
+        } else {
+            AppendMenuW(m, MF_STRING | ((updater::Checking() || updater::Downloading()) ? MF_GRAYED : 0), kCheckUpdate,
+                        updater::Downloading() ? Tr(L"Скачивание обновления...", L"Downloading update...")
+                        : updater::Checking()  ? Tr(L"Проверка обновлений...", L"Checking for updates...")
+                                               : Tr(L"Проверить обновления", L"Check for updates"));
+        }
     } else {
         for (UINT k = 0; k < std::size(kAfter); ++k)
             AppendMenuW(m, MF_STRING | (GetSettingBool(kAfter[k].key, kAfter[k].def) ? MF_CHECKED : 0), kAfterBase + k,
@@ -1555,6 +1593,14 @@ void ShowSubmenu(int i) {
         RunCommand(C_ImportShareX);
     } else if (id == kAutostart) {
         SetAutostart(!AutostartEnabled());
+    } else if (id == kSound) {
+        RunCommand(C_ToggleSound);
+    } else if (id == kAutoUpdate) {
+        SetSettingBool(L"AutoUpdate", !GetSettingBool(L"AutoUpdate", true));
+    } else if (id == kCheckUpdate) {
+        RunCommand(C_CheckUpdate);
+    } else if (id == kInstallUpdate) {
+        RunCommand(C_InstallUpdate);
     } else if (id == kOpenIni) {
         RunCommand(C_Settings);
     }
@@ -1577,16 +1623,17 @@ void Activate(int i) {
         }
         InvalidateRect(g_mw->hwnd, nullptr, FALSE);
         break;
-    case A_About:
-        MessageBoxW(g_mw->hwnd,
-                    Tr(L"Zipshot — нативная замена ShareX\n\n"
-                       L"Звуки: ShareX (GPLv3), https://getsharex.com\n"
-                       L"Иконки: Fugue Icons, Yusuke Kamiyamane (CC BY 3.0)",
-                       L"Zipshot, a native ShareX replacement\n\n"
-                       L"Sounds: ShareX (GPLv3), https://getsharex.com\n"
-                       L"Icons: Fugue Icons, Yusuke Kamiyamane (CC BY 3.0)"),
-                    Tr(L"О программе", L"About"), MB_OK | MB_ICONINFORMATION);
+    case A_About: {
+        std::wstring about = std::wstring(L"Zipshot ") + updater::kAppVersion +
+            Tr(L" — нативная замена ShareX\n\n"
+               L"Звуки: ShareX (GPLv3), https://getsharex.com\n"
+               L"Иконки: Fugue Icons, Yusuke Kamiyamane (CC BY 3.0)",
+               L" — native ShareX replacement\n\n"
+               L"Sounds: ShareX (GPLv3), https://getsharex.com\n"
+               L"Icons: Fugue Icons, Yusuke Kamiyamane (CC BY 3.0)");
+        MessageBoxW(g_mw->hwnd, about.c_str(), Tr(L"О программе", L"About"), MB_OK | MB_ICONINFORMATION);
         break;
+    }
     default: break;
     }
 }

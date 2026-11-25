@@ -4349,12 +4349,7 @@ void OpenEditor(ImagePtr img, const std::wstring& path) {
     MONITORINFO mi{sizeof(mi)};
     GetMonitorInfoW(mon, &mi);
     RECT wa = mi.rcWork;
-    UINT dpi = 96;
-    using GetDpiForMonitorFn = HRESULT(WINAPI*)(HMONITOR, int, UINT*, UINT*);
-    if (auto fn = (GetDpiForMonitorFn)GetProcAddress(LoadLibraryW(L"shcore.dll"), "GetDpiForMonitor")) {
-        UINT dx, dy;
-        if (SUCCEEDED(fn(mon, 0, &dx, &dy))) dpi = dx;
-    }
+    UINT dpi = MonitorDpi(mon);
     e->ui = dpi / 96.0f;
     e->tipFont = Font(L"Segoe UI", 12 * e->ui, false);
     int minW = (int)(620 * e->ui);
@@ -4755,12 +4750,7 @@ bool RegionCapture(ImagePtr screen, RECT vs, Image& out, RECT& rect) {
     GetMonitorInfoW(mon, &mi);
     e->mon = mi.rcMonitor;
     OffsetRect(&e->mon, -vs.left, -vs.top);
-    UINT dpi = 96;
-    using GetDpiForMonitorFn = HRESULT(WINAPI*)(HMONITOR, int, UINT*, UINT*);
-    if (auto fn = (GetDpiForMonitorFn)GetProcAddress(LoadLibraryW(L"shcore.dll"), "GetDpiForMonitor")) {
-        UINT dx, dy;
-        if (SUCCEEDED(fn(mon, 0, &dx, &dy))) dpi = dx;
-    }
+    UINT dpi = MonitorDpi(mon);
     e->ui = dpi / 96.0f;
     e->tipFont = Font(L"Segoe UI", 12 * e->ui, false);
     e->infoFont = Font(L"Verdana", 12 * e->ui, false);

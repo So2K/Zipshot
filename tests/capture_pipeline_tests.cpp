@@ -85,6 +85,18 @@ void ShowMainWindow() { Forbidden(); }
 void MainWindowRefresh() { Forbidden(); }
 bool MainWindowWriteReady(const std::wstring&) { Forbidden(); }
 bool MainWindowMediaBusy() { Forbidden(); }
+bool SoundEnabled() { Forbidden(); }
+void SetSoundEnabled(bool) { Forbidden(); }
+bool CombineBusy() { Forbidden(); }
+namespace updater {
+void CleanupOldExe() { Forbidden(); }
+void Check(bool) { Forbidden(); }
+void DownloadAndInstall() { Forbidden(); }
+bool Checking() { return false; }
+bool Downloading() { return false; }
+bool HasUpdate() { return false; }
+std::wstring AvailableVersion() { return L""; }
+}  // namespace updater
 bool ImportShareXSettings(std::wstring&) { Forbidden(); }
 RECT VirtualScreen() { Forbidden(); }
 Image CaptureRect(RECT, bool) { Forbidden(); }

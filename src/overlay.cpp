@@ -323,7 +323,12 @@ bool SelectRegion(const Image& screen, RECT vs, RECT& out, bool forRecording) {
     QueryPerformanceCounter(&t1);
     Log(L"overlay: shown in %.1f ms", (t1.QuadPart - t0.QuadPart) * 1000.0 / f.QuadPart);
     MSG msg;
-    while (!o.done && GetMessageW(&msg, nullptr, 0, 0)) {
+    while (!o.done) {
+        int r = GetMessageW(&msg, nullptr, 0, 0);
+        if (r <= 0) {
+            if (r == 0) PostQuitMessage((int)msg.wParam);
+            break;
+        }
         TranslateMessage(&msg);
         DispatchMessageW(&msg);
     }

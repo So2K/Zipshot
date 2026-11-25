@@ -52,6 +52,9 @@ jobs:
       - name: Recorder cursor state and output routing
         shell: cmd
         run: tests\run_recorder_cursor_tests.bat
+      - name: Auto-updater version parsing and SHA-256 checks
+        shell: cmd
+        run: tests\run_updater_tests.bat
       - uses: actions/upload-artifact@v4
         with:
           name: Zipshot-windows-x64

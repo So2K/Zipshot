@@ -67,6 +67,13 @@ int wmain(int argc, wchar_t** argv) {
     LoadSettings();
     Check(SaveDirRoot().find(L"\\Zipshot") != std::wstring::npos &&
           SaveDirRoot() != L"D:\\Programs\\ShareX\\ShareX\\Screenshots", "first run defaults to this user's Pictures/Zipshot");
+    Check(SoundEnabled(), "sounds are enabled by default on first run");
+    SetSoundEnabled(false);
+    Check(!SoundEnabled() && !GetSettingBool(L"Sound", true), "disabling sound updates live state and persists to zipshot.ini");
+    LoadSettings();
+    Check(!SoundEnabled(), "disabled sound setting survives reload");
+    SetSoundEnabled(true);
+    Check(SoundEnabled() && GetSettingBool(L"Sound", false), "re-enabling sound updates live state and persists");
 
     Image transparent{2, 2, true, {0x00FFFFFFu, 0x80FF0000u, 0xFFFFFFFFu, 0xFF123456u}};
     auto crop = transparent.crop({0, 0, 2, 1});

@@ -65,7 +65,15 @@ bool GetSettingBool(const wchar_t* key, bool def) { return IniStr(key, def ? L"1
 
 void SetSettingBool(const wchar_t* key, bool value) {
     WritePrivateProfileStringW(L"main", key, value ? L"1" : L"0", IniPath().c_str());
+    if (_wcsicmp(key, L"Sound") == 0) g_sound = value;
+    else if (_wcsicmp(key, L"SoundCapture") == 0) g_soundCapture = value;
+    else if (_wcsicmp(key, L"SoundDone") == 0) g_soundDone = value;
+    else if (_wcsicmp(key, L"SoundAction") == 0) g_soundAction = value;
 }
+
+bool SoundEnabled() { return g_sound; }
+
+void SetSoundEnabled(bool on) { SetSettingBool(L"Sound", on); }
 
 std::wstring SaveDirRoot() { return g_saveDir; }
 
@@ -489,11 +497,15 @@ void CopyFileToClipboard(const std::wstring& path) {
     HGLOBAL g = GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, bytes);
     if (g) {
         auto* df = (DROPFILES*)GlobalLock(g);
-        df->pFiles = sizeof(DROPFILES);
-        df->fWide = TRUE;
-        memcpy(df + 1, path.c_str(), path.size() * sizeof(wchar_t));
-        GlobalUnlock(g);
-        if (!SetClipboardData(CF_HDROP, g)) GlobalFree(g);
+        if (df) {
+            df->pFiles = sizeof(DROPFILES);
+            df->fWide = TRUE;
+            memcpy(df + 1, path.c_str(), path.size() * sizeof(wchar_t));
+            GlobalUnlock(g);
+            if (!SetClipboardData(CF_HDROP, g)) GlobalFree(g);
+        } else {
+            GlobalFree(g);
+        }
     }
     CloseClipboard();
 }

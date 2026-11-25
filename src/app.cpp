@@ -3,15 +3,18 @@
 #include "sharex_import.h"
 #include "capture_ext.h"
 #include "encoded_png.h"
+#include "updater.h"
 #include <ole2.h>
 #include <dwmapi.h>
 #include <shellapi.h>
+#include <shlobj.h>
 #include <shlwapi.h>
 #include <psapi.h>
 #include <algorithm>
 #include <atomic>
 #include <cstdarg>
 #include <cstdio>
+#include <mutex>
 #include <thread>
 
 HINSTANCE g_inst;
@@ -44,6 +47,7 @@ std::vector<Bound> g_bound;  // RegisterHotKey id = index + 1
 UINT g_taskbarCreated;
 constexpr UINT_PTR kTrayClickTimer = 7;
 constexpr UINT_PTR kQuitAfterSaveTimer = 8;
+constexpr UINT_PTR kUpdateCheckTimer = 9;
 bool g_quitAfterSave = false;
 bool g_trayDouble = false;
 NOTIFYICONDATAW g_nid{};
@@ -60,8 +64,12 @@ std::vector<std::wstring> g_audioDevices;
 
 // Camera glyph drawn at runtime, so the exe needs no resources.
 HICON MakeIcon(int s) {
-    void* bits;
+    void* bits = nullptr;
     HBITMAP color = CreateDib(s, s, &bits);
+    if (!color || !bits) {
+        if (color) DeleteObject(color);
+        return nullptr;
+    }
     auto* p = (uint32_t*)bits;
     auto in = [&](float x, float y, float l, float t, float r, float b) { return x >= l && x < r && y >= t && y < b; };
     for (int y = 0; y < s; ++y)
@@ -76,10 +84,13 @@ HICON MakeIcon(int s) {
             p[y * s + x] = c;
         }
     HBITMAP mask = CreateBitmap(s, s, 1, 1, nullptr);
-    ICONINFO ii{TRUE, 0, 0, mask, color};
-    HICON icon = CreateIconIndirect(&ii);
+    HICON icon = nullptr;
+    if (mask) {
+        ICONINFO ii{TRUE, 0, 0, mask, color};
+        icon = CreateIconIndirect(&ii);
+        DeleteObject(mask);
+    }
     DeleteObject(color);
-    DeleteObject(mask);
     return icon;
 }
 
@@ -318,9 +329,17 @@ void Run(int cmd) {
     case C_Video: ToggleRecord(false); break;
     case C_Gif: ToggleRecord(true); break;
     case C_Folder: {
-        std::wstring p = NewOutputPath(L"png");
-        p = p.substr(0, p.find_last_of(L'\\'));
-        ShellExecuteW(nullptr, L"open", p.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+        std::wstring dir = SaveDirRoot();
+        if (!g_lastPath.empty()) {
+            size_t slash = g_lastPath.find_last_of(L"\\/");
+            if (slash != std::wstring::npos) {
+                std::wstring parent = g_lastPath.substr(0, slash);
+                DWORD attr = GetFileAttributesW(parent.c_str());
+                if (attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY)) dir = parent;
+            }
+        }
+        SHCreateDirectoryExW(nullptr, dir.c_str(), nullptr);
+        ShellExecuteW(nullptr, L"open", dir.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
         break;
     }
     case C_Settings:
@@ -341,12 +360,19 @@ void Run(int cmd) {
         // Finish owned encoding/copy work before exiting instead of orphaning an encoder.
         g_quitAfterSave = true;
         KillTimer(g_main, kTrayClickTimer);
+        KillTimer(g_main, kUpdateCheckTimer);
         if (RecorderActive()) RecorderStop();
-        if (RecorderBusy() || MainWindowMediaBusy() || g_stillJobs.load()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
+        if (RecorderBusy() || MainWindowMediaBusy() || CombineBusy() || g_stillJobs.load()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
         else DestroyWindow(g_main);
         break;
     case C_ShowMain: ShowMainWindow(); break;
     case C_ToggleAutostart: SetAutostart(!AutostartEnabled()); break;
+    case C_ToggleSound:
+        SetSoundEnabled(!SoundEnabled());
+        MainWindowRefresh();
+        break;
+    case C_CheckUpdate: updater::Check(true); break;
+    case C_InstallUpdate: updater::DownloadAndInstall(); break;
     case C_ImportShareX: ImportShareXNow(); break;
     case C_LangRu:
     case C_LangEn:
@@ -390,8 +416,18 @@ void ShowMenu() {
     AppendMenuW(lang, MF_STRING | (IsEnglish() ? MF_CHECKED : 0), C_LangEn, L"English");
     AppendMenuW(m, MF_POPUP, (UINT_PTR)lang, L"Язык / Language");
     AppendMenuW(m, MF_STRING, C_Rehook, Tr(L"Перехватить хоткеи заново", L"Re-register hotkeys"));
+    AppendMenuW(m, MF_STRING | (SoundEnabled() ? MF_CHECKED : 0), C_ToggleSound,
+                Tr(L"Звуки", L"Sounds"));
     AppendMenuW(m, MF_STRING | (AutostartEnabled() ? MF_CHECKED : 0), C_ToggleAutostart,
                 Tr(L"Запускать при входе в Windows", L"Run at Windows startup"));
+    if (updater::HasUpdate() && !updater::Downloading()) {
+        std::wstring upd = std::wstring(Tr(L"Обновить до ", L"Update to ")) + updater::AvailableVersion();
+        AppendMenuW(m, MF_STRING, C_InstallUpdate, upd.c_str());
+    } else {
+        AppendMenuW(m, MF_STRING | ((updater::Checking() || updater::Downloading()) ? MF_GRAYED : 0), C_CheckUpdate,
+                    updater::Downloading() ? Tr(L"Скачивание обновления...", L"Downloading update...")
+                                           : Tr(L"Проверить обновления", L"Check for updates"));
+    }
     AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
     AppendMenuW(m, MF_STRING, C_ShowMain, Tr(L"Открыть главное окно", L"Open main window"));
     AppendMenuW(m, MF_STRING, C_Quit, Tr(L"Выход", L"Exit"));
@@ -468,7 +504,7 @@ LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         return 0;
     case WM_TIMER:
         if (w == kQuitAfterSaveTimer) {
-            if (!RecorderBusy() && !MainWindowMediaBusy() && !g_stillJobs.load()) {
+            if (!RecorderBusy() && !MainWindowMediaBusy() && !CombineBusy() && !g_stillJobs.load()) {
                 KillTimer(h, kQuitAfterSaveTimer);
                 DestroyWindow(h);
             }
@@ -477,6 +513,11 @@ LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         if (w == kTrayClickTimer) {
             KillTimer(h, kTrayClickTimer);
             Run(C_Region);
+            return 0;
+        }
+        if (w == kUpdateCheckTimer) {
+            KillTimer(h, kUpdateCheckTimer);
+            if (!g_quitAfterSave && GetSettingBool(L"AutoUpdate", true)) updater::Check(false);
             return 0;
         }
         break;
@@ -695,8 +736,10 @@ void Log(const wchar_t* fmt, ...) {
     wchar_t buf[2048];
     va_list ap;
     va_start(ap, fmt);
-    vswprintf_s(buf, fmt, ap);
+    _vsnwprintf_s(buf, std::size(buf), _TRUNCATE, fmt, ap);
     va_end(ap);
+    static std::mutex logMu;
+    std::lock_guard<std::mutex> lk(logMu);
     wchar_t tmp[MAX_PATH];
     GetTempPathW(MAX_PATH, tmp);
     FILE* f = nullptr;
@@ -716,8 +759,22 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE, LPWSTR, int) {
     std::wstring arg1 = argc > 1 ? argv[1] : L"";
     bool test = arg1.rfind(L"--test-", 0) == 0;
 
+    // Self-update handoff: wait briefly for the previous process to exit before taking the singleton mutex.
+    if (arg1 == L"--wait-pid" && argc > 2) {
+        DWORD oldPid = (DWORD)_wtol(argv[2]);
+        if (oldPid && oldPid != GetCurrentProcessId()) {
+            if (HANDLE hp = OpenProcess(SYNCHRONIZE, FALSE, oldPid)) {
+                WaitForSingleObject(hp, 5000);
+                CloseHandle(hp);
+            }
+        }
+        arg1 = argc > 3 ? argv[3] : L"";
+    }
+    if (!test) updater::CleanupOldExe();
+
+    HANDLE mutex = nullptr;
     if (!test) {
-        HANDLE mutex = CreateMutexW(nullptr, TRUE, L"Local\\ZipshotSingleton");
+        mutex = CreateMutexW(nullptr, TRUE, L"Local\\ZipshotSingleton");
         if (GetLastError() == ERROR_ALREADY_EXISTS) {
             // Forward the command to the running instance.
             if (HWND other = FindWindowW(kMainClass, nullptr)) {
@@ -730,14 +787,16 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE, LPWSTR, int) {
                     LRESULT sent = SendMessageTimeoutW(other, WM_COPYDATA, 0, (LPARAM)&cd, SMTO_ABORTIFHUNG | SMTO_BLOCK, 3000, &result);
                     if (!sent || !result) {
                         Log(L"command forwarding failed or was rejected");
+                        if (mutex) CloseHandle(mutex);
                         LocalFree(argv);
                         return 1;
                     }
                 }
             }
+            if (mutex) CloseHandle(mutex);
+            LocalFree(argv);
             return 0;
         }
-        (void)mutex;
     }
 
     OleInitialize(nullptr);  // STA + OLE drag and drop (toast, main window)
@@ -793,5 +852,10 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE, LPWSTR, int) {
         CaptureRect({0, 0, 1, 1}, false);
         TrimMemory();
     });
-    return MessageLoop();
+    // Silent background update check 4s after startup (FluxTube-style), never blocks launch.
+    if (GetSettingBool(L"AutoUpdate", true)) SetTimer(g_main, kUpdateCheckTimer, 4000, nullptr);
+    int rc = MessageLoop();
+    if (mutex) CloseHandle(mutex);
+    OleUninitialize();
+    return rc;
 }

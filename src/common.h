@@ -35,10 +35,21 @@ inline const wchar_t* Tr(const wchar_t* ru, const wchar_t* en) { return IsEnglis
 
 // Commands shared by hotkeys, tray and the main window.
 enum Cmd { C_Full = 1, C_Region, C_Window, C_Video, C_Gif, C_Folder, C_Settings, C_Rehook, C_EditLast, C_Quit, C_ShowMain,
-           C_ImportShareX, C_LangRu, C_LangEn, C_ActiveMonitor, C_ToggleAutostart, C_LastRegion };
+           C_ImportShareX, C_LangRu, C_LangEn, C_ActiveMonitor, C_ToggleAutostart, C_LastRegion, C_ToggleSound,
+           C_CheckUpdate, C_InstallUpdate };
 void RunCommand(int cmd);
 struct HotkeyInfo { std::wstring keys, description; bool registered; };
 std::vector<HotkeyInfo> HotkeyStatus();
+
+// Monitor DPI helper (loads shcore.dll once from System32 without leaking module handles).
+inline UINT MonitorDpi(HMONITOR mon) {
+    static HMODULE shcore = LoadLibraryExW(L"shcore.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+    using GetDpiForMonitorFn = HRESULT(WINAPI*)(HMONITOR, int, UINT*, UINT*);
+    static auto fn = shcore ? (GetDpiForMonitorFn)(void*)GetProcAddress(shcore, "GetDpiForMonitor") : nullptr;
+    UINT dx = 96, dy = 96;
+    if (fn && mon && SUCCEEDED(fn(mon, 0, &dx, &dy)) && dx) return dx;
+    return 96;
+}
 
 // Autostart: HKCU\...\Run "Zipshot" (shows in Settings > Apps > Startup and Task Manager > Startup apps).
 bool AutostartEnabled();
@@ -77,6 +88,9 @@ void CopyImageToClipboard(const Image& img);
 void CopyFileToClipboard(const std::wstring& path);
 enum Sound { S_Capture, S_TaskDone, S_Error, S_Action };  // ShareX's own sounds
 void PlayUiSound(Sound s);
+bool SoundEnabled();
+void SetSoundEnabled(bool on);
+bool CombineBusy();
 std::wstring FindFFmpeg();
 
 // editor.cpp, region mode: ShareX-style capture surface with the annotation toolbar.

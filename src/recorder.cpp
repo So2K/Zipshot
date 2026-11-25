@@ -478,7 +478,8 @@ LRESULT CALLBACK PanelProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         if (w == kTimerCheck) {
             KillTimer(h, kTimerCheck);
             // ffmpeg died at startup (e.g. no NVENC, audio device busy): fall through to the next variant.
-            if (g.active && g.state == RS_Recording && g.cur.pi.hProcess && WaitForSingleObject(g.cur.pi.hProcess, 0) == WAIT_OBJECT_0) {
+            if (g.active && g.state == RS_Recording && g.cur.pi.hProcess && !g.segs.empty() &&
+                WaitForSingleObject(g.cur.pi.hProcess, 0) == WAIT_OBJECT_0) {
                 CloseHandle(g.cur.pi.hProcess);
                 CloseHandle(g.cur.pi.hThread);
                 CloseHandle(g.cur.in);
@@ -539,20 +540,15 @@ void CreateUi() {
     HMONITOR mon = MonitorFromRect(&g.r, MONITOR_DEFAULTTONEAREST);
     MONITORINFO mi{sizeof(mi)};
     GetMonitorInfoW(mon, &mi);
-    UINT dpi = 96;
-    using GetDpiForMonitorFn = HRESULT(WINAPI*)(HMONITOR, int, UINT*, UINT*);
-    if (auto fn = (GetDpiForMonitorFn)GetProcAddress(LoadLibraryW(L"shcore.dll"), "GetDpiForMonitor")) {
-        UINT dx, dy;
-        if (SUCCEEDED(fn(mon, 0, &dx, &dy))) dpi = dx;
-    }
+    UINT dpi = MonitorDpi(mon);
     RECT work = mi.rcWork;
     if (work.right <= work.left || work.bottom <= work.top) work = mi.rcMonitor;
     const int pw = std::min<int>(MulDiv(g.gif ? 450 : 720, dpi, 96), std::max(1L, work.right - work.left));
     const int ph = std::min<int>(MulDiv(g.gif ? 30 : 36, dpi, 96), std::max(1L, work.bottom - work.top));
-    int x = std::clamp<int>(g.r.right - pw, work.left, work.right - pw);
+    int x = std::clamp<int>(g.r.right - pw, work.left, std::max<int>(work.left, work.right - pw));
     int y = g.r.bottom + 6;
     if (y + ph > work.bottom) y = g.r.top - 6 - ph;
-    y = std::clamp<int>(y, work.top, work.bottom - ph);
+    y = std::clamp<int>(y, work.top, std::max<int>(work.top, work.bottom - ph));
     g.panel = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE, L"ZipshotRecPanel", L"", WS_POPUP, x, y, pw,
                               ph, nullptr, nullptr, g_inst, nullptr);
     SetWindowDisplayAffinity(g.panel, WDA_EXCLUDEFROMCAPTURE);
@@ -826,6 +822,7 @@ void RecorderStop() {
     const bool cursorLimitReached = g.cursorLimitReached;
     const int sourceWidth = g.r.right - g.r.left, sourceHeight = g.r.bottom - g.r.top;
     const double duration = g.recordedMs / 1000.0;
+    try {
     std::thread([=, cursorSamples = std::move(cursorSamples)] {
         for (const Proc& p : procs) {
             if (WaitForSingleObject(p.pi.hProcess, 15000) == WAIT_TIMEOUT) TerminateProcess(p.pi.hProcess, 1);
@@ -865,6 +862,16 @@ void RecorderStop() {
             TrimMemory();
         });
     }).detach();
+    } catch (...) {
+        for (const Proc& p : procs) {
+            TerminateProcess(p.pi.hProcess, 1);
+            CloseHandle(p.pi.hProcess);
+            CloseHandle(p.pi.hThread);
+        }
+        for (auto& s : segs) DeleteFileW(s.c_str());
+        g.busy = false;
+        PlayUiSound(S_Error);
+    }
 }
 
 // `ffmpeg -list_devices true -f dshow -i dummy`: device names from stderr. Old builds list them under

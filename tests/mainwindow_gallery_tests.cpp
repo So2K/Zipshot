@@ -208,6 +208,19 @@ void OpenEditor(ImagePtr, const std::wstring&) { ++test::forbiddenCalls; }
 void CopyImageToClipboard(const Image&) { ++test::forbiddenCalls; }
 void CopyFileToClipboard(const std::wstring&) { ++test::forbiddenCalls; }
 void PlayUiSound(Sound) {}
+bool SoundEnabled() { return GetSettingBool(L"Sound", true); }
+void SetSoundEnabled(bool on) { SetSettingBool(L"Sound", on); }
+bool CombineBusy() { return false; }
+namespace updater {
+bool Checking() { return false; }
+bool Downloading() { return false; }
+bool HasUpdate() { return false; }
+double Progress() { return 0.0; }
+std::wstring AvailableVersion() { return L""; }
+std::wstring StatusText() { return L""; }
+void Check(bool) {}
+void DownloadAndInstall() {}
+}  // namespace updater
 bool RecorderBusy() { return test::recorderBusy; }
 bool RecorderActive() { return test::recorderActive; }
 std::wstring FindFFmpeg() { return test::ffmpegAvailable ? L"synthetic-ffmpeg-not-executed.exe" : L""; }

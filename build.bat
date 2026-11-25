@@ -12,8 +12,8 @@ cd /d "%~dp0"
 if not exist build mkdir build
 rc /nologo /fo build\zipshot.res res\zipshot.rc || exit /b 1
 cl /nologo /O2 /GL /GS /guard:cf /Gy /W3 /EHsc /std:c++20 /utf-8 /MT /DUNICODE /D_UNICODE ^
-   src\app.cpp src\capture.cpp src\output.cpp src\png_encode_fast.cpp third_party\fpng\fpng.cpp src\overlay.cpp src\editor.cpp src\toast.cpp src\recorder.cpp src\mainwindow.cpp src\clipboard_shelf.cpp src\cursor_video.cpp src\i18n.cpp src\sharex_import.cpp src\colorpicker.cpp src\combine.cpp src\imageops.cpp src\imagedialogs.cpp src\shapes_ext.cpp src\stickers.cpp ^
+   src\app.cpp src\capture.cpp src\output.cpp src\png_encode_fast.cpp third_party\fpng\fpng.cpp src\overlay.cpp src\editor.cpp src\toast.cpp src\recorder.cpp src\mainwindow.cpp src\clipboard_shelf.cpp src\cursor_video.cpp src\i18n.cpp src\sharex_import.cpp src\colorpicker.cpp src\combine.cpp src\imageops.cpp src\imagedialogs.cpp src\shapes_ext.cpp src\stickers.cpp src\updater.cpp ^
    build\zipshot.res /Fobuild\ /Fe:build\zipshot.exe ^
    /link /LTCG /OPT:REF /OPT:ICF /DYNAMICBASE /NXCOMPAT /guard:cf /SUBSYSTEM:WINDOWS /MANIFEST:EMBED /MANIFESTINPUT:src\zipshot.manifest ^
    user32.lib gdi32.lib shell32.lib shlwapi.lib ole32.lib oleaut32.lib windowscodecs.lib d2d1.lib dwrite.lib ^
-   dwmapi.lib winmm.lib dxgi.lib d3d11.lib msimg32.lib advapi32.lib comdlg32.lib
+   dwmapi.lib winmm.lib dxgi.lib d3d11.lib msimg32.lib advapi32.lib comdlg32.lib winhttp.lib

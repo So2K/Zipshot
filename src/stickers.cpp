@@ -563,6 +563,7 @@ struct ThumbCache {
                 r.delays.push_back(d);
                 r.total += d;
             }
+            if (frames.empty() || frames[0].w <= 0 || frames[0].h <= 0) return;
             r.w = frames[0].w, r.h = frames[0].h, r.n = (int)frames.size();
             r.px.reserve((size_t)r.w * r.h * r.n);
             for (auto& f : frames) {
@@ -785,6 +786,7 @@ struct StickerPopup {
     void Paint(HDC out) {
         RECT cr;
         GetClientRect(hwnd, &cr);
+        if (cr.right <= 0 || cr.bottom <= 0) return;
         HDC dc = CreateCompatibleDC(out);
         HBITMAP buf = CreateCompatibleBitmap(out, cr.right, cr.bottom);
         HGDIOBJ oldBmp = SelectObject(dc, buf);

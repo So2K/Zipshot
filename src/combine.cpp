@@ -153,7 +153,12 @@ void SaveCombineOptions(const CombineOptions& o) {
 
 // ---------- combine + save ----------
 
+static std::atomic_uint g_combineJobs{0};
+bool CombineBusy() { return g_combineJobs.load() != 0; }
+
 void CombineFilesAsync(std::vector<std::wstring> paths, CombineOptions opt, std::function<void(const std::wstring&)> onSaved) {
+    ++g_combineJobs;
+    try {
     std::thread([paths = std::move(paths), opt, onSaved = std::move(onSaved)] {
         HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
         auto sp = std::make_shared<Image>();
@@ -174,6 +179,7 @@ void CombineFilesAsync(std::vector<std::wstring> paths, CombineOptions opt, std:
         }
         if (SUCCEEDED(hr)) CoUninitialize();
         RunOnMain([sp, path, ok, onSaved] {
+            --g_combineJobs;
             if (!ok) {
                 PlayUiSound(S_Error);
                 MessageBoxW(g_main, Tr(L"Не удалось объединить изображения.", L"Could not combine the images."), L"Zipshot",
@@ -188,6 +194,10 @@ void CombineFilesAsync(std::vector<std::wstring> paths, CombineOptions opt, std:
             if (GetSettingBool(L"AfterToast", true)) ShowToast(sp, path, Tr(L"Объединено", L"Combined"));
         });
     }).detach();
+    } catch (...) {
+        --g_combineJobs;
+        PlayUiSound(S_Error);
+    }
 }
 
 // ---------- dialog ----------
@@ -412,6 +422,7 @@ void Paint(Dlg& d) {
     HDC wdc = BeginPaint(d.hwnd, &ps);
     RECT rc;
     GetClientRect(d.hwnd, &rc);
+    if (rc.right <= 0 || rc.bottom <= 0) { EndPaint(d.hwnd, &ps); return; }
     HDC dc = CreateCompatibleDC(wdc);
     HBITMAP bmp = CreateCompatibleBitmap(wdc, rc.right, rc.bottom);
     HGDIOBJ oldBmp = SelectObject(dc, bmp);
