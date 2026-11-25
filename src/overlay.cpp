@@ -209,6 +209,35 @@ struct Overlay {
             if (PtInRect(&r, cur)) { hover = r; hasHover = true; break; }
     }
 
+    void UpdateSelection(POINT p, int dx, int dy) {
+        if (GetKeyState(VK_CONTROL) < 0) {
+            anchor.x += dx;
+            anchor.y += dy;
+        }
+        POINT end = p;
+        if (GetKeyState(VK_SHIFT) < 0) {
+            int s = std::max(std::abs(end.x - anchor.x), std::abs(end.y - anchor.y));
+            end.x = anchor.x + (end.x >= anchor.x ? s : -s);
+            end.y = anchor.y + (end.y >= anchor.y ? s : -s);
+        } else if (GetKeyState(VK_MENU) < 0) {
+            static constexpr int kSnap[5][2] = {{426, 240}, {640, 360}, {854, 480}, {1280, 720}, {1920, 1080}};
+            int w = std::abs(end.x - anchor.x) + 1, h = std::abs(end.y - anchor.y) + 1;
+            int best = 30 * 30, found = -1;
+            for (int i = 0; i < 5; ++i) {
+                int d2 = (w - kSnap[i][0]) * (w - kSnap[i][0]) + (h - kSnap[i][1]) * (h - kSnap[i][1]);
+                if (d2 > 0 && d2 < best) { best = d2; found = i; }
+            }
+            if (found >= 0) {
+                end.x = end.x >= anchor.x ? anchor.x + kSnap[found][0] - 1 : anchor.x - kSnap[found][0] + 1;
+                end.y = end.y >= anchor.y ? anchor.y + kSnap[found][1] - 1 : anchor.y - kSnap[found][1] + 1;
+            }
+        }
+        sel = {std::min(anchor.x, end.x), std::min(anchor.y, end.y), std::max(anchor.x, end.x) + 1,
+               std::max(anchor.y, end.y) + 1};
+        RECT all{0, 0, W, H};
+        IntersectRect(&sel, &sel, &all);
+    }
+
     void Finish(bool accept, RECT r) {
         ok = accept && r.right - r.left >= 2 && r.bottom - r.top >= 2;
         result = r;
@@ -239,10 +268,10 @@ LRESULT CALLBACK OverlayProc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_MOUSEMOVE: {
         POINT p{(short)LOWORD(l), (short)HIWORD(l)};
         if (p.x == o->cur.x && p.y == o->cur.y) return 0;
+        int dx = p.x - o->cur.x, dy = p.y - o->cur.y;
         o->cur = p;
         if (o->dragging) {
-            o->sel = {std::min(o->anchor.x, p.x), std::min(o->anchor.y, p.y), std::max(o->anchor.x, p.x) + 1,
-                      std::max(o->anchor.y, p.y) + 1};
+            o->UpdateSelection(p, dx, dy);
         } else {
             o->UpdateHover();
         }
@@ -275,10 +304,28 @@ LRESULT CALLBACK OverlayProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         }
         return 0;
     case WM_KEYDOWN:
+    case WM_SYSKEYDOWN:
         if (w == VK_ESCAPE) o->Finish(false, {});
         else if (w == VK_RETURN && !o->dragging) {
             RECT r{0, 0, o->W, o->H};
             o->Finish(true, o->hasHover ? o->hover : r);
+        } else if (w == VK_LEFT || w == VK_RIGHT || w == VK_UP || w == VK_DOWN) {
+            int step = GetKeyState(VK_SHIFT) < 0 ? 10 : 1;
+            int dx = w == VK_LEFT ? -step : w == VK_RIGHT ? step : 0;
+            int dy = w == VK_UP ? -step : w == VK_DOWN ? step : 0;
+            POINT c;
+            GetCursorPos(&c);
+            SetCursorPos(c.x + dx, c.y + dy);
+        } else if (o->dragging && (w == VK_SHIFT || w == VK_MENU)) {
+            o->UpdateSelection(o->cur, 0, 0);
+            o->Update();
+        }
+        return 0;
+    case WM_KEYUP:
+    case WM_SYSKEYUP:
+        if (o->dragging && (w == VK_SHIFT || w == VK_MENU)) {
+            o->UpdateSelection(o->cur, 0, 0);
+            o->Update();
         }
         return 0;
     }
