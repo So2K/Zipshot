@@ -510,6 +510,23 @@ void CopyFileToClipboard(const std::wstring& path) {
     CloseClipboard();
 }
 
+void CopyTextToClipboard(const std::wstring& text) {
+    if (text.empty() || !OpenClipboardRetry()) return;
+    EmptyClipboard();
+    size_t bytes = (text.size() + 1) * sizeof(wchar_t);
+    HGLOBAL g = GlobalAlloc(GMEM_MOVEABLE, bytes);
+    if (g) {
+        if (void* p = GlobalLock(g)) {
+            memcpy(p, text.c_str(), bytes);
+            GlobalUnlock(g);
+            if (!SetClipboardData(CF_UNICODETEXT, g)) GlobalFree(g);
+        } else {
+            GlobalFree(g);
+        }
+    }
+    CloseClipboard();
+}
+
 void PlayUiSound(Sound s) {
     if (!g_sound) return;
     if ((s == S_Capture && !g_soundCapture) || (s == S_TaskDone && !g_soundDone) || (s == S_Action && !g_soundAction)) return;

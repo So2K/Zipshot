@@ -86,6 +86,7 @@ bool EncodeImage(const Image& img, const std::wstring& path, bool jpeg);
 bool LoadImageFile(const std::wstring& path, Image& out);
 void CopyImageToClipboard(const Image& img);
 void CopyFileToClipboard(const std::wstring& path);
+void CopyTextToClipboard(const std::wstring& text);
 enum Sound { S_Capture, S_TaskDone, S_Error, S_Action };  // ShareX's own sounds
 void PlayUiSound(Sound s);
 bool SoundEnabled();

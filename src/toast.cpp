@@ -6,7 +6,7 @@
 #include <algorithm>
 
 // Small "captured" popup in the bottom-right corner.
-// Left click: editor (images) / open file (video), middle: show in folder, right: close.
+// Left click: editor (images) / open file (video), middle: show in folder, right: copy file path as text & close.
 // Dragging it drops the saved file into any app (Telegram, Discord, Explorer, a browser...).
 
 using Microsoft::WRL::ComPtr;
@@ -144,9 +144,15 @@ LRESULT CALLBACK ToastProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         }
         return 0;
     }
-    case WM_RBUTTONUP:
+    case WM_RBUTTONUP: {
+        std::wstring path = t->path;
         DestroyWindow(h);
+        if (!path.empty()) {
+            CopyTextToClipboard(path);
+            PlayUiSound(S_Action);
+        }
         return 0;
+    }
     case WM_NCDESTROY:
         if (g_toast == t) g_toast = nullptr;
         delete t;
