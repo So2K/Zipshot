@@ -99,7 +99,7 @@ struct Opts {
     D2D1_COLOR_F highlight = kYellow;
     // Region capture surface (RegionCaptureOptions).
     int lastRegionTool = T_RegionRect, lastAnnotationTool = T_Freehand, lastEditorTool = T_Select;
-    bool showInfo = true, showMagnifier = true, squareMagnifier = false, dimming = true, detectWindows = true;
+    bool showInfo = true, showMagnifier = true, squareMagnifier = false, dimming = true, detectWindows = true, detectControls = false;
     int magnifierCount = 33, magnifierSize = 10, dimStrength = 10;
     // ShareX AnnotationOptions added with the shape/tool options.
     int regionRadius = 0, borderStyle = 0, cornerRadius = 3, shadow = 1, centerPoints = 1, arrowDir = 0;
@@ -180,7 +180,7 @@ struct Opts {
         centerPoints = std::clamp(centerPoints, 0, 5);  // LineDrawingShape.MaximumCenterPointCount
         auto flag = [&](const wchar_t* k, bool& v) { v = GetPrivateProfileIntW(L"region", k, v, ini.c_str()) != 0; };
         flag(L"ShowInfo", showInfo); flag(L"ShowMagnifier", showMagnifier); flag(L"UseSquareMagnifier", squareMagnifier);
-        flag(L"UseDimming", dimming); flag(L"DetectWindows", detectWindows);
+        flag(L"UseDimming", dimming); flag(L"DetectWindows", detectWindows); flag(L"DetectControls", detectControls);
         magnifierCount = GetPrivateProfileIntW(L"region", L"MagnifierPixelCount", magnifierCount, ini.c_str()) | 1;
         magnifierSize = GetPrivateProfileIntW(L"region", L"MagnifierPixelSize", magnifierSize, ini.c_str());
         dimStrength = GetPrivateProfileIntW(L"region", L"BackgroundDimStrength", dimStrength, ini.c_str());
@@ -229,7 +229,7 @@ struct Opts {
         });
         auto flag = [&](const wchar_t* k, bool v) { WritePrivateProfileStringW(L"region", k, v ? L"1" : L"0", ini.c_str()); };
         flag(L"ShowInfo", showInfo); flag(L"ShowMagnifier", showMagnifier); flag(L"UseSquareMagnifier", squareMagnifier);
-        flag(L"UseDimming", dimming); flag(L"DetectWindows", detectWindows);
+        flag(L"UseDimming", dimming); flag(L"DetectWindows", detectWindows); flag(L"DetectControls", detectControls);
         WritePrivateProfileStringW(L"region", L"MagnifierPixelCount", std::to_wstring(magnifierCount).c_str(), ini.c_str());
         WritePrivateProfileStringW(L"region", L"MagnifierPixelSize", std::to_wstring(magnifierSize).c_str(), ini.c_str());
         WritePrivateProfileStringW(L"region", L"BackgroundDimStrength", std::to_wstring(dimStrength).c_str(), ini.c_str());
@@ -2406,8 +2406,9 @@ struct Editor {
         for (const WindowRect& w : wins) {
             if (!PtInRect(&w.rect, sp)) continue;
             RECT r = w.rect, c;
-            if (ControlRectAt(w.hwnd, sp, c) && IntersectRect(&c, &c, &w.rect)) r = c;  // ShareX "detect controls"
-            IntersectRect(&r, &r, &vs);
+            if (o.detectControls && ControlRectAt(w.hwnd, sp, c) && IntersectRect(&c, &c, &w.rect)) r = c;
+            if (!IntersectRect(&r, &r, &vs)) continue;
+            if (r.right - r.left < 16 || r.bottom - r.top < 16) continue;
             OffsetRect(&r, -vs.left, -vs.top);
             hover = r;
             hasHover = true;
@@ -2612,7 +2613,8 @@ struct Editor {
         item(15, Tr(L"Запоминать положение панели", L"Remember menu state"), o.rememberMenu);
         AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
         item(4, Tr(L"Затемнять фон", L"Dim background"), o.dimming);
-        item(5, Tr(L"Определять окна и элементы", L"Detect windows and controls"), o.detectWindows);
+        item(5, Tr(L"Определять окна", L"Detect windows"), o.detectWindows);
+        item(16, Tr(L"Определять элементы внутри окон", L"Detect controls inside windows"), o.detectControls);
         POINT p = MenuPos(b);
         int id = TrackPopupMenu(m, TPM_RETURNCMD, p.x, p.y, 0, hwnd, nullptr);
         DestroyMenu(m);
@@ -2621,6 +2623,7 @@ struct Editor {
         else if (id == 3) o.squareMagnifier = !o.squareMagnifier;
         else if (id == 4) o.dimming = !o.dimming;
         else if (id == 5) o.detectWindows = !o.detectWindows;
+        else if (id == 16) o.detectControls = !o.detectControls;
         else if (id == 6) {
             o.quickCrop = !o.quickCrop;
             if (o.quickCrop) regions.clear(), selRegion = -1;

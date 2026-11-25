@@ -298,6 +298,20 @@ Image CaptureRect(RECT r, bool cursor) {
     return img;
 }
 
+static bool IsIgnoredWindowClass(HWND hwnd) {
+    wchar_t cls[64]{};
+    if (!GetClassNameW(hwnd, cls, (int)std::size(cls))) return false;
+    static const wchar_t* const kSkip[] = {
+        L"Progman", L"WorkerW", L"SysShadow", L"tooltips_class32", L"MSCTFIME UI", L"IME",
+        L"EdgeUiInputTopWndClass", L"EdgeUiInputWndClass", L"DummyDWMListenerWindow",
+        L"NarratorHelperWindow", L"Shell_InputSwitchTopLevelWindow", L"TaskListThumbnailWnd",
+        L"ForegroundStaging",
+    };
+    for (const wchar_t* s : kSkip)
+        if (_wcsicmp(cls, s) == 0) return true;
+    return false;
+}
+
 static BOOL CALLBACK EnumWin(HWND hwnd, LPARAM lp) {
     auto* out = (std::vector<WindowRect>*)lp;
     if (!IsWindowVisible(hwnd) || IsIconic(hwnd)) return TRUE;
@@ -306,6 +320,7 @@ static BOOL CALLBACK EnumWin(HWND hwnd, LPARAM lp) {
     if (pid == GetCurrentProcessId()) return TRUE;
     DWORD cloaked = 0;
     if (SUCCEEDED(DwmGetWindowAttribute(hwnd, DWMWA_CLOAKED, &cloaked, sizeof(cloaked))) && cloaked) return TRUE;
+    LONG style = GetWindowLongW(hwnd, GWL_STYLE);
     LONG ex = GetWindowLongW(hwnd, GWL_EXSTYLE);
     if (ex & WS_EX_TRANSPARENT) return TRUE;
     if (ex & WS_EX_LAYERED) {
@@ -313,9 +328,18 @@ static BOOL CALLBACK EnumWin(HWND hwnd, LPARAM lp) {
         DWORD flags = 0;
         if (GetLayeredWindowAttributes(hwnd, nullptr, &alpha, &flags) && (flags & LWA_ALPHA) && alpha == 0) return TRUE;
     }
+    if (IsIgnoredWindowClass(hwnd)) return TRUE;
+    RECT rgnBox{};
+    if (GetWindowRgnBox(hwnd, &rgnBox) == NULLREGION) return TRUE;
+    // Skip untitled non-activating or frameless layered tool windows (invisible/ghost helper squares).
+    if ((ex & WS_EX_TOOLWINDOW) && GetWindowTextLengthW(hwnd) == 0) {
+        if ((ex & WS_EX_NOACTIVATE) || ((ex & WS_EX_LAYERED) && !(style & (WS_CAPTION | WS_THICKFRAME)))) return TRUE;
+    }
     RECT r{};
     if (FAILED(DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &r, sizeof(r)))) GetWindowRect(hwnd, &r);
-    if (r.right - r.left < 8 || r.bottom - r.top < 8) return TRUE;
+    RECT vs = VirtualScreen(), clipped{};
+    if (!IntersectRect(&clipped, &r, &vs)) return TRUE;
+    if (clipped.right - clipped.left < 24 || clipped.bottom - clipped.top < 24) return TRUE;
     out->push_back({hwnd, r});
     return TRUE;
 }
@@ -340,9 +364,10 @@ bool ControlRectAt(HWND top, POINT pt, RECT& out) {
         ScreenToClient(cur, &cp);
         HWND child = ChildWindowFromPointEx(cur, cp, CWP_SKIPINVISIBLE | CWP_SKIPTRANSPARENT | CWP_SKIPDISABLED);
         if (!child || child == cur) break;
+        if (GetWindowLongW(child, GWL_EXSTYLE) & WS_EX_TRANSPARENT) break;
         found = cur = child;
     }
     if (!found) return false;
     GetWindowRect(found, &out);
-    return out.right - out.left >= 4 && out.bottom - out.top >= 4;
+    return out.right - out.left >= 32 && out.bottom - out.top >= 32;
 }
