@@ -58,7 +58,8 @@ std::atomic_uint g_stillJobs{0};
 uint64_t g_clipboardCaptureEpoch = 0;  // UI-thread capture ordering, not a global clipboard monitor.
 
 // Tray menu ids that are not shared commands.
-constexpr int kTrayPause = 900, kTrayAbort = 901, kAudioNone = 2000;
+constexpr int kTrayPause = 900, kTrayAbort = 901, kAudioNone = 2000, kAudioWasapiSys = 2001, kAudioWasapiMic = 2002,
+              kAudioWasapiBoth = 2003, kAudioDshowBase = 2010;
 HMENU g_audioMenu = nullptr;
 std::vector<std::wstring> g_audioDevices;
 
@@ -440,14 +441,19 @@ void ShowMenu() {
     PostMessageW(g_main, WM_NULL, 0, 0);
     if (cmd == kTrayPause) RecorderPauseResume();
     else if (cmd == kTrayAbort) RecorderAbort();
-    else if (cmd >= kAudioNone && cmd <= kAudioNone + (int)g_audioDevices.size()) {
+    else if (cmd == kAudioNone || cmd == kAudioWasapiSys || cmd == kAudioWasapiMic || cmd == kAudioWasapiBoth ||
+             (cmd >= kAudioDshowBase && cmd < kAudioDshowBase + (int)g_audioDevices.size())) {
         EnsureUnicodeIni();  // device names are often not ASCII
-        WritePrivateProfileStringW(L"record", L"AudioSource", cmd == kAudioNone ? L"" : g_audioDevices[cmd - kAudioNone - 1].c_str(),
-                                   ZipshotIni().c_str());
+        const wchar_t* val = cmd == kAudioNone ? L""
+                           : cmd == kAudioWasapiSys ? L"wasapi:system"
+                           : cmd == kAudioWasapiMic ? L"wasapi:mic"
+                           : cmd == kAudioWasapiBoth ? L"wasapi:both"
+                           : g_audioDevices[cmd - kAudioDshowBase].c_str();
+        WritePrivateProfileStringW(L"record", L"AudioSource", val, ZipshotIni().c_str());
     } else if (cmd) Run(cmd);
 }
 
-// "Audio source" submenu (ShareX FFmpegOptions.AudioSource): none + the dshow audio devices, current one checked.
+// "Audio source" submenu: native WASAPI (PC loopback, mic, both) + legacy DirectShow devices.
 void FillAudioMenu(HMENU menu) {
     static DWORD listedAt = 0;
     if (g_audioDevices.empty() || GetTickCount() - listedAt > 60000) {
@@ -458,13 +464,20 @@ void FillAudioMenu(HMENU menu) {
     }
     while (GetMenuItemCount(menu) > 0) DeleteMenu(menu, 0, MF_BYPOSITION);
     std::wstring cur = IniString(L"record", L"AudioSource", L"");
+    auto isCur = [&](const wchar_t* v) { return _wcsicmp(cur.c_str(), v) == 0; };
     AppendMenuW(menu, MF_STRING | (cur.empty() ? MF_CHECKED : 0), kAudioNone, Tr(L"Нет", L"None"));
+    AppendMenuW(menu, MF_STRING | (isCur(L"wasapi:system") ? MF_CHECKED : 0), kAudioWasapiSys,
+                Tr(L"Звук системы (ПК)", L"System audio (PC)"));
+    AppendMenuW(menu, MF_STRING | (isCur(L"wasapi:mic") ? MF_CHECKED : 0), kAudioWasapiMic,
+                Tr(L"Микрофон", L"Microphone"));
+    AppendMenuW(menu, MF_STRING | (isCur(L"wasapi:both") ? MF_CHECKED : 0), kAudioWasapiBoth,
+                Tr(L"Система + Микрофон", L"System + Microphone"));
+    if (!g_audioDevices.empty()) AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
     for (size_t i = 0; i < g_audioDevices.size() && i < 200; ++i)
-        AppendMenuW(menu, MF_STRING | (cur == g_audioDevices[i] ? MF_CHECKED : 0), kAudioNone + 1 + (int)i, g_audioDevices[i].c_str());
-    if (!cur.empty() && std::find(g_audioDevices.begin(), g_audioDevices.end(), cur) == g_audioDevices.end())
+        AppendMenuW(menu, MF_STRING | (cur == g_audioDevices[i] ? MF_CHECKED : 0), kAudioDshowBase + (int)i, g_audioDevices[i].c_str());
+    bool isWasapi = isCur(L"wasapi:system") || isCur(L"wasapi:mic") || isCur(L"wasapi:both");
+    if (!cur.empty() && !isWasapi && std::find(g_audioDevices.begin(), g_audioDevices.end(), cur) == g_audioDevices.end())
         AppendMenuW(menu, MF_STRING | MF_CHECKED | MF_GRAYED, 0, (cur + Tr(L" (не найдено)", L" (not found)")).c_str());
-    if (g_audioDevices.empty())
-        AppendMenuW(menu, MF_STRING | MF_GRAYED, 0, Tr(L"Устройства DirectShow не найдены", L"No DirectShow audio devices"));
 }
 
 int ParseCmd(const std::wstring& s) {

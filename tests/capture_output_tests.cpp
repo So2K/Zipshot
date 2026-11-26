@@ -50,6 +50,19 @@ Result RenderPrepared(const std::wstring&, const PreparedSource&, const std::wst
     UnexpectedUiCall(); return {};
 }
 }
+namespace wasapi_audio {
+struct Recorder::Impl {};
+Recorder::Recorder() = default;
+Recorder::~Recorder() = default;
+Mode ParseMode(const std::wstring&) { return Mode::None; }
+const wchar_t* ModeToSetting(Mode) { return L""; }
+bool IsWasapiSetting(const std::wstring&) { return false; }
+bool Recorder::Start(const std::wstring&, Mode, bool, uint32_t) { return false; }
+void Recorder::SetMuted(bool) {}
+bool Recorder::Muted() const { return false; }
+bool Recorder::Active() const { return false; }
+void Recorder::Stop() {}
+}
 
 static int failures = 0;
 static void Check(bool ok, const char* message) {

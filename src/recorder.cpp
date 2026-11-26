@@ -2,6 +2,7 @@
 #include "capture_ext.h"
 #include "sharex_import.h"
 #include "cursor_video.h"
+#include "wasapi_audio.h"
 #include <dxgi.h>
 #include <wrl/client.h>
 #include <algorithm>
@@ -84,6 +85,10 @@ struct Rec {
     Proc cur;                       // ffmpeg writing the current segment
     std::vector<Proc> closing;      // segments told to finish (pause), joined on stop
     std::vector<std::wstring> segs; // segment files in order
+    std::vector<std::wstring> audioSegs;  // optional WASAPI WAV segments aligned with segs
+    std::shared_ptr<wasapi_audio::Recorder> audioRec;
+    wasapi_audio::Mode audioMode = wasapi_audio::Mode::None;
+    bool audioMuted = false;
     std::wstring out, ffmpeg, base;
     std::vector<std::wstring> variants;  // command lines to try in order; %OUT% = segment file
     size_t variant = 0;
@@ -208,9 +213,9 @@ void BuildVariants(RECT mon, int outIdx) {
         g.variants.push_back(head + gdi + enc);
         return;
     }
-    // ShareX FFmpegOptions.AudioSource: a dshow device as the second input, encoded next to the video.
+    // ShareX FFmpegOptions.AudioSource: a dshow device as the second input (WASAPI modes are captured natively to WAV).
     std::vector<std::pair<std::wstring, std::wstring>> audio;  // input args, encoder args
-    if (!c.audio.empty()) {
+    if (!c.audio.empty() && !wasapi_audio::IsWasapiSetting(c.audio)) {
         const wchar_t* enc = c.audioCodec == L"opus" ? L"libopus" : c.audioCodec == L"mp3" ? L"libmp3lame" : L"aac";
         audio.push_back({L" -f dshow -thread_queue_size 1024 -audio_buffer_size 80 -i audio=" + Q(c.audio),
                          std::wstring(L" -c:a ") + enc + L" -b:a " + std::to_wstring(c.audioBitrate) + L"k"});
@@ -337,7 +342,7 @@ void DrawFrame() {
     DeleteObject(bmp);
 }
 
-enum PanelBtn { PB_Start, PB_Pause, PB_Stop, PB_Abort, PB_Follow };
+enum PanelBtn { PB_Start, PB_Pause, PB_Stop, PB_Abort, PB_Follow, PB_Audio };
 
 std::vector<std::pair<PanelBtn, RECT>> PanelButtons() {
     std::vector<PanelBtn> kinds;
@@ -346,20 +351,35 @@ std::vector<std::pair<PanelBtn, RECT>> PanelButtons() {
     case RS_Countdown: kinds = {PB_Abort}; break;
     default: kinds = {PB_Pause, PB_Stop, PB_Abort}; break;
     }
-    if (!g.gif) kinds.insert(kinds.begin(), PB_Follow);
+    if (!g.gif) {
+        kinds.insert(kinds.begin(), PB_Follow);
+        kinds.insert(kinds.begin(), PB_Audio);
+    }
     RECT c;
     GetClientRect(g.panel, &c);
-    const int weight = (int)kinds.size() * 3 + (g.gif ? 0 : 2);
-    const int status = std::min(c.right / 3, c.bottom * 5);
-    const int unit = std::max(1, std::min((int)c.bottom, ((int)c.right - status) / weight));
+    int weight = 0;
+    for (PanelBtn b : kinds) weight += b == PB_Follow ? 5 : b == PB_Audio ? 4 : 3;
+    const int status = std::min(c.right / 4, c.bottom * 5);
+    const int unit = std::max(1, std::min((int)c.bottom, ((int)c.right - status) / std::max(1, weight)));
     int x = c.right;
     std::vector<std::pair<PanelBtn, RECT>> v(kinds.size());
     for (int i = (int)kinds.size() - 1; i >= 0; --i) {
-        const int bw = unit * (kinds[i] == PB_Follow ? 5 : 3);
+        const int bw = unit * (kinds[i] == PB_Follow ? 5 : kinds[i] == PB_Audio ? 4 : 3);
         v[i] = {kinds[i], {x - bw, 0, x, c.bottom}};
         x -= bw;
     }
     return v;
+}
+
+const wchar_t* AudioModeLabel(wasapi_audio::Mode m, bool muted) {
+    if (m == wasapi_audio::Mode::None) return Tr(L"Звук ВЫКЛ", L"Audio OFF");
+    if (muted) return Tr(L"Звук МУТ", L"Audio MUTE");
+    switch (m) {
+    case wasapi_audio::Mode::System: return Tr(L"Звук: ПК", L"Audio: PC");
+    case wasapi_audio::Mode::Mic: return Tr(L"Звук: Микр.", L"Audio: Mic");
+    case wasapi_audio::Mode::Both: return Tr(L"ПК + Микр.", L"PC + Mic");
+    default: return Tr(L"Звук ВЫКЛ", L"Audio OFF");
+    }
 }
 
 const wchar_t* PanelLabel(PanelBtn b) {
@@ -369,8 +389,67 @@ const wchar_t* PanelLabel(PanelBtn b) {
     case PB_Stop: return Tr(L"Стоп", L"Stop");
     case PB_Follow: return g.cursorLimitReached ? Tr(L"Слежение: лимит", L"Follow: limit") :
                           g.followEnabled ? Tr(L"Слежение ВКЛ", L"Follow ON") : Tr(L"Слежение ВЫКЛ", L"Follow OFF");
+    case PB_Audio: return AudioModeLabel(g.audioMode, g.audioMuted);
     default: return Tr(L"Прервать", L"Abort");
     }
+}
+
+void SetAudioMode(wasapi_audio::Mode mode) {
+    g.audioMode = mode;
+    g.audioMuted = false;
+    g.cfg.audio = wasapi_audio::ModeToSetting(mode);
+    EnsureUnicodeIni();
+    WritePrivateProfileStringW(L"record", L"AudioSource", g.cfg.audio.c_str(), ZipshotIni().c_str());
+    if (g.state == RS_Recording && mode != wasapi_audio::Mode::None) {
+        if (!g.audioRec || !g.audioRec->Active()) {
+            std::wstring wav = g.base + L"a" + std::to_wstring(g.audioSegs.size()) + L".wav";
+            g.audioRec = std::make_shared<wasapi_audio::Recorder>();
+            DWORD lead = GetTickCount() - g.segStart;
+            if (g.audioRec->Start(wav, mode, false, lead)) g.audioSegs.push_back(wav);
+        } else {
+            g.audioRec->SetMuted(false);
+        }
+    } else if (g.audioRec && g.audioRec->Active() && mode == wasapi_audio::Mode::None) {
+        g.audioRec->SetMuted(true);
+    }
+    Redraw();
+}
+
+void ToggleAudio() {
+    if (!g.active || g.gif) return;
+    if (g.state == RS_Recording || g.state == RS_Paused) {
+        if (g.audioMode == wasapi_audio::Mode::None) {
+            SetAudioMode(wasapi_audio::Mode::System);
+        } else {
+            g.audioMuted = !g.audioMuted;
+            if (g.audioRec) g.audioRec->SetMuted(g.audioMuted);
+            Redraw();
+        }
+        return;
+    }
+    wasapi_audio::Mode next = g.audioMode == wasapi_audio::Mode::None   ? wasapi_audio::Mode::System
+                            : g.audioMode == wasapi_audio::Mode::System ? wasapi_audio::Mode::Both
+                            : g.audioMode == wasapi_audio::Mode::Both   ? wasapi_audio::Mode::Mic
+                                                                        : wasapi_audio::Mode::None;
+    SetAudioMode(next);
+}
+
+void ShowAudioPopup(HWND h, POINT pt) {
+    HMENU m = CreatePopupMenu();
+    auto add = [&](UINT id, const wchar_t* ru, const wchar_t* en, wasapi_audio::Mode mode) {
+        AppendMenuW(m, MF_STRING | (g.audioMode == mode ? MF_CHECKED : 0), id, Tr(ru, en));
+    };
+    add(1, L"Без звука", L"No audio", wasapi_audio::Mode::None);
+    add(2, L"Звук системы (ПК)", L"System audio (PC)", wasapi_audio::Mode::System);
+    add(3, L"Микрофон", L"Microphone", wasapi_audio::Mode::Mic);
+    add(4, L"Система + Микрофон", L"System + Microphone", wasapi_audio::Mode::Both);
+    ClientToScreen(h, &pt);
+    UINT id = (UINT)TrackPopupMenu(m, TPM_RETURNCMD | TPM_RIGHTBUTTON, pt.x, pt.y, 0, h, nullptr);
+    DestroyMenu(m);
+    if (id == 1) SetAudioMode(wasapi_audio::Mode::None);
+    else if (id == 2) SetAudioMode(wasapi_audio::Mode::System);
+    else if (id == 3) SetAudioMode(wasapi_audio::Mode::Mic);
+    else if (id == 4) SetAudioMode(wasapi_audio::Mode::Both);
 }
 
 // ShareX lblTimer: mm:ss:ff, counting down during the start delay.
@@ -410,6 +489,8 @@ LRESULT CALLBACK PanelProc(HWND h, UINT m, WPARAM w, LPARAM l) {
             RECT r = b.second;
             InflateRect(&r, -2, -3);
             COLORREF fill = b.first == PB_Follow && g.followEnabled ? RGB(34, 103, 190) :
+                            b.first == PB_Audio && g.audioMode != wasapi_audio::Mode::None && !g.audioMuted ? RGB(42, 132, 74) :
+                            b.first == PB_Audio && g.audioMuted ? RGB(156, 98, 28) :
                             b.first == PB_Stop ? RGB(200, 45, 45) : b.first == PB_Start ? RGB(46, 140, 70) : RGB(58, 58, 64);
             HBRUSH br = CreateSolidBrush(fill);
             FillRect(mdc, &r, br);
@@ -451,6 +532,15 @@ LRESULT CALLBACK PanelProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         for (auto& b : PanelButtons())
             if (PtInRect(&b.second, p)) {
                 PanelClick(b.first);
+                break;
+            }
+        return 0;
+    }
+    case WM_RBUTTONUP: {
+        POINT p{(short)LOWORD(l), (short)HIWORD(l)};
+        for (auto& b : PanelButtons())
+            if (b.first == PB_Audio && PtInRect(&b.second, p)) {
+                ShowAudioPopup(h, p);
                 break;
             }
         return 0;
@@ -543,7 +633,7 @@ void CreateUi() {
     UINT dpi = MonitorDpi(mon);
     RECT work = mi.rcWork;
     if (work.right <= work.left || work.bottom <= work.top) work = mi.rcMonitor;
-    const int pw = std::min<int>(MulDiv(g.gif ? 450 : 720, dpi, 96), std::max(1L, work.right - work.left));
+    const int pw = std::min<int>(MulDiv(g.gif ? 450 : 860, dpi, 96), std::max(1L, work.right - work.left));
     const int ph = std::min<int>(MulDiv(g.gif ? 30 : 36, dpi, 96), std::max(1L, work.bottom - work.top));
     int x = std::clamp<int>(g.r.right - pw, work.left, std::max<int>(work.left, work.right - pw));
     int y = g.r.bottom + 6;
@@ -585,6 +675,12 @@ bool StartSegment() {
         if (Spawn(WithTarget(g.variants[g.variant], seg), g.cur.pi, &g.cur.in)) break;
     if (g.variant >= g.variants.size()) return false;
     g.segs.push_back(seg);
+    if (!g.gif && g.audioMode != wasapi_audio::Mode::None) {
+        std::wstring wav = g.base + L"a" + std::to_wstring(g.audioSegs.size()) + L".wav";
+        DeleteFileW(wav.c_str());
+        g.audioRec = std::make_shared<wasapi_audio::Recorder>();
+        if (g.audioRec->Start(wav, g.audioMode, g.audioMuted, 0)) g.audioSegs.push_back(wav);
+    }
     g.state = RS_Recording;
     g.segStart = GetTickCount();
     g.segmentSampleStart = g.cursorSamples.size();
@@ -596,6 +692,10 @@ bool StartSegment() {
 
 // Asks the current ffmpeg to finish its segment ('q' on stdin); it is waited for on stop.
 void EndSegment() {
+    if (g.audioRec) {
+        g.audioRec->Stop();
+        g.audioRec.reset();
+    }
     if (!g.cur.pi.hProcess) return;
     RecordCursorSample(true);
     if (g.cur.in) {
@@ -634,22 +734,13 @@ void PanelClick(PanelBtn b) {
     case PB_Stop: RecorderStop(); break;
     case PB_Abort: RecorderAbort(); break;
     case PB_Follow: ToggleFollow(); break;
+    case PB_Audio: ToggleAudio(); break;
     }
 }
 
-// Joins the finished segments into `out` (video: stream copy; GIF: palette passes). Runs on a worker thread.
-bool Finalize(const std::wstring& ffmpeg, const std::vector<std::wstring>& segs, const std::wstring& out, bool gif,
-              const RecCfg& cfg, const std::wstring& base) {
-    std::vector<std::wstring> parts;
-    for (auto& s : segs) {
-        WIN32_FILE_ATTRIBUTE_DATA fa;
-        if (GetFileAttributesExW(s.c_str(), GetFileExInfoStandard, &fa) && (fa.nFileSizeHigh || fa.nFileSizeLow > 2048)) parts.push_back(s);
-        else Log(L"recorder: dropping empty segment %s", s.c_str());
-    }
-    if (parts.empty()) return false;
-    std::wstring list = base + L"list.txt";
+std::wstring WriteConcatList(const std::wstring& listPath, const std::vector<std::wstring>& files) {
     std::string text;
-    for (auto& s : parts) {
+    for (auto& s : files) {
         std::wstring fwd = s;
         std::replace(fwd.begin(), fwd.end(), L'\\', L'/');
         int n = WideCharToMultiByte(CP_UTF8, 0, fwd.c_str(), (int)fwd.size(), nullptr, 0, nullptr, nullptr);
@@ -659,15 +750,46 @@ bool Finalize(const std::wstring& ffmpeg, const std::vector<std::wstring>& segs,
         for (char ch : u) esc += ch == '\'' ? std::string("'\\''") : std::string(1, ch);
         text += "file '" + esc + "'\n";
     }
-    HANDLE h = CreateFileW(list.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, nullptr);
-    if (h == INVALID_HANDLE_VALUE) return false;
-    DWORD wr;
+    HANDLE h = CreateFileW(listPath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, nullptr);
+    if (h == INVALID_HANDLE_VALUE) return {};
+    DWORD wr = 0;
     WriteFile(h, text.data(), (DWORD)text.size(), &wr, nullptr);
     CloseHandle(h);
+    return listPath;
+}
+
+// Joins the finished segments into `out` (video: stream copy + optional WASAPI WAV mux; GIF: palette passes). Runs on a worker thread.
+bool Finalize(const std::wstring& ffmpeg, const std::vector<std::wstring>& segs, const std::vector<std::wstring>& audioSegs,
+              const std::wstring& out, bool gif, const RecCfg& cfg, const std::wstring& base) {
+    std::vector<std::wstring> parts;
+    for (auto& s : segs) {
+        WIN32_FILE_ATTRIBUTE_DATA fa;
+        if (GetFileAttributesExW(s.c_str(), GetFileExInfoStandard, &fa) && (fa.nFileSizeHigh || fa.nFileSizeLow > 2048)) parts.push_back(s);
+        else Log(L"recorder: dropping empty segment %s", s.c_str());
+    }
+    if (parts.empty()) return false;
+    std::wstring list = WriteConcatList(base + L"list.txt", parts);
+    if (list.empty()) return false;
     std::wstring head = Q(ffmpeg) + L" -hide_banner -loglevel warning -y -f concat -safe 0 -i " + Q(list);
-    bool ok;
+    bool ok = false;
     if (!gif) {
-        ok = RunAndWait(head + L" -c copy -movflags +faststart " + Q(out));
+        std::vector<std::wstring> wavParts;
+        for (auto& a : audioSegs) {
+            WIN32_FILE_ATTRIBUTE_DATA fa;
+            if (GetFileAttributesExW(a.c_str(), GetFileExInfoStandard, &fa) && (fa.nFileSizeHigh || fa.nFileSizeLow > 64))
+                wavParts.push_back(a);
+        }
+        if (!wavParts.empty()) {
+            std::wstring alist = WriteConcatList(base + L"wavlist.txt", wavParts);
+            if (!alist.empty()) {
+                const wchar_t* aenc = cfg.audioCodec == L"opus" ? L"libopus" : cfg.audioCodec == L"mp3" ? L"libmp3lame" : L"aac";
+                ok = RunAndWait(head + L" -f concat -safe 0 -i " + Q(alist) +
+                                L" -map 0:v:0 -map 1:a:0 -c:v copy -c:a " + aenc + L" -b:a " +
+                                std::to_wstring(std::max(cfg.audioBitrate, 128)) + L"k -shortest -movflags +faststart " + Q(out));
+                DeleteFileW(alist.c_str());
+            }
+        }
+        if (!ok) ok = RunAndWait(head + L" -c copy -movflags +faststart " + Q(out));
     } else {
         std::wstring pal = base + L"palette.png";
         std::wstring use = L"paletteuse=dither=" + cfg.dither;
@@ -768,6 +890,8 @@ void RecorderStart(RECT r, bool gif) {
     g.r = r;
     g.gif = gif;
     g.followEnabled = !gif && g.cfg.followCursor;
+    g.audioMode = gif ? wasapi_audio::Mode::None : wasapi_audio::ParseMode(g.cfg.audio);
+    g.audioMuted = false;
     g.out = NewOutputPath(gif ? L"gif" : L"mp4");
     g.base = TempDir() + L"zipshot_rec_" + std::to_wstring(GetCurrentProcessId()) + L"_";
     DeleteFileW(LogPath().c_str());
@@ -817,6 +941,8 @@ void RecorderStop() {
     bool gif = g.gif, aborted = g.aborted;
     RecCfg cfg = g.cfg;
     std::vector<std::wstring> segs = g.segs;
+    std::vector<std::wstring> audioSegs = g.audioSegs;
+    g.audioSegs.clear();
     std::wstring out = g.out, ffmpeg = g.ffmpeg, base = g.base;
     auto cursorSamples = std::move(g.cursorSamples);
     const bool cursorLimitReached = g.cursorLimitReached;
@@ -829,7 +955,7 @@ void RecorderStop() {
             CloseHandle(p.pi.hProcess);
             CloseHandle(p.pi.hThread);
         }
-        bool ok = !aborted && Finalize(ffmpeg, segs, out, gif, cfg, base);
+        bool ok = !aborted && Finalize(ffmpeg, segs, audioSegs, out, gif, cfg, base);
         CursorCompletion cursor;
         if (ok && !gif) {
             try {
@@ -842,6 +968,7 @@ void RecorderStop() {
             }
         }
         for (auto& s : segs) DeleteFileW(s.c_str());
+        for (auto& a : audioSegs) DeleteFileW(a.c_str());
         RunOnMain([=] {
             g.busy = false;
             if (ok) {

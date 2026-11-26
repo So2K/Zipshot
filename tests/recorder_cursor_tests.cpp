@@ -4,6 +4,7 @@
 #include "../src/capture_ext.h"
 #include "../src/sharex_import.h"
 #include "../src/cursor_video.h"
+#include "../src/wasapi_audio.h"
 #include <dxgi.h>
 #include <wrl/client.h>
 #include <wincodec.h>
@@ -259,6 +260,19 @@ Result RenderPrepared(const std::wstring& ffmpeg, const PreparedSource& source,
 #define MonitorFromRect test::MonitorRect
 #define GetMonitorInfoW test::Monitor
 #define CreateDXGIFactory1 test::Factory
+namespace wasapi_audio {
+struct Recorder::Impl {};
+Recorder::Recorder() = default;
+Recorder::~Recorder() = default;
+Mode ParseMode(const std::wstring&) { return Mode::None; }
+const wchar_t* ModeToSetting(Mode) { return L""; }
+bool IsWasapiSetting(const std::wstring&) { return false; }
+bool Recorder::Start(const std::wstring&, Mode, bool, uint32_t) { return false; }
+void Recorder::SetMuted(bool) {}
+bool Recorder::Muted() const { return false; }
+bool Recorder::Active() const { return false; }
+void Recorder::Stop() {}
+}  // namespace wasapi_audio
 #ifdef ZIPSHOT_STAGED_CURSOR_RECORDER
 #include "../build/cursor-qa/recorder_cursor.cpp"
 #else
