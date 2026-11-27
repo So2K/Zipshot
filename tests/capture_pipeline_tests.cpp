@@ -88,6 +88,9 @@ bool MainWindowMediaBusy() { Forbidden(); }
 bool SoundEnabled() { Forbidden(); }
 void SetSoundEnabled(bool) { Forbidden(); }
 bool CombineBusy() { Forbidden(); }
+bool IsVideoFile(const std::wstring&) { return false; }
+void OpenVideoEditor(const std::wstring&) { Forbidden(); }
+bool VideoEditorBusy() { return false; }
 namespace updater {
 void CleanupOldExe() { Forbidden(); }
 void Check(bool) { Forbidden(); }

@@ -5,6 +5,7 @@
 #include "cursor_video.h"
 #include "sharex_import.h"
 #include "updater.h"
+#include "video_editor.h"
 #include <commctrl.h>
 #include <dwmapi.h>
 #include <shlobj.h>
@@ -1221,6 +1222,10 @@ const Entry* Selected() {
 void ShellOpen(const std::wstring& path) { ShellExecuteW(g_mw->hwnd, L"open", path.c_str(), nullptr, nullptr, SW_SHOWNORMAL); }
 
 void OpenInEditor(const std::wstring& path) {
+    if (IsVideoFile(path)) {
+        OpenVideoEditor(path);
+        return;
+    }
     auto img = std::make_shared<Image>();
     if (LoadImageFile(path, *img)) OpenEditor(img, path);
     else ShellOpen(path);
@@ -1472,6 +1477,7 @@ HMENU BuildTileMenu(const Entry& e, bool multi) {
                     Tr(L"Сделать видео со слежением за курсором...", L"Create cursor-follow video..."));
         if (!track) AppendMenuW(m, MF_STRING | MF_GRAYED, 0,
                                Tr(L"Нужна новая запись Zipshot с треком курсора", L"Requires a new Zipshot recording with a cursor track"));
+        AppendMenuW(m, MF_STRING, M_Editor, Tr(L"Открыть в видеоредакторе", L"Open in video editor"));
     }
     AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
     if (e.kind == K_Image) AppendMenuW(m, MF_STRING, M_CopyImage, Tr(L"Копировать изображение\tCtrl+C", L"Copy image\tCtrl+C"));

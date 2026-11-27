@@ -211,6 +211,9 @@ void PlayUiSound(Sound) {}
 bool SoundEnabled() { return GetSettingBool(L"Sound", true); }
 void SetSoundEnabled(bool on) { SetSettingBool(L"Sound", on); }
 bool CombineBusy() { return false; }
+bool IsVideoFile(const std::wstring&) { return false; }
+void OpenVideoEditor(const std::wstring&) { ++test::forbiddenCalls; }
+bool VideoEditorBusy() { return false; }
 namespace updater {
 bool Checking() { return false; }
 bool Downloading() { return false; }

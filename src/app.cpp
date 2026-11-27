@@ -4,6 +4,7 @@
 #include "capture_ext.h"
 #include "encoded_png.h"
 #include "updater.h"
+#include "video_editor.h"
 #include <ole2.h>
 #include <dwmapi.h>
 #include <shellapi.h>
@@ -353,8 +354,11 @@ void Run(int cmd) {
         break;
     case C_EditLast:
         if (!g_lastPath.empty()) {
-            auto img = std::make_shared<Image>();
-            if (LoadImageFile(g_lastPath, *img)) OpenEditor(img, g_lastPath);
+            if (IsVideoFile(g_lastPath)) OpenVideoEditor(g_lastPath);
+            else {
+                auto img = std::make_shared<Image>();
+                if (LoadImageFile(g_lastPath, *img)) OpenEditor(img, g_lastPath);
+            }
         }
         break;
     case C_Quit:
@@ -363,7 +367,7 @@ void Run(int cmd) {
         KillTimer(g_main, kTrayClickTimer);
         KillTimer(g_main, kUpdateCheckTimer);
         if (RecorderActive()) RecorderStop();
-        if (RecorderBusy() || MainWindowMediaBusy() || CombineBusy() || g_stillJobs.load()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
+        if (RecorderBusy() || MainWindowMediaBusy() || CombineBusy() || VideoEditorBusy() || g_stillJobs.load()) SetTimer(g_main, kQuitAfterSaveTimer, 200, nullptr);
         else DestroyWindow(g_main);
         break;
     case C_ShowMain: ShowMainWindow(); break;
@@ -517,7 +521,7 @@ LRESULT CALLBACK MainProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         return 0;
     case WM_TIMER:
         if (w == kQuitAfterSaveTimer) {
-            if (!RecorderBusy() && !MainWindowMediaBusy() && !CombineBusy() && !g_stillJobs.load()) {
+            if (!RecorderBusy() && !MainWindowMediaBusy() && !CombineBusy() && !VideoEditorBusy() && !g_stillJobs.load()) {
                 KillTimer(h, kQuitAfterSaveTimer);
                 DestroyWindow(h);
             }

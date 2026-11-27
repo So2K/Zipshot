@@ -1,4 +1,5 @@
 #include "common.h"
+#include "video_editor.h"
 #include <shellapi.h>
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -132,7 +133,10 @@ LRESULT CALLBACK ToastProc(HWND h, UINT m, WPARAM w, LPARAM l) {
         std::wstring path = t->path;
         DestroyWindow(h);
         if (img) OpenEditor(img, path);
-        else if (!path.empty()) ShellExecuteW(nullptr, L"open", path.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+        else if (!path.empty()) {
+            if (IsVideoFile(path)) OpenVideoEditor(path);
+            else ShellExecuteW(nullptr, L"open", path.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+        }
         return 0;
     }
     case WM_MBUTTONUP: {
